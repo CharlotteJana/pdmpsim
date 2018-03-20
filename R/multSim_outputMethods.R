@@ -3,9 +3,7 @@
 # plot: stetige/diskrete Variablen über pdmp-slot bestimmen
 # NA for den Plots ausführen
 # plot: title und subtitle übergben können
-# subtitle in plot: line = ... abhängig von Zeilenanzahl
 # subtitle: anzahl der Seeds mit Hinschreiben
-# plot: image statt image3D
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R getTimeslice.R
 NULL
@@ -89,71 +87,7 @@ density.multSim <- function(x, t, main, ...){
   density(timeSlice, main = main, ...)
 }
 
-plot.multSim <- function(x, nbins = 30, ...){
-  if (!requireNamespace("plot3D", quietly = TRUE)) {
-    stop("Pkg 'plot3D' needed for this function to work. 
-          Please install it.", call. = FALSE)
-  }
-  
-  #------ prepare data and plot settings -----
-  
-  n <- d <- NULL # n = index of continous vars, d = index of discrete variables
-  for(i in seq_along(x$model@init)){
-    if(length(unique(x$outputList[[1]][, i+1])) > 6) 
-      n <- cbind(n, i+1) # determination of continous variables is only 
-                         # based on first simulation
-    else 
-      d <- cbind(d, i+1)
-  }
-  # concatenate all simulations to one matrix (rows with NA are removed):
-  values <- na.exclude(do.call("rbind", x$outputList)) 
-  t_c <- cut(values[,1], nbins)
-  t_sc <- seq(min(values[,1]), max(values[,1]), length.out = nbins)
-  
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
-  par(mar = c(3,3,1,3), oma = c(0,0,7,0))
-  layout(matrix(c(rep(seq_along(n), each = length(d)), 
-                  length(n) + seq_along(d) ), 
-                ncol = length(n) + 1))
-  
-  #----- plot continous variables ------
-  
-  for(i in seq_along(n)){
-
-    x_c <- cut(values[,n[i]], nbins)
-    x_sc <- seq(min(values[,n[i]]), max(values[,n[i]]), length.out = nbins)
-    freq <- table(t_c, x_c)
-
-    plot3D::image2D(x = t_sc, y = x_sc, z = freq, ylab = "",
-                    xlab = "time", main = colnames(values)[n[i]], ...)
-    contour(x = t_sc, y = x_sc, z = freq, add = TRUE, col = "black") 
-    #col = rgb(1,1,1,.7)
-  }
-
-  #---- plot discrete variables -----
-
-  for(i in seq_along(d)){
-    freq <- prop.table(table(values[,1], values[,d[i]]),1)
-    par(mar = c(6,4,2,4), xpd = TRUE)
-    matplot(x$outputList[[1]][,1], freq, type = "l", lty = 1, 
-            col = rainbow(ncol(freq)), xlab = "time", ylab = "", 
-            main = colnames(values)[d[i]], ...)
-    legend("topleft", bty = "n", legend = colnames(freq), 
-           col=rainbow(ncol(freq)), pch=15, cex = 1.0, horiz = TRUE)
-  }
-  
-  #---- text ---------
-  
-  title <- x$model@descr
-  subtitle <- format(x$model, short = FALSE, collapse = "\n", 
-                     slots = c("init", "parms"))
-  mtext(title, cex = 1.5, font = 2, line = 4, outer = TRUE)
-  mtext(subtitle, line = -1, outer = TRUE)
-}
-
-
-gplot <- function(x, nbins = 30, ...){
+plot.multSim <- function(x, title, subtitle, ...){
   
   #------ prepare data -----
   
@@ -182,28 +116,50 @@ gplot <- function(x, nbins = 30, ...){
   discrData <- summarise(discrData, count = n())
   discrData$value <- as.ordered(discrData$value)
   
-  print(str(discrData))
-  
   #----- plot ------
   
-  plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time))
-  plot <- plot + ggplot2::geom_bin2d(data = contData, ggplot2::aes(y = value))
- # plot <- plot + ggplot2::geom_density_2d(data = contData, ggplot2::aes(y = value))
- # plot <- plot + ggplot2::stat_summary_2d(data = contData)
+  plot <- ggplot(data = NULL, aes(x = time))
   
-  #plot <- plot + ggplot2::geom_line(data = discrData, 
-  #                                  ggplot2::aes(y = count, group = value, color = value))
-  plot <- plot + ggplot2::geom_smooth(data = discrData, method = "auto",
-                                    ggplot2::aes(y = count, group = value, color = value))
-  plot <- plot + ggplot2::facet_wrap( ~ variable)
+  # continous variables
+  contPlot <- "density_2d" # "bin2d" or "density_2d"
+  if(contPlot == "bin2d"){
+  plot <- plot + geom_bin2d(data = contData, aes(y = value)) +
+          #viridis::scale_fill_viridis() +
+          scale_fill_distiller(palette = "Spectral", 
+                               name = switch(as.character(length(n)),
+                                             "1" = "Continous\nvariable",
+                                             "Continous\nvariables"))
+  }
+  if(contPlot == "density_2d"){
+  plot <- plot + stat_density_2d(data = contData,
+                                 aes(y = value, 
+                                     colour = value))
+  }
+  
+  # discrete variables
+  discrPlot <- "smooth" # or "line"
+  if(discrPlot == "line"){
+  plot <- plot + geom_line(data = discrData, 
+                           aes(y = count, group = value, color = value))
+  }
+  if(discrPlot == "smooth"){
+  plot <- plot + geom_smooth(data = discrData, method = "auto",
+                             aes(y = count, group = value, color = value))
+  }
+  plot <- plot + scale_color_discrete(name = "Discrete\nValues")
+  
+  # text
+  if(missing(title)) 
+    title <- x$model@descr
+  if(missing(subtitle))
+    subtitle <- format(x$model, short = FALSE, collapse = "\n",
+                      slots = c("init", "parms"))
+  plot <- plot + labs(title = title,
+                      subtitle = subtitle,
+                      ylab = "")
+  
+  # facet
+  plot <- plot + facet_wrap( ~ variable)
   
   return(plot)
- 
-  #---- text ---------
-  
-  title <- x$model@descr
-  subtitle <- format(x$model, short = FALSE, collapse = "\n", 
-                     slots = c("init", "parms"))
-  mtext(title, cex = 1.5, font = 2, line = 4, outer = TRUE)
-  mtext(subtitle, line = -1, outer = TRUE)
-  }
+}
