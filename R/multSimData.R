@@ -1,5 +1,8 @@
 #======== todo =================================================================
-# discVarNames rausnehmen und durch slot ersetzen
+# discVarNames rausnehmen und durch slot ersetzen!
+# plotMethoden umschreiben, so dass sie multSimData benutzen
+# dokumentieren
+# tests schreiben
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R msCsv.R
 NULL
@@ -107,13 +110,6 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
     seeds <- x$seeds
     seedIndex <- seq_along(seeds)
   }
-  if(missing(discVarNames)){
-    discVarNames <- NULL
-    for(i in seq_along(x$model@init)){
-      if(length(unique(x$outputList[[1]][, i+1])) < 6) 
-        discVarNames <- cbind(discVarNames, names(init(x$model))[i])
-    }
-  }
   
   # select times
   if(!identical(times, all.times)){
@@ -146,7 +142,7 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
         value <- as.numeric(x$lafList[[n]][seedIndex[j], timeIndex[i]+1])
         new_row <- data.frame(time = all.times[timeIndex[i]],
                               seed = x$seeds[seedIndex[j]],
-                              type = ifelse(varName %in% discVarNames, 
+                              type = ifelse(is.element(varName, discVarNames), 
                                             "disc", "cont"),
                               variable = varName,
                               value = value)
@@ -156,4 +152,22 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
   }
   attr(data, "class") <- c("multSimData", class(data))
   return(data)
+}
+
+#' @rdname multSimData
+#' @export
+getMultSimData.multSimData <- function(x, times, seeds){
+  if(missing(times) || is.null(times))
+    times <- unique(x$time)
+  if(missing(seeds) || is.null(seeds))
+    seeds <- unique(x$seed)
+  x <- subset(x, time == times)
+  x <- subset(x, seed == seeds)
+  return(x)
+}
+
+is.multSimData <- function(x){
+  b1 <- identical(colnames(x), c("time", "seed", "type", "variable", "value"))
+  b2 <- is.element("multSimData", class(x))
+  return(b1 & b2)
 }
