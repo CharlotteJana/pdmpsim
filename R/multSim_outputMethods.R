@@ -5,7 +5,7 @@
 # plot: title und subtitle übergben können
 # subtitle: anzahl der Seeds mit Hinschreiben
 
-#' @include pdmp_class.R pdmp_sim.R multSim.R getTimeslice.R
+#' @include pdmp_class.R pdmp_sim.R multSim.R getTimeslice.R multSimData_outputMethods.R
 NULL
 
 
@@ -91,79 +91,17 @@ density.multSim <- function(x, t, main, ...){
 #' @export
 plot.multSim <- function(x, title, subtitle, ...){
   
-  require(ggplot2)
+  data <- getMultSimData(x)
   
-  #------ prepare data -----
-  
-  n <- d <- NULL # n = index of continous vars, d = index of discrete variables
-  for(i in seq_along(x$model@init)){
-    if(length(unique(x$outputList[[1]][, i+1])) > 6) 
-      n <- cbind(n, i) # determination of continous variables is only 
-    # based on first simulation
-    else 
-      d <- cbind(d, i)
-  }
-  discVarNames <- names(init(x$model))[d]
-    
-  # concatenate all simulations to one matrix (rows with NA are removed):
-  data <- as.data.frame(na.exclude(do.call("rbind", x$outputList)))
-  data <- reshape2::melt(data, id = c("time"))
-  data$type <- vapply(data$variable, 
-                      function(v) ifelse(v %in% discVarNames, "discr", "cont"),
-                      character(1))
-  
-  contData <- subset(data, type == "cont")
-  
-  discrData <- subset(data, type == "discr")
-  discrData$variable <- factor(discrData$variable)
-  discrData <- group_by(discrData, variable, time, value)
-  discrData <- dplyr::summarise(discrData, count = n())
-  discrData$value <- as.ordered(discrData$value)
-  
-  #----- plot ------
-  
-  plot <- ggplot(data = NULL, aes(x = time))
-  
-  # continous variables
-  contPlot <- "bin2d" # "bin2d" or "density_2d"
-  if(contPlot == "bin2d"){
-  plot <- plot + geom_bin2d(data = contData, aes(y = value)) +
-          #viridis::scale_fill_viridis() +
-          scale_fill_distiller(palette = "Spectral", 
-                               name = switch(as.character(length(n)),
-                                             "1" = "Continous\nvariable",
-                                             "Continous\nvariables"))
-  }
-  if(contPlot == "density_2d"){
-  plot <- plot + stat_density_2d(data = contData,
-                                 aes(y = value, 
-                                     colour = value))
-  }
-  
-  # discrete variables
-  discrPlot <- "smooth" # or "line"
-  if(discrPlot == "line"){
-  plot <- plot + geom_line(data = discrData, 
-                           aes(y = count, group = value, color = value))
-  }
-  if(discrPlot == "smooth"){
-  plot <- plot + geom_smooth(data = discrData, method = "auto",
-                             aes(y = count, group = value, color = value))
-  }
-  plot <- plot + scale_color_discrete(name = "Discrete\nValues")
-  
-  # text
   if(missing(title)) 
     title <- x$model@descr
-  if(missing(subtitle))
-    subtitle <- format(x$model, short = FALSE, collapse = "\n",
-                      slots = c("init", "parms"))
-  plot <- plot + labs(title = title,
-                      subtitle = subtitle,
-                      ylab = "")
   
-  # facet
-  plot <- plot + facet_wrap( ~ variable, scales = "free_y")
-  
-  return(plot)
+  if(missing(subtitle)){
+    subtitle <- paste0("Number of simulations: ", length(x$seeds), "\n")
+    subtitle <- paste0(subtitle, format(x$model, 
+                                        short = FALSE, 
+                                        collapse = "\n",
+                                        slots = c("init", "parms")))
+  }
+  plot(data, title = title, subtitle = subtitle, ...)
 }

@@ -40,6 +40,7 @@ Collate:
     'msCsv_calculations.R'
     'msCsv_outputMethods.R'
     'multSimData.R'
+    'multSimData_outputMethods.R'
     'multSim_calculations.R'
     'multSim_outputMethods.R'
     'pdmp_accessors.R'

@@ -3,6 +3,7 @@
 # plotMethoden umschreiben, so dass sie multSimData benutzen
 # dokumentieren
 # tests schreiben
+# methode sehr langsam, eventuell umschreiben?
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R msCsv.R
 NULL

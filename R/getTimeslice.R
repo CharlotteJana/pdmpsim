@@ -52,6 +52,8 @@ getTimeslice.multSimCsv <- function(x, times){
   seeds <- x$seeds
   all.times <- fromtoby(x$model@times)
   index <- NULL
+  
+  # select times
   for(i in times){
     a <- which(all.times == i)
     if(length(a) == 0){
@@ -59,6 +61,7 @@ getTimeslice.multSimCsv <- function(x, times){
     }
     else index <- c(index, a)
   }
+  
   for(i in index){
     d <- data.frame(time = rep(all.times[i], length(seeds)), seed = seeds)
     for(j in seq_along(x$lafList)){
