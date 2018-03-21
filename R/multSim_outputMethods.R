@@ -87,7 +87,11 @@ density.multSim <- function(x, t, main, ...){
   density(timeSlice, main = main, ...)
 }
 
+#' @importFrom dplyr summarise
+#' @export
 plot.multSim <- function(x, title, subtitle, ...){
+  
+  require(ggplot2)
   
   #------ prepare data -----
   
@@ -113,7 +117,7 @@ plot.multSim <- function(x, title, subtitle, ...){
   discrData <- subset(data, type == "discr")
   discrData$variable <- factor(discrData$variable)
   discrData <- group_by(discrData, variable, time, value)
-  discrData <- summarise(discrData, count = n())
+  discrData <- dplyr::summarise(discrData, count = n())
   discrData$value <- as.ordered(discrData$value)
   
   #----- plot ------
@@ -121,7 +125,7 @@ plot.multSim <- function(x, title, subtitle, ...){
   plot <- ggplot(data = NULL, aes(x = time))
   
   # continous variables
-  contPlot <- "density_2d" # "bin2d" or "density_2d"
+  contPlot <- "bin2d" # "bin2d" or "density_2d"
   if(contPlot == "bin2d"){
   plot <- plot + geom_bin2d(data = contData, aes(y = value)) +
           #viridis::scale_fill_viridis() +
@@ -159,7 +163,7 @@ plot.multSim <- function(x, title, subtitle, ...){
                       ylab = "")
   
   # facet
-  plot <- plot + facet_wrap( ~ variable)
+  plot <- plot + facet_wrap( ~ variable, scales = "free_y")
   
   return(plot)
 }

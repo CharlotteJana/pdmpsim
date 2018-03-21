@@ -39,6 +39,7 @@ Collate:
     'getTimeslice.R'
     'msCsv_calculations.R'
     'msCsv_outputMethods.R'
+    'multSimData.R'
     'multSim_calculations.R'
     'multSim_outputMethods.R'
     'pdmp_accessors.R'
