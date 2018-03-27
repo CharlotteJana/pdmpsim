@@ -3,7 +3,7 @@
 # plotMethoden umschreiben, so dass sie multSimData benutzen
 # dokumentieren
 # tests schreiben
-# methode sehr langsam, eventuell umschreiben?
+# methode für multSimCsv sehr langsam, eventuell umschreiben?
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R msCsv.R
 NULL
@@ -66,11 +66,9 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
     }
   }
   
-  for(i in seq_along(timeIndex)){
-    for(j in seq_along(seedIndex)){
-      data <- rbind(data, c(seed = seeds[j], 
-                            x$outputList[[seedIndex[j]]][timeIndex[i], ]))
-    }
+  for(j in seq_along(seedIndex)){
+    seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
+    data <- rbind(data, cbind(seed = rep(seeds[j]), seedData))
   }
   
   # every value gets its own row
@@ -136,6 +134,8 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
     }
   }
   
+  print("Drei")
+  
   for(n in seq_along(init(x$model))){
     varName <- names(init(x$model))[n]
     for(i in seq_along(timeIndex)){
@@ -152,6 +152,8 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
     }
   }
   attr(data, "class") <- c("multSimData", class(data))
+  
+  print("Vier")
   return(data)
 }
 

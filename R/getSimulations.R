@@ -97,7 +97,7 @@ getSimulations.pdmpModel <- function(x, seeds){ #geht das? pdmpModel ist ja s4!
 #' @note This method requires the packages \pkg{ggplot2}, \pkg{reshape2} and 
 #' \pkg{RColorBrewer}.
 #' @export
-plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1), 
+plotSeeds_old <- function(sdata, discVarName = tail(names(sdata), 1), 
                       trange = c(0, tail(sdata$time, 1)), log = FALSE){
   
   if (!requireNamespace("reshape2", quietly = TRUE)) {
@@ -106,7 +106,7 @@ plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1),
   }
   if (!requireNamespace("RColorBrewer", quietly = TRUE)) {
     stop("Pkg 'RColorBrewer' needed for this function to work. 
-          Please install it.", call. = FALSE)
+         Please install it.", call. = FALSE)
   }
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("Pkg 'ggplot2' needed for this function to work. 
@@ -157,6 +157,8 @@ plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1),
                                             character(1))
   }
   
+  print(head(sdata))
+  
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = sdata, ggplot2::aes(x = time))  + 
@@ -184,14 +186,14 @@ plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1),
   height <- abs(max(sdata$value) - min)/10
   for(i in seq_along(discVarName)){
     plot <- plot +
-        ggplot2::geom_rect(ggplot2::aes_string(
-          fill = paste0("col_",discVarName[i]), 
-          xmin = "time", xmax = "time+1", 
-          ymin = min - i*height, ymax = min - (i - 1)*height))
+      ggplot2::geom_rect(ggplot2::aes_string(
+        fill = paste0("col_",discVarName[i]), 
+        xmin = "time", xmax = "time+1", 
+        ymin = min - i*height, ymax = min - (i - 1)*height))
   }
   plot <- plot + ggplot2::scale_fill_identity("discrete\nvariables", 
-    guide = "legend", labels = printVect(discValues, collapse = NULL)
-    )
+                                              guide = "legend", labels = printVect(discValues, collapse = NULL)
+  )
   #plot <- plot + ggplot2::scale_fill_identity("discrete\nvariables", 
   #               guide = "legend", labels = printVect(discValues, 
   #               collapse = NULL), breaks = 1:length(discValues), 
@@ -207,8 +209,8 @@ plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1),
                        size = 1) +
     ggplot2::scale_colour_manual(name = "continous\nvariables", 
                                  values = cols[seq_along(names)])
-                                 # breaks = names, 
-                                 # values=cols[1:length(names)])
+  # breaks = names, 
+  # values=cols[1:length(names)])
   
   
   # facet_wrap
@@ -218,4 +220,4 @@ plotSeeds <- function(sdata, discVarName = tail(names(sdata), 1),
   print(plot)
   invisible(plot)
   return(plot)
-}
+  }
