@@ -98,10 +98,12 @@ summarise_at.timeData <- function(.tbl, .vars, .funs, ...){
   return(dplyr::summarise_at(.tbl, .vars, .funs, ..., .cols = NULL))
 }
 
+
+
 #----------- plot methods --------------
 
 #' @importFrom dplyr mutate if_else group_by
-plotStats <- function(tdata, vars, funs){
+plotStats_old <- function(tdata, vars, funs){
   
   ##todo: missing funktioniert nicht, warum ????
   if(missing(vars)) vars <- colnames(tdata)[-c(1, 2)] # names of all variables

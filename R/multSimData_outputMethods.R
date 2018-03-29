@@ -1,6 +1,7 @@
 #' @include multSimData.R
 NULL
 
+#========== plot ===============
 
 #' @importFrom dplyr summarise
 #' @export
@@ -56,6 +57,8 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
   
   return(plot)
 }
+
+#========== plotSeeds ===============
 
 #' Plot method for simulations
 #' 
@@ -177,4 +180,84 @@ plotSeeds <- function(x, trange = c(0, tail(x$time, 1)), log = FALSE){
   print(plot)
   invisible(plot)
   return(plot)
+}
+
+#========== plotStats ===============
+
+#' @rdname summarise_at
+#' @importFrom dplyr summarise_at group_by
+#' @export
+summarise_at.multSimData <- function(.tbl, .vars, .funs, ...){
+  .tbl <- group_by(.tbl, time)
+  #return( callGeneric(.tbl, .vars, .funs, ..., .cols = NULL))
+  return(dplyr::summarise_at(.tbl, .vars, .funs, ..., .cols = NULL))
+}
+
+#' @importFrom dplyr mutate if_else group_by funs
+plotStats <- function(x, vars, funs){
+  
+  ##todo: missing funktioniert nicht, warum ????
+  if(missing(vars)) vars <- levels(x$variable) # names of all variables
+  if(missing(funs)) funs <- dplyr::funs(min, median, mean, max, sd)
+  
+  if (!requireNamespace("grid", quietly = TRUE)) {
+    stop("Pkg 'grid' needed for this function to work. 
+         Please install it.", call. = FALSE)
+  }
+  if (!requireNamespace("gtable", quietly = TRUE)) {
+    stop("Pkg 'gtable' needed for this function to work. 
+         Please install it.", call. = FALSE)
+  }
+  
+  #------ Prepare the data for plotting ------------
+  
+  data <- subset(x, select = -type)
+  data <- tidyr::spread(data, variable, value)
+  data <- reshape2::melt(summarise_at(data, vars, funs), id = c("time"))
+  colnames(data)[2] <- "fun"
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  value <- fun <- name <- NULL
+  
+  #---------- Create Plot ---------------------
+  
+  plot <- ggplot(data = data, aes(
+    x = time, y = value, group = fun, color = fun)) +
+    geom_line() + 
+    scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
+    theme(legend.position = "none", plot.margin = unit(c(1,0,1,1),"line"))
+  
+  #---------- Create labeling on the right side ---------
+  
+  d2 <- data[which(data$time == max(data$time)),]
+  #d2 <- ddply(data, "fun", summarise, time=0, value=value[length(value)])
+  
+  plegend <- ggplot(data, aes(x=time, y=value, colour=fun)) + 
+    geom_blank() +
+    geom_segment(data = d2, 
+                 aes(x=2, xend = 0, y = value, yend = value),
+                 arrow=arrow(length=unit(2,"mm"), type="closed")) +
+    geom_text(data = d2, ggplot2::aes(x=2.5, label = fun), hjust = 0) +
+    scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
+    guides(colour = "none") + 
+    theme_minimal() + 
+    theme(line = element_blank(),
+          text = element_blank(),
+          panel.background = element_rect(
+          fill="grey95", linetype = "blank"))
+  gl <- gtable::gtable_filter(ggplotGrob(plegend), "panel")
+  
+  # add a cell next to the main plot panel, and insert gl there
+  g <- ggplotGrob(plot)
+  index <- subset(g$layout, name == "panel")
+  g <- gtable::gtable_add_cols(g, unit(1, "strwidth", "line # 1") + 
+                                 unit(1, "cm"))
+  g <- gtable::gtable_add_grob(g, gl, t = index$t, 
+                               l = ncol(g), b = index$b, r = ncol(g))
+  grid::grid.newpage()
+  grid::grid.draw(g)
+  
+  #print(g)
+  #invisible(g)
+  #return(g) 
   }
