@@ -446,3 +446,99 @@ hist.multSimData <- function(x, t, main, sub, ...){
   if(!is.null(main)) mtext(main, font = 2, line = 0, cex = 1.5, outer = TRUE)
   if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
 }
+
+#========== density ================
+
+#' @title Plot Density Estimations
+#'  
+#' @description A plot method for simulations of a piecewise deterministic 
+#' markov process (\code{\link{pdmp}}). It computes and plots a density over 
+#' all simulations of the PDMP, seperately for every time value and every 
+#' contious variable. Discrete variables are plotted in a stacked barplot.
+#'
+#' @param ... additional parameters passed to the default method of 
+#' \code{\link[stats]{density}}
+#' @inheritParams hist
+#' @name density
+#' @importFrom stats density
+#' @export
+density.multSimData <- function(x, t, main, sub, ...){ 
+  
+  if(missing(t))
+    t <- unique(x$time)
+  if(length(t) > 20)
+    stop("To many time values to plot. There should be less than
+         20 different time values in the given data.")
+  
+  data <- subset(x, subset = time %in% t)
+  if(nrow(data) == 0) 
+    stop("There are no simulations for t = ", t, ".")
+  
+  contData <- subset(data, type == "cont")
+  discData <- subset(data, type == "disc")
+  n <- unique(contData$variable)
+  d <- unique(discData$variable)
+  
+  if(!is.null(dev.list())) dev.off()
+  plot.new()
+  opar <- par(no.readonly = TRUE)
+  on.exit(par(opar))
+  par(oma = c(0,1,4,0))
+  layout(t(c(rep(seq_along(n), each = 2), seq_along(d) + length(n))))
+  cols <- colorRampPalette(c("green", "blue", "red"))(length(t))
+  transCols <- paste0(cols, "6f")
+  
+  #density plot for every continuous variable
+  for(name in n){
+    dens <- lapply(t, 
+              function(j) stats::density(
+                subset(contData, time == j & variable == name)$value, 
+                ...)
+            )
+    plot(NA, main = "",
+         xlim = range(sapply(dens, "[", "x")), 
+         ylim = range(sapply(dens, "[", "y")),
+         xlab = name, ylab = "Density")
+    mapply(lines, dens, col = cols)
+    
+  }
+  if(length(t) != 1) 
+    legend("topright", bty="n", legend=paste("t =", t), fill=cols, cex = 1.0)
+  
+  #barplot for discrete variable
+  for(name in d){
+    specVals <- sapply(lapply(t, 
+                  function(j) subset(discData, time==j & variable==name)$value), 
+                  cbind)
+    discRange <- unique(c(specVals))
+    discVal <- sapply(seq_along(t), function(m) 
+      as.matrix(table(c(specVals[,m], discRange))) - rep(1, length(discRange)))
+    b <- barplot(discVal, beside = FALSE, xlab = name,
+                 axes = FALSE, col = gray.colors(nrow(discVal), start = 0.3))
+    
+    for(i in seq_along(cols)){ # each bar gets its own color
+      disc <- discVal
+      disc[,-i] <- NA
+      colnames(disc)[-i] <- NA
+      barplot(disc, col = c(rep(transCols[i], (nrow(discVal)))), 
+              add = TRUE, axes = FALSE)
+    }
+    
+    #text for the bars
+    h <- sapply(seq_len(ncol(discVal)), 
+                function(i) cumsum(discVal[,i])) - discVal/2
+    text(b, y=t(h), labels = rep(levels(factor(discRange)), each = length(t)))
+  }
+  
+  # title
+  if(missing(main)) main <- NULL
+  if(missing(sub)){
+    if(length(t) == 1) timeText <- paste("at time t =", t) 
+    else timeText <- "at different times"
+    sub <- paste0("Density plot of ", length(unique(x$seed)), 
+                  " simulations ", timeText,".")
+  } 
+  if(!is.null(main)) mtext(main, font = 2, line = 0, cex = 1.5, outer = TRUE)
+  if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
+}
+

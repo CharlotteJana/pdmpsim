@@ -150,26 +150,7 @@ plotTimes_old <- function(tdata, vars, threshold = NULL){
 }
 
 
-#' Histogram over all simulations
-#' 
-#' A plot method for simulations of a piecewise deterministic markov process 
-#' (\code{\link{pdmp}}). It plots every continous variable in its own histogram 
-#' and all discrete variables in a stacked barplot. 
-#' 
-#' @note All variables with more than six different values are considered as 
-#' continous.
-#' @param x object of class \code{\link{multSim}} or \code{\link{timeData}}
-#' @param t a single time value at which the histogram shall be plotted
-#' @param main optional character string for the title of the plot. If \code{x} 
-#' is a \code{multSim} object, \code{main} will be set as \code{descr(x$model)} 
-#' if not otherwise specified.
-#' @param sub optional character string for the subtitle of the plot. The 
-#' default value for a \code{multSim} object \code{x} gives informations about 
-#' parameters and the initial values.
-#' @param ... additional parameters passed to the default method of 
-#' \code{\link[base]{hist}}
-#' @name hist
-#' @export
+
 hist_old <- function(x, t, main, sub, ...){
   
   if(missing(main)) main <- NULL
@@ -229,20 +210,7 @@ hist_old <- function(x, t, main, sub, ...){
   if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
 }
 
-#' @title Plot Density Estimations
-#'  
-#' @description A plot method for simulations of a piecewise deterministic 
-#' markov process (\code{\link{pdmp}}). It computes and plots a density over all 
-#' simulations of the PDMP, seperately for every time value and every 
-#' contious variable. Discrete variables are plotted in a stacked barplot.
-#'
-#' @param ... additional parameters passed to the default method of 
-#' \code{\link[stats]{density}}
-#' @inheritParams hist
-#' @name density
-#' @importFrom stats density
-#' @export
-density.timeData <- function(x, main, sub, ...){ 
+density_old <- function(x, main, sub, ...){ 
   
   #if (!requireNamespace("stats", quietly = TRUE)) {
   #  stop("Pkg 'stats' needed for this function to work. 
