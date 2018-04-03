@@ -170,7 +170,7 @@ plotTimes_old <- function(tdata, vars, threshold = NULL){
 #' \code{\link[base]{hist}}
 #' @name hist
 #' @export
-hist.timeData <- function(x, t, main, sub, ...){
+hist_old <- function(x, t, main, sub, ...){
   
   if(missing(main)) main <- NULL
   if(missing(sub)) sub <- paste("Histogram of ", nrow(x), 
@@ -220,6 +220,8 @@ hist.timeData <- function(x, t, main, sub, ...){
       h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
     }
   }
+  print(discVal)
+  print(h)
   text(b, y=t(h), labels = rep(levels(factor(discRange)), each = length(d)))
   
   # title

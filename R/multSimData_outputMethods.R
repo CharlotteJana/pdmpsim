@@ -1,3 +1,8 @@
+#======== todo =================================================================
+# hist: bei mehreren diskreten Variablen wird der Barplot nicht 
+#       korrekt beschriftet (names.arg = c("dA", "dB") geht nicht!)
+
+
 #' @include multSimData.R
 NULL
 
@@ -278,7 +283,7 @@ plotStats <- function(x, vars, funs){
 #========== plotTimes ===============
 
 #' @importFrom dplyr mutate
-plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot"){
+plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot", ...){
   
   # tdata = data.frame with columns "seed", "time", 
   # and columns for the variables (named by the name of the variable)
@@ -327,11 +332,14 @@ plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot"){
     ggplot2::geom_hline(yintercept = 1, col = "grey")
   
   if(plottype == "boxplot")
-    plot <- plot + ggplot2::geom_boxplot()
+    plot <- plot + ggplot2::geom_boxplot(...)
   else if(plottype == "violin")
-    plot <- plot + ggplot2::geom_violin(draw_quantiles = 0.5)
+    plot <- plot + ggplot2::geom_violin(draw_quantiles = 0.5, ...)
+  else if(plottype == "dotplot")
+    plot <- plot + ggplot2::geom_dotplot(binaxis="y", stackdir="center", ...)
   else
-    stop("variable 'plottype' should be either 'boxplot' or 'violin'.")
+    stop("variable 'plottype' should be either 'boxplot', 
+         'violin' or 'dotplot'.")
   
   # print red point for mean
   plot <- plot + ggplot2::stat_summary(fun.y = mean, geom = "point", 
@@ -350,3 +358,91 @@ plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot"){
   invisible(plot)
   return(plot)
   }
+
+#========== hist ================
+
+#' Histogram over all simulations
+#' 
+#' A plot method for simulations of a piecewise deterministic markov process 
+#' (\code{\link{pdmp}}). It plots every continous variable in its own histogram 
+#' and all discrete variables in a stacked barplot. 
+#' 
+#' @note All variables with more than six different values are considered as 
+#' continous.
+#' @param x object of class \code{\link{multSimData}},
+#' \code{\link{multSim}} or \code{\link{multSimCsv}}
+#' @param t a single time value at which the histogram shall be plotted.
+#' The parameter can be omitted if \code{x} contains only one time value.
+#' @param main optional character string for the title of the plot. If \code{x} 
+#' is a \code{multSim} object, \code{main} will be set as \code{descr(x$model)} 
+#' if not otherwise specified.
+#' @param sub optional character string for the subtitle of the plot. The 
+#' default value for a \code{multSim} object \code{x} gives informations about 
+#' parameters and the initial values.
+#' @param ... additional parameters passed to the default method of 
+#' \code{\link[base]{hist}}
+#' @name hist
+#' @export
+hist.multSimData <- function(x, t, main, sub, ...){
+  
+  if(missing(t)) t <- unique(x$time)
+  if(length(t) > 1) 
+    stop("This method requires a single value for variable 't'.")
+  
+  #------ Prepare the data for plotting ------------
+  
+  data <- subset(x, time == t)
+  if(nrow(data) == 0) 
+    stop("There are no simulations for t = ", t, ".")
+  
+  contData <- subset(data, type == "cont")
+  discData <- subset(data, type == "disc")
+  n <- unique(contData$variable)
+  d <- unique(discData$variable)
+  
+  #---------- Create Plot ---------------------
+  
+  if(!is.null(dev.list())) dev.off()
+  plot.new()
+  opar <- par(no.readonly = TRUE)
+  on.exit(par(opar))
+  par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
+  layout(t(c(rep(seq_along(n), each = 2), length(n)+1)))
+  
+  for(name in n){
+    hist(subset(contData, variable == name)$value,
+         xlab = name, ylab = "", col = "grey", main = NULL, ...)
+  }
+  
+  dVal <- NULL
+  dRange <- unique(discData$value)
+  for(name in d){
+    dVal <- cbind(dVal, as.matrix(table(
+      c(subset(discData, variable==name)$value, dRange) - 1
+    )))
+  }
+  colnames(dVal) <- d
+  # warum funktioniert names.arg = as.character(d) nicht????
+  b <- barplot(dVal, beside = FALSE, axes = FALSE, 
+               col = gray.colors(nrow(dVal), start = 0.6))
+  
+  #text for the bars
+  h <- vapply(seq_len(ncol(dVal)), 
+              function(i) cumsum(dVal[, i]),
+              numeric(nrow(dVal)))-dVal/2
+  smallBarIndex <- which(dVal <= 0.04*nrow(discData), arr.ind = TRUE)
+  if(length(smallBarIndex) != 0){
+    for(i in seq_len(nrow(smallBarIndex))){
+      h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
+    }
+  }
+  print(dVal)
+  text(b, y=t(h), labels = rep(levels(factor(dRange)), each = length(d)))
+  
+  # title
+  if(missing(main)) main <- NULL
+  if(missing(sub)) sub <- paste("Histogram of ", length(unique(data$seed)), 
+                                " simulations at time t = ", t, ".", sep = "")
+  if(!is.null(main)) mtext(main, font = 2, line = 0, cex = 1.5, outer = TRUE)
+  if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
+}
