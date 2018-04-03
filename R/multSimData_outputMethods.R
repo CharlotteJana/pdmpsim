@@ -1,7 +1,11 @@
 #======== todo =================================================================
 # hist: bei mehreren diskreten Variablen wird der Barplot nicht 
 #       korrekt beschriftet (names.arg = c("dA", "dB") geht nicht!)
-
+# plotStats: label oben hinzufügen
+# plotStats: missing funktioniert nicht, warum?
+# summarize_at: correct generic function definition?
+# density: in plotDensity umbenennen?
+# density: warum muss stats in imports und darf nicht zu suggest?
 
 #' @include multSimData.R
 NULL

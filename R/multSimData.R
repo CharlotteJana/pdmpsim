@@ -1,7 +1,6 @@
 #======== todo =================================================================
 # discVarNames rausnehmen und durch slot ersetzen!
 # plotMethoden umschreiben, so dass sie multSimData benutzen
-# dokumentieren
 # tests schreiben
 # methode für multSimCsv sehr langsam, eventuell umschreiben?
 
@@ -10,6 +9,33 @@ NULL
 
 #----------- getMultSimData --------------
 
+#' Create data.frame with simulations
+#'
+#' This method transforms objects of class \code{multSim} or \code{multSimCsv}
+#' into a specific data.frame of class \code{multSimData}. Most plot method
+#' of package \pkg{pdmpsim} are based on this class. The data.frame has five
+#' columns:
+#' \itemize{
+#' \item \code{time} for the time value,
+#' \item \code{seed} for the seed on which the simulation was created,
+#' \item \code{type} indicating if the variable is discrete or continous,
+#' \item \code{variable} for the name of the simulated variable,
+#' \item \code{value} for the simulated value}.
+#' 
+#' Methods that use objects of class \code{multSimData} as input are
+#' \code{\link{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
+#' 
+#' @param x an object of class \code{\link{multSim}} or \code{\link{multSimCsv}}
+#' @param seeds integer vector with specific seeds for which the simulation
+#' results (for all times) shall appear in the data.frame
+#' @param times vector with specific time values for which the simulation
+#' results (for all seeds) shall appear in the data.frame
+#' @param discVarName character vector giving the names of all discrete
+#' variables. If no vector is given, all variables with less than six different
+#' values will be considered as discrete, whereas all others are considered
+#' as continous.
+#' @return a data.frame of class \code{multSimData} with simulation results.
 #' @name multSimData
 #' @aliases getmultsimdata multSimData multsimdata
 #' @export
