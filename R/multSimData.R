@@ -1,6 +1,5 @@
 #======== todo =================================================================
 # discVarNames rausnehmen und durch slot ersetzen!
-# plotMethoden umschreiben, so dass sie multSimData benutzen
 # tests schreiben
 # methode für multSimCsv sehr langsam, eventuell umschreiben?
 
@@ -20,14 +19,14 @@ NULL
 #' \item \code{seed} for the seed on which the simulation was created,
 #' \item \code{type} indicating if the variable is discrete or continous,
 #' \item \code{variable} for the name of the simulated variable,
-#' \item \code{value} for the simulated value}.
-#' 
+#' \item \code{value} for the simulated value.} 
 #' Methods that use objects of class \code{multSimData} as input are
 #' \code{\link{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' 
-#' @param x an object of class \code{\link{multSim}} or \code{\link{multSimCsv}}
-#' @param seeds integer vector with specific seeds for which the simulation
+#' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}}
+#' or \code{multSimData}
+#' @param seeds vector with specific seeds for which the simulation
 #' results (for all times) shall appear in the data.frame
 #' @param times vector with specific time values for which the simulation
 #' results (for all seeds) shall appear in the data.frame
@@ -94,6 +93,8 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
   
   for(j in seq_along(seedIndex)){
     seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
+    if(length(timeIndex) == 1)
+      seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(seeds[j]), seedData))
   }
   

@@ -460,6 +460,9 @@ hist.multSimData <- function(x, t, main, sub, ...){
 #' all simulations of the PDMP, seperately for every time value and every 
 #' contious variable. Discrete variables are plotted in a stacked barplot.
 #'
+#'#' @param t a vector of time values at which the densities shall be plotted. 
+#' If \code{x} is of class \code{\link{timeData}}, all existing time values 
+#' will be taken.
 #' @param ... additional parameters passed to the default method of 
 #' \code{\link[stats]{density}}
 #' @inheritParams hist
@@ -482,6 +485,7 @@ density.multSimData <- function(x, t, main, sub, ...){
   discData <- subset(data, type == "disc")
   n <- unique(contData$variable)
   d <- unique(discData$variable)
+  simnr <- length(unique(x$seed))
   
   if(!is.null(dev.list())) dev.off()
   plot.new()
@@ -490,7 +494,6 @@ density.multSimData <- function(x, t, main, sub, ...){
   par(oma = c(0,1,4,0))
   layout(t(c(rep(seq_along(n), each = 2), seq_along(d) + length(n))))
   cols <- colorRampPalette(c("green", "blue", "red"))(length(t))
-  transCols <- paste0(cols, "6f")
   
   #density plot for every continuous variable
   for(name in n){
@@ -517,16 +520,13 @@ density.multSimData <- function(x, t, main, sub, ...){
     discRange <- unique(c(specVals))
     discVal <- sapply(seq_along(t), function(m) 
       as.matrix(table(c(specVals[,m], discRange))) - rep(1, length(discRange)))
-    b <- barplot(discVal, beside = FALSE, xlab = name,
-                 axes = FALSE, col = gray.colors(nrow(discVal), start = 0.3))
+
+    # bars with colors as background
+    fullbars <- rep(simnr, length(cols))
+    barplot(fullbars, col = cols, axes = FALSE)
     
-    for(i in seq_along(cols)){ # each bar gets its own color
-      disc <- discVal
-      disc[,-i] <- NA
-      colnames(disc)[-i] <- NA
-      barplot(disc, col = c(rep(transCols[i], (nrow(discVal)))), 
-              add = TRUE, axes = FALSE)
-    }
+    b <- barplot(discVal, beside = FALSE, xlab = name, add = TRUE, axes = FALSE,
+                 col = gray.colors(nrow(discVal), alpha = 0.6, end = 1))
     
     #text for the bars
     h <- sapply(seq_len(ncol(discVal)), 
@@ -539,10 +539,8 @@ density.multSimData <- function(x, t, main, sub, ...){
   if(missing(sub)){
     if(length(t) == 1) timeText <- paste("at time t =", t) 
     else timeText <- "at different times"
-    sub <- paste0("Density plot of ", length(unique(x$seed)), 
-                  " simulations ", timeText,".")
+    sub <- paste0("Density plot of ", simnr, " simulations ", timeText,".")
   } 
   if(!is.null(main)) mtext(main, font = 2, line = 0, cex = 1.5, outer = TRUE)
   if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
 }
-

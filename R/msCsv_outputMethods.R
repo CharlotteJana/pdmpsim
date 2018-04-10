@@ -1,3 +1,8 @@
+#======== todo =================================================================
+# dokumentieren, dass man getMultSimData aufrufen muss, um die entsprechenden 
+# print-methoden verwenden zu können.
+# eventuell methoden hinzufügen?
+
 #' @export
 print.multSimCsv <- function(x){
   cat("An S3-object of class", class(x)[1], "with elements \n\n")
