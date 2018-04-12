@@ -5,7 +5,7 @@
 # plot: title und subtitle übergben können
 # subtitle: anzahl der Seeds mit Hinschreiben
 
-#' @include pdmp_class.R pdmp_sim.R multSim.R getTimeslice.R multSimData_outputMethods.R
+#' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL
 
 
@@ -70,21 +70,18 @@ summary.multSim <- function(x, entries = 1:(min(5,length(x$seeds)))){
 #' @rdname hist
 hist.multSim <- function(x, t, main, ...){
   if(missing(main)) main <- x$model@descr
-  timeSlice <- getTimeslice(x, times = t)
-  hist(timeSlice, t = t, main = main, ...)
+  data <- getMultSimData(x, times = t)
+  hist(data, t = t, main = main, ...)
 }
 
-#' @param t a vector of time values at which the densities shall be plotted. 
-#' If \code{x} is of class \code{\link{timeData}}, all existing time values 
-#' will be taken.
 #' @rdname density
 density.multSim <- function(x, t, main, ...){
   if(missing(main)) main <- x$model@descr
-  timeText <- ifelse(length(t) == 1, 
-                     paste("at time t =", t), 
-                     "at different times")
-  timeSlice <- getTimeslice(x, times = t)
-  density(timeSlice, main = main, ...)
+  # timeText <- ifelse(length(t) == 1, 
+  #                    paste("at time t =", t), 
+  #                    "at different times")
+  data <- getMultSimData(x, times = t)
+  density(data, main = main, ...)
 }
 
 #' @importFrom dplyr summarise

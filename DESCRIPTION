@@ -30,8 +30,6 @@ Suggests: Deriv,
 RoxygenNote: 6.0.1
 Collate: 
     'data.R'
-    'getSimulations.R'
-    'getTimeslice.R'
     'msCsv.R'
     'msCsv_calculations.R'
     'msCsv_outputMethods.R'
