@@ -1,2 +1,0 @@
-library(simecol)
-devtools::document(".")

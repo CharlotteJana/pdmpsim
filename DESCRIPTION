@@ -1,15 +1,16 @@
 Package: pdmpsim
 Type: Package
-Title: Simulate piecewise deterministic markov processes
+Title: Simulate Piecewise Deterministic Markov Processes
 Version: 1.0-1
 Author: Volkmar Liebscher, Charlotte Jana
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
-Description: A package to simulate piecewise deterministic markov processes (PDMPs).
-    It also contains methods to store multiple simulations, calculate some
-    statistics on them, plot methods and a function to calculate the generator of a PDMP.
-    The PDMPs can have multiple discrete and continous variables, but are not allowed to 
-    have borders or a varying number of continous variables (the number should be independent 
-    of the state of the discrete variable).
+Description: Simulate certain stochastic processes  known as piecewise deterministic 
+    markov processes (PDMPs). The package contains methods to simulate, store multiple 
+    simulations, calculate some statistics on them, plot methods and a function to 
+    calculate the generator of a PDMP. The PDMPs can have multiple discrete and 
+    continous variables, but are not allowed to have borders or a varying number 
+    of continous variables (the number should be independent of the state of the 
+    discrete variable).
 License: GPL(>= 2)
 Encoding: UTF-8
 LazyData: true
@@ -18,14 +19,15 @@ Imports: deSolve,
     dplyr,
     ggplot2,
     LaF,
+    reshape2,
     stats
 Suggests: Deriv,
     ggrepel,
     gtable,
     plot3Drgl,
     RColorBrewer,
-    reshape2,
     testthat,
+    tidyr,
     vdiffr
 RoxygenNote: 6.0.1
 Collate: 

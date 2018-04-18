@@ -11,19 +11,21 @@ NULL
 
 #### output methods #####
 
+#' @importFrom utils str
+#' @importFrom stats median
 print.multSim <- function(x){
   cat("An S3-object of class", class(x)[1], "with elements \n\n")
   names <- names(x)
   for (name in names) {
     content <- x[name]
     if (!is.null(content)) {
-      if (name == "seeds") {cat("$seeds\n"); str(x$seeds)}
+      if (name == "seeds") {cat("$seeds\n"); utils::str(x$seeds)}
       if (name == "timeList") {
         times <- vapply(x$timeList, function(i) i[1:3], numeric(3))
         if(is.null(x$timeList)) cat("$timeList\nNULL\n")
         else{
           cat("$timeList\n\n time per simulation (median):\n")
-          print(apply(times, 1, median, na.rm = TRUE))
+          print(apply(times, 1, stats::median, na.rm = TRUE))
           cat("\n time altogether:\n")
           print(rowSums(times))
         }

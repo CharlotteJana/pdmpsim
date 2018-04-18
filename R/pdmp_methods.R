@@ -113,6 +113,7 @@ setMethod(f = "format",
 
 #---------- print --------------
 
+#' @importFrom utils str
 #' @export
 setMethod(f = "print",
           signature = "pdmpModel",
@@ -132,7 +133,7 @@ setMethod(f = "print",
                     if (slotname == "solver") next
                     cat("Slot ", dQuote(slotname), ":\n", sep = "")
                     if (slotname == "out") cat("  outputs exist ...\n")
-                    else if (slotname == "parms")  str(slotcontent)
+                    else if (slotname == "parms")  utils::str(slotcontent)
                     else print(slotcontent, ...)
                     cat("\n")
                   }
@@ -157,6 +158,7 @@ setMethod(f = "print",
 NULL
 
 #' @rdname plot-methods
+#' @importFrom graphics title
 #' @export
 setMethod("plot", signature(x="pdmpModel", y="missing"),
           function(x, y, ...) {
@@ -164,7 +166,7 @@ setMethod("plot", signature(x="pdmpModel", y="missing"),
               stop("Please simulate the model before plotting", call. = FALSE)
             o.par <- par(oma = c(0,0,2,0))
             do.call("plot", alist(x@out, ...))
-            title(x@descr, line = -0.3, outer = TRUE)
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
             par(o.par)
           }
 )

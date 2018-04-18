@@ -44,6 +44,7 @@ NULL
 #' @aliases sim
 #' @importMethodsFrom simecol sim
 #' @importFrom simecol fromtoby
+#' @importFrom stats rexp
 #' @export
 setMethod("sim", "pdmpModel", function(obj, initialize = FALSE, 
                                        seed = 1, outrate = FALSE, 

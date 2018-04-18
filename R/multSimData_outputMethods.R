@@ -13,12 +13,17 @@ NULL
 #========== plot ===============
 
 #' @importFrom dplyr summarise
+#' @importFrom ggplot2 ggplot aes geom_bin2d stat_density_2d geom_line
+#' @importFrom ggplot2 geom_smooth scale_color_discrete labs facet_wrap
 #' @export
 plot.multSimData <- function(x, title = NULL, subtitle = NULL, 
                              discPlot = "smooth", contPlot = "bin2d", ...){
-  require(ggplot2)
-  
+
   ### prepare data
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- type <- variable <- value <- count <- NULL
+  
   contData <- subset(x, type == "cont")
   discData <- subset(x, type == "disc")
   discData$variable <- factor(discData$variable)
@@ -26,43 +31,42 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
   discData <- dplyr::summarise(discData, count = n())
   discData$value <- as.ordered(discData$value)
   
-  plot <- ggplot(data = NULL, aes(x = time))
+  plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time))
   
   ### continous variables
   if(contPlot == "bin2d"){
     n <- length(unique(contData$variable))
-    plot <- plot + geom_bin2d(data = contData, aes(y = value), ...) +
+    plot <- plot + ggplot2::geom_bin2d(data = contData, 
+                                       ggplot2::aes(y = value), ...) +
       #viridis::scale_fill_viridis() +
-      scale_fill_distiller(palette = "Spectral", 
-                           name = switch(as.character(length(n)),
-                                         "1" = "Continous\nvariable",
-                                         "Continous\nvariables"))
+      ggplot2::scale_fill_distiller(palette = "Spectral", 
+                                    name = switch(as.character(length(n)),
+                                                  "1" = "Continous\nvariable",
+                                                  "Continous\nvariables"))
   }
   if(contPlot == "density_2d"){
-    plot <- plot + stat_density_2d(data = contData,
-                                   aes(y = value, colour = value),
-                                   ...)
+    plot <- plot + ggplot2::stat_density_2d(
+      data = contData, ggplot2::aes(y = value, colour = value),...)
   }
   ### discrete variables
   if(discPlot == "line"){
-    plot <- plot + geom_line(data = discData,
-                             aes(y = count, group = value, color = value),
-                             ...)
+    plot <- plot + ggplot2::geom_line(
+      data = discData, ggplot2::aes(y=count, group=value, color=value), ...)
   }
   if(discPlot == "smooth"){
-    plot <- plot + geom_smooth(data = discData, method = "auto",
-                               aes(y = count, group = value, color = value),
-                               ...)
+    plot <- plot + ggplot2::geom_smooth(
+      data = discData, ggplot2::aes(y = count, group = value, color = value),
+      method = "auto", ...)
   }
-  plot <- plot + scale_color_discrete(name = "Discrete\nValues")
+  plot <- plot + ggplot2::scale_color_discrete(name = "Discrete\nValues")
   
   ### text
   if(missing(subtitle))
     subtitle <- paste("Number of simulations:", length(unique(x$seed)))
-  plot <- plot + labs(title = title, subtitle = subtitle, y = NULL)
+  plot <- plot + ggplot2::labs(title = title, subtitle = subtitle, y = NULL)
   
   ### facet
-  plot <- plot + facet_wrap( ~ variable, scales = "free_y")
+  plot <- plot + ggplot2::facet_wrap( ~ variable, scales = "free_y")
   
   return(plot)
 }
@@ -79,6 +83,10 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' @param x data.frame of class \code{\link{multSimData}}.
 #' @note A maximal number of 4 seeds can be plotted. 
 #' The method requires the package \pkg{tidyr}.
+#' @importFrom utils tail
+#' @importFrom grDevices rainbow
+#' @importFrom ggplot2 ggplot aes labs geom_rect aes_string geom_line
+#' @importFrom ggplot2 scale_fill_identity scale_color_manual facet_wrap
 #' @export
 plotSeeds <- function(x, trange = c(0, tail(x$time, 1)), log = FALSE){
   
@@ -99,7 +107,7 @@ plotSeeds <- function(x, trange = c(0, tail(x$time, 1)), log = FALSE){
   #* These notes occur because surv, lower, upper, and variable are called
   #* within transform(), melt(), and ddply() where there is a data argument
   #* that R CMD check can't reconcile with the variables.
-  value <- variable <- NULL
+  time <- value <- variable <- type <- NULL
   
   #------ Prepare the data for plotting ------------
   
@@ -126,9 +134,9 @@ plotSeeds <- function(x, trange = c(0, tail(x$time, 1)), log = FALSE){
 
   #---------- Create Plot ---------------------
   
-  plot <- ggplot(data = NULL, aes(x = time)) + 
-    coord_cartesian(xlim=trange) +   # zoom in
-    labs(y = "", x = "time")  
+  plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
+    ggplot2::coord_cartesian(xlim=trange) +   # zoom in
+    ggplot2::labs(y = "", x = "time")  
   
   #** Plot discrete variables
   # if(log){
@@ -159,31 +167,30 @@ plotSeeds <- function(x, trange = c(0, tail(x$time, 1)), log = FALSE){
      names(vals) <- rep(discVarNames[i], length(vals))
      discValues <- c(discValues, vals)
      
-     plot <- plot + geom_rect(data = discData,
-       aes_string(
+     plot <- plot + ggplot2::geom_rect(data = discData,
+                                       ggplot2::aes_string(
          fill = paste0("col_", discVarNames[i]), 
          xmin = "time", xmax = "time+1", 
          ymin = min - i*height, ymax = min - (i - 1)*height))
   }
-  plot <- plot + scale_fill_identity("discrete\nvariables",
-                                     guide = "legend",
-                                     breaks = discCols,
-                                     labels = printVect(discValues,
-                                                        collapse = NULL)
+  plot <- plot + ggplot2::scale_fill_identity(
+    "discrete\nvariables", guide = "legend", breaks = discCols,
+    labels = printVect(discValues,collapse = NULL)
   )
 
   #** Plot continous variables
   cols <- c("#009E73", "#0072B2", "#D55E00", "#E69F00", 
             "#56B4E9", "#CC79A7", "#F0E442")
   plot <- plot + 
-    geom_line(data = contData, 
-              aes(x = time, y = value, colour = variable), 
-              size = 1) +
-    scale_colour_manual(name = "continous\nvariables", 
-                        values = cols[1:length(levels(contData$variable))])
+    ggplot2::geom_line(data = contData, 
+                       ggplot2::aes(x = time, y = value, colour = variable), 
+                       size = 1) +
+    ggplot2::scale_colour_manual(
+      name = "continous\nvariables", 
+      values = cols[1:length(levels(contData$variable))])
   
   # facet_wrap
-  plot <- plot + facet_wrap( ~ seed, ncol = 2)
+  plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
   #plot <- plot + facet_grid(variable ~ seed)
   
   print(plot)
@@ -210,20 +217,32 @@ summarise_at <- function (.tbl, .vars, .funs, ...) {
 #' @importFrom dplyr summarise_at group_by
 #' @export
 summarise_at.multSimData <- function(.tbl, .vars, .funs, ...){
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- NULL
+  
   .tbl <- group_by(.tbl, time)
   #return( callGeneric(.tbl, .vars, .funs, ..., .cols = NULL))
   return(dplyr::summarise_at(.tbl, .vars, .funs, ..., .cols = NULL))
 }
 
+#' @importFrom reshape2 melt
+#' @importFrom ggplot2 ggplot aes geom_line scale_x_continuous theme ggplotGrob
+#' @importFrom ggplot2 unit geom_blank geom_segment arrow geom_text
+#' @importFrom ggplot2 guides theme_minimal element_blank element_rect
 #' @importFrom dplyr mutate if_else group_by funs
 plotStats <- function(x, vars, funs){
   
   ##todo: missing funktioniert nicht, warum ????
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
-  if(missing(funs)) funs <- dplyr::funs(min, median, mean, max, sd)
+  if(missing(funs)) funs <- dplyr::funs("min", "median", "mean", "max", "sd")
   
   if (!requireNamespace("grid", quietly = TRUE)) {
     stop("Pkg 'grid' needed for this function to work. 
+         Please install it.", call. = FALSE)
+  }
+  if (!requireNamespace("tidyr", quietly = TRUE)) {
+    stop("Pkg 'tidyr' needed for this function to work. 
          Please install it.", call. = FALSE)
   }
   if (!requireNamespace("gtable", quietly = TRUE)) {
@@ -233,47 +252,52 @@ plotStats <- function(x, vars, funs){
   
   #------ Prepare the data for plotting ------------
   
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- variable <- NULL
+  
   data <- subset(x, select = -type)
   data <- tidyr::spread(data, variable, value)
   data <- reshape2::melt(summarise_at(data, vars, funs), id = c("time"))
   colnames(data)[2] <- "fun"
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
-  value <- fun <- name <- NULL
+  value <- fun <- name <- type <- NULL
   
   #---------- Create Plot ---------------------
   
-  plot <- ggplot(data = data, aes(
+  plot <- ggplot2::ggplot(data = data, ggplot2::aes(
     x = time, y = value, group = fun, color = fun)) +
-    geom_line() + 
-    scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
-    theme(legend.position = "none", plot.margin = unit(c(1,0,1,1),"line"))
+    ggplot2::geom_line() + 
+    ggplot2::scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
+    ggplot2::theme(legend.position = "none", 
+                   plot.margin = unit(c(1,0,1,1),"line"))
   
   #---------- Create labeling on the right side ---------
   
   d2 <- data[which(data$time == max(data$time)),]
   #d2 <- ddply(data, "fun", summarise, time=0, value=value[length(value)])
   
-  plegend <- ggplot(data, aes(x=time, y=value, colour=fun)) + 
-    geom_blank() +
-    geom_segment(data = d2, 
-                 aes(x=2, xend = 0, y = value, yend = value),
-                 arrow=arrow(length=unit(2,"mm"), type="closed")) +
-    geom_text(data = d2, ggplot2::aes(x=2.5, label = fun), hjust = 0) +
-    scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
-    guides(colour = "none") + 
-    theme_minimal() + 
-    theme(line = element_blank(),
-          text = element_blank(),
-          panel.background = element_rect(
-          fill="grey95", linetype = "blank"))
+  plegend <- ggplot2::ggplot(data, ggplot2::aes(x=time, y=value, colour=fun)) + 
+    ggplot2::geom_blank() +
+    ggplot2::geom_segment(data = d2, 
+                          ggplot2::aes(x=2, xend = 0, y = value, yend = value),
+                          arrow = ggplot2::arrow(length=unit(2,"mm"), 
+                                                 type="closed")) +
+    ggplot2::geom_text(data = d2, ggplot2::aes(x=2.5, label = fun), hjust = 0) +
+    ggplot2::scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
+    ggplot2::guides(colour = "none") + 
+    ggplot2::theme_minimal() + 
+    ggplot2::theme(line = ggplot2::element_blank(),
+                    text = ggplot2::element_blank(),
+                   panel.background = ggplot2::element_rect(fill="grey95", 
+                                                            linetype = "blank"))
   gl <- gtable::gtable_filter(ggplotGrob(plegend), "panel")
   
   # add a cell next to the main plot panel, and insert gl there
-  g <- ggplotGrob(plot)
+  g <- ggplot2::ggplotGrob(plot)
   index <- subset(g$layout, name == "panel")
-  g <- gtable::gtable_add_cols(g, unit(1, "strwidth", "line # 1") + 
-                                 unit(1, "cm"))
+  g <- gtable::gtable_add_cols(g, ggplot2::unit(1, "strwidth", "line # 1") + 
+                                  ggplot2::unit(1, "cm"))
   g <- gtable::gtable_add_grob(g, gl, t = index$t, 
                                l = ncol(g), b = index$b, r = ncol(g))
   grid::grid.newpage()
@@ -294,10 +318,6 @@ plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot", ...){
   # method "getTimeslice" provides tdata in the required form for 
   # objects of class multSimCsv
   
-  if (!requireNamespace("reshape2", quietly = TRUE)) {
-    stop("Pkg 'reshape2' needed for this function to work. 
-         Please install it.", call. = FALSE)
-  }
   if (!requireNamespace("ggrepel", quietly = TRUE)) {
     stop("Pkg 'ggrepel' needed for this function to work. 
          Please install it.", call. = FALSE)
@@ -317,7 +337,7 @@ plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot", ...){
   data <- data[data$variable %in% vars, ]
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
-  variable <- value <- print.outlier <- NULL
+  variable <- value <- print.outlier <- type <- NULL
   
   #----- Find seeds that belong to outliers --------
   
@@ -384,8 +404,10 @@ plotTimes <- function(x, vars, threshold = NULL, plottype = "boxplot", ...){
 #' default value for a \code{multSim} object \code{x} gives informations about 
 #' parameters and the initial values.
 #' @param ... additional parameters passed to the default method of 
-#' \code{\link[base]{hist}}
+#' \code{\link[graphics]{hist}}
 #' @name hist
+#' @importFrom graphics hist par plot.new layout barplot text mtext
+#' @importFrom grDevices dev.list dev.off gray.colors
 #' @export
 hist.multSimData <- function(x, t, main, sub, ...){
   
@@ -394,6 +416,9 @@ hist.multSimData <- function(x, t, main, sub, ...){
     stop("This method requires a single value for variable 't'.")
   
   #------ Prepare the data for plotting ------------
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- type <- variable <- NULL
   
   data <- subset(x, time == t)
   if(nrow(data) == 0) 
@@ -406,16 +431,16 @@ hist.multSimData <- function(x, t, main, sub, ...){
   
   #---------- Create Plot ---------------------
   
-  if(!is.null(dev.list())) dev.off()
-  plot.new()
-  opar <- par(no.readonly = TRUE)
-  on.exit(par(opar))
-  par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
-  layout(t(c(rep(seq_along(n), each = 2), length(n)+1)))
+  if(!is.null(grDevices::dev.list())) grDevices::dev.off()
+  graphics::plot.new()
+  opar <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(opar))
+  graphics::par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
+  graphics::layout(t(c(rep(seq_along(n), each = 2), length(n)+1)))
   
   for(name in n){
-    hist(subset(contData, variable == name)$value,
-         xlab = name, ylab = "", col = "grey", main = NULL, ...)
+    graphics::hist(subset(contData, variable == name)$value,
+                   xlab = name, ylab = "", col = "grey", main = NULL, ...)
   }
   
   dVal <- NULL
@@ -427,8 +452,8 @@ hist.multSimData <- function(x, t, main, sub, ...){
   }
   colnames(dVal) <- d
   # warum funktioniert names.arg = as.character(d) nicht????
-  b <- barplot(dVal, beside = FALSE, axes = FALSE, 
-               col = gray.colors(nrow(dVal), start = 0.6))
+  b <- graphics::barplot(dVal, beside = FALSE, axes = FALSE, 
+                         col = grDevices::gray.colors(nrow(dVal), start = 0.6))
   
   #text for the bars
   h <- vapply(seq_len(ncol(dVal)), 
@@ -440,15 +465,16 @@ hist.multSimData <- function(x, t, main, sub, ...){
       h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
     }
   }
-  print(dVal)
-  text(b, y=t(h), labels = rep(levels(factor(dRange)), each = length(d)))
+  graphics::text(b, y = t(h), 
+                 labels = rep(levels(factor(dRange)), each = length(d)))
   
   # title
   if(missing(main)) main <- NULL
   if(missing(sub)) sub <- paste("Histogram of ", length(unique(data$seed)), 
                                 " simulations at time t = ", t, ".", sep = "")
-  if(!is.null(main)) mtext(main, font = 2, line = 0, cex = 1.5, outer = TRUE)
-  if(!is.null(sub)) mtext(sub, line = -2, outer = TRUE)
+  if(!is.null(main)) graphics::mtext(main, font = 2, line = 0, 
+                                     cex = 1.5, outer = TRUE)
+  if(!is.null(sub)) graphics::mtext(sub, line = -2, outer = TRUE)
 }
 
 #========== density ================
@@ -461,15 +487,20 @@ hist.multSimData <- function(x, t, main, sub, ...){
 #' contious variable. Discrete variables are plotted in a stacked barplot.
 #'
 #'#' @param t a vector of time values at which the densities shall be plotted. 
-#' If \code{x} is of class \code{\link{timeData}}, all existing time values 
-#' will be taken.
+#' If no vector is provided, every time value in the data.frame \code{x} will
+#' be plotted.
 #' @param ... additional parameters passed to the default method of 
 #' \code{\link[stats]{density}}
 #' @inheritParams hist
 #' @name density
 #' @importFrom stats density
+#' @importFrom grDevices dev.list dev.off gray.colors colorRampPalette
+#' @importFrom graphics plot.new par layout plot lines legend barplot text mtext
 #' @export
 density.multSimData <- function(x, t, main, sub, ...){ 
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- type <- variable <- NULL
   
   if(missing(t))
     t <- unique(x$time)
@@ -487,13 +518,13 @@ density.multSimData <- function(x, t, main, sub, ...){
   d <- unique(discData$variable)
   simnr <- length(unique(x$seed))
   
-  if(!is.null(dev.list())) dev.off()
+  if(!is.null(grDevices::dev.list())) grDevices::dev.off()
   plot.new()
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(oma = c(0,1,4,0))
   layout(t(c(rep(seq_along(n), each = 2), seq_along(d) + length(n))))
-  cols <- colorRampPalette(c("green", "blue", "red"))(length(t))
+  cols <- grDevices::colorRampPalette(c("green", "blue", "red"))(length(t))
   
   #density plot for every continuous variable
   for(name in n){

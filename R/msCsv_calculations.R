@@ -40,29 +40,29 @@ mean.multSimCsv <- function(x, ...){
 #' }
 
 
-
-calcOutliers <- function(tdata, IQRfactor = 3){
-
-  # compute iqr
-
-  lowerq <- aggregate(tdata[,c(-1, -2)], list(tdata$time), quantile, 0.25)
-  upperq <- aggregate(tdata[,c(-1, -2)], list(tdata$time), quantile, 0.75)
-  iqr <- upperq - lowerq
-  #iqr <- aggregate(tdata[,c(-1,-2)], list(tdata$time), IQR)
-
-  upper <- (iqr * IQRfactor) + upperq # upper thresholds
-  lower <- lowerq - (iqr * IQRfactor) # lower thresholds
-
-  is.upper.outlier <- apply(tdata, 1, function(row) 
-    row[!names(row) %in% c("seed")] > upper[which(upper$Group.1 == row["time"]), ])
-  is.lower.outlier <- apply(tdata, 1, function(row) 
-    row[!names(row) %in% c("seed")] < lower[which(lower$Group.1 == row["time"]), ])
-
-  seeds.upper <- apply(is.upper.outlier, 1, function(row) tdata$seed[row])
-  seeds.lower <- apply(is.lower.outlier, 1, function(row) tdata$seed[row])
-
-  seeds <- sort(unique(c(unlist(seeds.upper), unlist(seeds.lower))))
-
-  return(seeds)
-} # funktioniert nicht?
+# 
+# calcOutliers <- function(tdata, IQRfactor = 3){
+# 
+#   # compute iqr
+# 
+#   lowerq <- aggregate(tdata[,c(-1, -2)], list(tdata$time), quantile, 0.25)
+#   upperq <- aggregate(tdata[,c(-1, -2)], list(tdata$time), quantile, 0.75)
+#   iqr <- upperq - lowerq
+#   #iqr <- aggregate(tdata[,c(-1,-2)], list(tdata$time), IQR)
+# 
+#   upper <- (iqr * IQRfactor) + upperq # upper thresholds
+#   lower <- lowerq - (iqr * IQRfactor) # lower thresholds
+# 
+#   is.upper.outlier <- apply(tdata, 1, function(row) 
+#     row[!names(row) %in% c("seed")] > upper[which(upper$Group.1 == row["time"]), ])
+#   is.lower.outlier <- apply(tdata, 1, function(row) 
+#     row[!names(row) %in% c("seed")] < lower[which(lower$Group.1 == row["time"]), ])
+# 
+#   seeds.upper <- apply(is.upper.outlier, 1, function(row) tdata$seed[row])
+#   seeds.lower <- apply(is.lower.outlier, 1, function(row) tdata$seed[row])
+# 
+#   seeds <- sort(unique(c(unlist(seeds.upper), unlist(seeds.lower))))
+# 
+#   return(seeds)
+# } # funktioniert nicht?
 

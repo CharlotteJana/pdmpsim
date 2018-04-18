@@ -51,6 +51,9 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
   seedIndex <- NULL
   all.times <- fromtoby(x$model@times)
   
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- seed <- type <- variable <- value <- NULL
+  
   if(missing(times) || is.null(times)){
     times <- all.times
     timeIndex <- seq_along(all.times)
@@ -186,7 +189,11 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
 
 #' @rdname multSimData
 #' @export
-getMultSimData.multSimData <- function(x, times, seeds){
+getMultSimData.multSimData <- function(x, times, seeds, discVarNames){
+  
+  # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+  time <- seed <- NULL
+  
   if(missing(times) || is.null(times))
     times <- unique(x$time)
   if(missing(seeds) || is.null(seeds))

@@ -88,6 +88,7 @@
 #' file, use \code{\link{loadMultSimCsv}} to create \code{lafList} automatically.
 #' @seealso loadMultSimCsv multSim multSim2multSimCsv
 #' @aliases multsimcsv
+#' @importFrom utils write.table
 #' @export
 multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"), 
                        append = FALSE, uniqueSeeds = TRUE, digits = NULL){
@@ -134,8 +135,8 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
   # write colnames
   if(!append){
     for(j in seq_along(names)){
-      write.table(t(colnames), csvNames[j], sep = ",", 
-                  append = FALSE, row.names = FALSE, col.names = FALSE)
+      utils::write.table(t(colnames), csvNames[j], sep = ",", 
+                         append = FALSE, row.names = FALSE, col.names = FALSE)
     }
   }
   if(uniqueSeeds){
@@ -165,9 +166,9 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
 
     # export to csv
     for(j in seq_along(names)){
-      write.table(format(t(c(seeds[i], out[,j+1])), digits = digits), 
-            csvNames[j], sep = ",", append = TRUE, 
-            row.names = FALSE, col.names = FALSE)
+      utils::write.table(format(t(c(seeds[i], out[,j+1])), digits = digits), 
+                         csvNames[j], sep = ",", append = TRUE, 
+                         row.names = FALSE, col.names = FALSE)
     }
   }
   if(i == length(seeds)) message("")
@@ -250,6 +251,7 @@ loadMultSimCsv.character <- function(x, dir = "."){
 #' all csv files that contain the simulated results with corresponding \pkg{LaF} 
 #' objects stored in element \code{lafList}. 
 #' @aliases multsim2multsimcsv
+#' @importFrom utils write.table
 #' @export
 multSim2multSimCsv <- function(ms, prefix = format(ms$model), 
                                append = FALSE, digits = NULL){
@@ -270,17 +272,17 @@ multSim2multSimCsv <- function(ms, prefix = format(ms$model),
   # write colnames
   if(!append){
     for(j in seq_along(names)){
-      write.table(t(c("Seed", times)), csvNames[j], 
-                  sep = ",", row.names = FALSE, col.names = FALSE)
+      utils::write.table(t(c("Seed", times)), csvNames[j], 
+                         sep = ",", row.names = FALSE, col.names = FALSE)
     }
   }
   
   # write simulations as rows
   for(i in seq_along(ms$outputList)){
     for(j in seq_along(names)){
-      write.table(format(t(c(ms$seeds[i], ms$outputList[[i]][,j+1])), 
-                  digits = digits), csvNames[j], sep = ",", 
-                  append = TRUE, row.names = FALSE, col.names = FALSE)
+      utils::write.table(format(t(c(ms$seeds[i], ms$outputList[[i]][,j+1])), 
+                                digits = digits), csvNames[j], sep = ",", 
+                         append = TRUE, row.names = FALSE, col.names = FALSE)
     }
   }
   
