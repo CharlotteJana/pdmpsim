@@ -41,7 +41,8 @@ test_that("filenames are correct", {
 test_that("results ms and msCsv are equal", {
   expect_identical(msCsv$model, ms$model)
   expect_identical(msCsv$seeds, ms$seeds)
-  expect_equal(msCsv$timeList, ms$timeList, tolerance = 0.1)
+  expect_identical(names(msCsv$timeList), names(ms$timeList))
+  expect_identical(length(msCsv$timeList), length(ms$timeList))
 })
 
 test_that("LaF links are correct", { #! hier wird im Quellcode die gleiche Funktion benutzt -> sinnloser test?

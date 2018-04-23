@@ -44,6 +44,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
                                                   "1" = "Continous\nvariable",
                                                   "Continous\nvariables"))
   }
+  
   if(contPlot == "density_2d"){
     plot <- plot + ggplot2::stat_density_2d(
       data = contData, ggplot2::aes(y = value, colour = value),...)
@@ -300,7 +301,7 @@ plotStats <- function(x, vars, funs){
                                   ggplot2::unit(1, "cm"))
   g <- gtable::gtable_add_grob(g, gl, t = index$t, 
                                l = ncol(g), b = index$b, r = ncol(g))
-  grid::grid.newpage()
+  #grid::grid.newpage()
   grid::grid.draw(g)
   
   #print(g)

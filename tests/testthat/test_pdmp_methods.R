@@ -38,10 +38,3 @@ test_that("method 'print' prints something", {
   expect_output(print(pdmp), "α: num 3")
   expect_output(print(pdmp), "Slot “times”:")
 })
-
-test_that("method 'plot' plots something", {
-  expect_error(plot(pdmp))
-  pdmp <- sim(pdmp, seed = 1, outSlot = TRUE)
-  testplot <- function() invisible(plot(pdmp))
-  vdiffr::expect_doppelganger("plot-pdmp", testplot, path = "")
-})

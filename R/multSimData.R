@@ -64,10 +64,11 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
   }
   if(missing(discVarNames)){
     discVarNames <- NULL
-    for(i in seq_along(x$model@init)){
-      if(length(unique(x$outputList[[1]][, i+1])) < 6) 
-        discVarNames <- cbind(discVarNames, names(init(x$model))[i])
-    }
+  }
+  
+  for(i in seq_along(x$model@init)){
+    if(length(unique(x$outputList[[1]][, i+1])) < 6) 
+      discVarNames <- cbind(discVarNames, names(init(x$model))[i])
   }
   
   # select times
@@ -98,7 +99,7 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
     seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
     if(length(timeIndex) == 1)
       seedData <- t(seedData)
-    data <- rbind(data, cbind(seed = rep(seeds[j]), seedData))
+    data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))
   }
   
   # every value gets its own row
@@ -163,9 +164,8 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
         seedIndex <- c(seedIndex, a)
     }
   }
-  
-  print("Drei")
-  
+
+  ### diese for-Schleife macht das Ganze so langsam!!!
   for(n in seq_along(init(x$model))){
     varName <- names(init(x$model))[n]
     for(i in seq_along(timeIndex)){
@@ -173,7 +173,7 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
         value <- as.numeric(x$lafList[[n]][seedIndex[j], timeIndex[i]+1])
         new_row <- data.frame(time = all.times[timeIndex[i]],
                               seed = x$seeds[seedIndex[j]],
-                              type = ifelse(is.element(varName, discVarNames), 
+                              type = ifelse(is.element(varName, discVarNames),
                                             "disc", "cont"),
                               variable = varName,
                               value = value)
@@ -182,14 +182,13 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
     }
   }
   attr(data, "class") <- c("multSimData", class(data))
-  
-  print("Vier")
+
   return(data)
 }
 
 #' @rdname multSimData
 #' @export
-getMultSimData.multSimData <- function(x, times, seeds, discVarNames){
+getMultSimData.multSimData <- function(x, times, seeds, discVarNames = NULL){
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
   time <- seed <- NULL
