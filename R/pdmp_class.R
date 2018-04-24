@@ -1,5 +1,6 @@
 #======== todo =================================================================
 #t1 jumptype beschreiben
+#t2 Warum muss die Dokumentation doppelt sein? Konstruktor anders definieren?
 #t3 initialize method schreiben wie in polyPdmpKlasse
 #t2 achtung: zur zeit MUSS solver = "lsodar" mitübergeben werden. warum?
 #t3 validity method schreiben wie in polyPdmpKlasse (aber mit Inhalt!)
@@ -88,6 +89,7 @@ setClass("pdmpModel",
          contains = "simObj")
 
 #' @rdname pdmpModel-class
+#' @param obj pdmpModel object that is being built. 
 #' @param descr a string containing a short description of the model. 
 #' This parameter is optional and only used in plot methods.
 #' @param parms a list (or vector for some classes) with constant model 

@@ -1,4 +1,4 @@
-context("pdmp_methods")
+context("pdmp methods")
 
 pdmp <- pdmpModel(
   descr = "a simple model",
@@ -36,5 +36,5 @@ test_that("method 'print' prints something", {
   expect_output(print(pdmp), "An S4-object of class pdmpModel")
   expect_output(print(pdmp), "a simple model")
   expect_output(print(pdmp), "α: num 3")
-  expect_output(print(pdmp), "Slot “times”:")
+  expect_output(print(pdmp), "Slot")
 })

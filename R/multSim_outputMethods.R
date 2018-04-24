@@ -12,7 +12,8 @@ NULL
 
 #' @importFrom utils str
 #' @importFrom stats median
-print.multSim <- function(x){
+#' @export
+print.multSim <- function(x, ...){
   cat("An S3-object of class", class(x)[1], "with elements \n\n")
   names <- names(x)
   for (name in names) {
@@ -55,20 +56,22 @@ print.multSim <- function(x){
   }
 }
 
-summary.multSim <- function(x, entries = 1:(min(5,length(x$seeds)))){
+#' @export
+summary.multSim <- function(object, entries = 1:(min(5,length(object$seeds))), ...){
   for(i in entries){
-    cat("\nseed =", x$seeds[i],":\n\n")
-    print(x$timeList[[i]])
+    cat("\nseed =", object$seeds[i],":\n\n")
+    print(object$timeList[[i]])
     cat("\n")
-    print(summary(x$outputList[[i]]))
+    print(summary(object$outputList[[i]]))
   }
-  if(length(entries) != length(x$seeds)){
-    cat("\nOnly", length(entries) ,"out of", length(x$seeds), 
+  if(length(entries) != length(object$seeds)){
+    cat("\nOnly", length(entries) ,"out of", length(object$seeds), 
         "simulations are shown.")
   }
 }
 
 #' @rdname hist
+#' @export
 hist.multSim <- function(x, t, main, ...){
   if(missing(main)) main <- x$model@descr
   data <- getMultSimData(x, times = t)
@@ -76,6 +79,7 @@ hist.multSim <- function(x, t, main, ...){
 }
 
 #' @rdname density
+#' @export
 density.multSim <- function(x, t, main, ...){
   if(missing(main)) main <- x$model@descr
   # timeText <- ifelse(length(t) == 1, 
@@ -83,6 +87,37 @@ density.multSim <- function(x, t, main, ...){
   #                    "at different times")
   data <- getMultSimData(x, times = t)
   density(data, main = main, ...)
+}
+
+#' @param seeds vector with seed numbers to plot (only if x is a \code{\link{multSim}} Object)
+#' @rdname plotSeeds
+#' @importFrom ggplot2 ggtitle
+#' @export
+plotSeeds.multSim <- function(x, seeds, ...){
+  if(missing(seeds)) seeds <- x$seeds
+  data <- getMultSimData(x, seeds = seeds)
+  plot <- plotSeeds(data, ...) + ggplot2::ggtitle(x$model@descr)
+  return(plot)
+}
+
+#' @rdname plotTimes
+#' @importFrom ggplot2 ggtitle
+#' @export
+plotTimes.multSim <- function(x, vars, times, threshold = NULL, plottype = "boxplot", ...){
+  if(missing(vars)) vars <- names(x$model@init)
+  if(missing(times)) times <- seq(x$model@times["from"], x$model@times["to"], len = 10)
+  
+  data <- getMultSimData(x, times = times)
+  plot <- plotTimes(data, ...) + ggplot2::ggtitle(x$model@descr)
+  return(plot)
+}
+
+#' @rdname plotStats
+#' @export
+plotStats.multSim <- function(x, vars, funs){
+ if(missing(vars)) vars <- names(x$model@init) 
+ data <- getMultSimData(x)
+ plotStats(x, vars, funs)
 }
 
 #' @importFrom dplyr summarise

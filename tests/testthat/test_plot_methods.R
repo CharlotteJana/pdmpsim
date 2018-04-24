@@ -1,7 +1,10 @@
 ### Todo
-# Anmerkung: Die auskommentierten Tests arbeiten nicht mit ggplot2.
-# Das Testen funktioniert in diesen Fällen nicht, ich weiß aber nicht, warum
+#t2 Anmerkung: Die auskommentierten Tests arbeiten nicht mit ggplot2.
+#t2 Das Testen funktioniert in diesen Fällen nicht, ich weiß aber nicht, warum
+#t2 Beim plotStats-Test wird NULL ausgegeben. Warum?
 
+context("plot methods")
+  
 pdmp <- pdmpModel(
   descr = "a simple model",
   init = c(f = 10, d = 1),
@@ -27,11 +30,13 @@ suppressMessages(
 # })
 
 test_that("method 'plot' plots correctly for multSim objects", {
+  skip_on_cran()
   testplot <- plot(ms, discPlot = "line")
   vdiffr::expect_doppelganger("plot-line-multSim", testplot, path = "")
 })
 
 test_that("method 'plot' plots correctly for multSimData objects", {
+  skip_on_cran()
   msd <- getMultSimData(ms)
   testplot <- plot(msd, discPlot = "smooth")
   vdiffr::expect_doppelganger("plot-smooth-multSimData", testplot, path = "")
@@ -39,18 +44,21 @@ test_that("method 'plot' plots correctly for multSimData objects", {
 
 
 test_that("method 'plotStats' plots correctly for multSimData objects",{
+  skip_on_cran()
   msd <- getMultSimData(ms)
   testplot <- function() plotStats(msd, vars = "f", funs = dplyr::funs(min, max, mean))
   vdiffr::expect_doppelganger("plotStats", testplot(), path = "")
 })
 
 test_that("method 'plotSeeds' plots correctly for multSimData objects", {
+  skip_on_cran()
   msd <- getMultSimData(ms, seeds = 1:2)
   testplot <- plotSeeds(msd)
   vdiffr::expect_doppelganger("plotSeeds", testplot, path = "")
 })
 
 test_that("method 'plotTimes' plots correctly for multSimData objects", {
+  skip_on_cran()
   msd <- getMultSimData(ms, times = 2*1:5)
   testplot <- plotTimes(msd, vars = "f", plottype = "violin")
   vdiffr::expect_doppelganger("plotTimes-violin", testplot, path = "")
@@ -77,6 +85,7 @@ suppressMessages(
 # })
 
 test_that("method 'plotTimes' plots correctly with a given threshold", {
+  skip_on_cran()
   msd <- getMultSimData(ms, times = 2*1:5)
   testplot <- plotTimes(msd, vars = "f", plottype = "boxplot", threshold = 1)
   vdiffr::expect_doppelganger("plotTimes-boxplot", testplot, path = "")

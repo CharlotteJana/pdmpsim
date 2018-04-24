@@ -30,7 +30,7 @@ NULL
 #' results (for all times) shall appear in the data.frame
 #' @param times vector with specific time values for which the simulation
 #' results (for all seeds) shall appear in the data.frame
-#' @param discVarName character vector giving the names of all discrete
+#' @param discVarNames character vector giving the names of all discrete
 #' variables. If no vector is given, all variables with less than six different
 #' values will be considered as discrete, whereas all others are considered
 #' as continous.
