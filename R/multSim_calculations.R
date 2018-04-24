@@ -1,9 +1,9 @@
 #======== todo =================================================================
-# removeSeeds: allgemein für bestimmte Nummern? Auch für msCsv machen?
-# removeSeeds: message?
-# Problem bei mean Funktionen: Es gibt NA simulations (Fehlermeldung angeben!!!)
-# na.rm als variable einfügen -> dann vllt kein aufruf von removeSeeds mehr nötig?
-# mean mit ... testen
+#t2 removeSeeds: allgemein für bestimmte Nummern? Auch für msCsv machen?
+#t2 removeSeeds: message?
+#t1 Problem bei mean Funktionen: Es gibt NA simulations (Fehlermeldung angeben!!!)
+#t1 na.rm als variable einfügen -> dann vllt kein aufruf von removeSeeds mehr nötig?
+#t3 mean mit ... testen
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R
 NULL

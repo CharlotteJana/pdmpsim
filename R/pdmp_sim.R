@@ -1,6 +1,6 @@
 #======== todo =================================================================
-# I = survival function?
-# seed der länge 2 dokumentieren
+#t3 I = survival function?
+#t1 seed der länge 2 dokumentieren
 
 #' @include pdmp_class.R pdmp_methods.R
 NULL

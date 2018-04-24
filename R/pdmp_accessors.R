@@ -1,9 +1,7 @@
 #======== todo =================================================================
-### simecol slot "inputs" importieren?
-### auch ... einfügen wie in simecol accessors (siehe ?parms)
-### in simecol wurden nicht die generics, sondern die methoden exportiert (exportMethods in Namespace).
-# wenn ich das mache, kommt es zu Fehlermeldungen bei R CMD check, ich muss die generics exportieren.
-# Man muss anscheinend beides exportieren. Dann wird die Hilfeseite ewig lang!
+#t2 simecol slot "inputs" importieren?
+#t2 auch ... einfügen wie in simecol accessors (siehe ?parms)
+#t3 Die Hilfe ist sehr lang, aber wenn ich weniger dokumentiere, kommen Fehler
 
 #======== Description ===========
 

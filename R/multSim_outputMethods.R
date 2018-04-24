@@ -1,9 +1,8 @@
 #======== todo =================================================================
-# < 80 chars per line
-# plot: stetige/diskrete Variablen über pdmp-slot bestimmen
-# NA for den Plots ausführen
-# plot: title und subtitle übergben können
-# subtitle: anzahl der Seeds mit Hinschreiben
+#t1 plot: stetige/diskrete Variablen über pdmp-slot bestimmen
+#t2 NA for den Plots ausführen
+#t2 plot: title und subtitle übergben können
+#t2 subtitle: anzahl der Seeds mit Hinschreiben
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL

@@ -1,45 +1,51 @@
 #======== todo =================================================================
-# < 80 chars per line
-# imported packages: stats, reshape2, prodlim
+#t1 imported packages: stats, reshape2, prodlim
 
 #' pdmpsim: simulate PDMPs
 #'
-#' The core of this package is the S4 class \code{\link{pdmpModel}} that has the aim to represent
-#' piecewise deterministic markov processes (PDMPs) in R. If a PDMP is implemented as \code{pdmpModel},
-#' it can be simulated with method \code{\link{sim}}. The package provides another class named 
-#' \code{\link{multSim}} to store multiple simulations and some methods for plotting and analysing
-#' the simulation results. Additionally the generator of a PDMP can be calculated with method \code{\link{generator}}. 
+#' The core of this package is the S4 class \code{\link{pdmpModel}} that has the 
+#' aim to represent piecewise deterministic markov processes (PDMPs) in R. If a 
+#' PDMP is implemented as \code{pdmpModel}, it can be simulated with method 
+#' \code{\link{sim}}. The package provides another class named 
+#' \code{\link{multSim}} to store multiple simulations and some methods for 
+#' plotting and analysing the simulation results. Additionally the generator of 
+#' a PDMP can be calculated with method \code{\link{generator}}. 
 #' 
 #' @section PDMPs:
-#' A PDMP is a stochastic process that consists of continous variables and discrete variables.
-#' Discrete variables are simulated like a usual discrete markov chain with finite state space. 
-#' The jump rates for the different states are defined in slot \code{ratefunc} where as the
-#' state of the variable after a jump is generated using slot \code{jumpfunc}. The continous
-#' variables evolve according to ODEs that are defined in slot \code{dynfunc}. These ODEs usually
-#' depend on the states of the discrete variables. The number of the continous variables is however
-#' fixed and does not change during the simulation. This is one restriction compared to the more
-#' general definition of PDMPs given in [Dav84]. The other restriction concernes borders for the 
+#' A PDMP is a stochastic process that consists of continous variables and 
+#' discrete variables. Discrete variables are simulated like a usual discrete 
+#' markov chain with finite state space. The jump rates for the different states 
+#' are defined in slot \code{ratefunc} where as the state of the variable after 
+#' a jump is generated using slot \code{jumpfunc}. The continous variables 
+#' evolve according to ODEs that are defined in slot \code{dynfunc}. These ODEs 
+#' usually depend on the states of the discrete variables. The number of the 
+#' continous variables is however fixed and does not change during the 
+#' simulation. This is one restriction compared to the more general definition 
+#' of PDMPs given in [Dav84]. The other restriction concernes borders for the 
 #' continous variables which are not yet implemented in the simulation algorithm. 
-#' See [Zei09] and [Ben+15] for an introduction of PDMPs with definitions that match with the
-#' implementation of this package.
+#' See [Zei09] and [Ben+15] for an introduction of PDMPs with definitions that 
+#' match with the implementation of this package.
 #' 
 #' @section Provided Methods:
-#' There is a bunch of methods that can be used to analyse the simulation results.
-#' A single simulation stored in slot \code{out} of class \code{pdmpModel} can be visualised with
-#' \code{\link{plot}}, summarized with \code{\link{summarise}} .
-#' To store multiple simulations in a conventient way, use \code{\link{multSim}} or \code{\link{multSimCsv}}.
-#' The latter is only needed for simulations generating big data that can not be loaded to the working
-#' memory anymore. Method \code{multSimCsv} stores the results in csv files and returnes a class with
-#' links to the corresponding files instead of returning the simulations themselves. 
+#' There is a bunch of methods that can be used to analyse the simulation 
+#' results. A single simulation stored in slot \code{out} of class 
+#' \code{pdmpModel} can be visualised with \code{\link{plot}} and summarized 
+#' with \code{\link{summarise}}. To store multiple simulations in a conventient 
+#' way, use \code{\link{multSim}} or \code{\link{multSimCsv}}.
+#' The latter is only needed for simulations generating big data that can not be 
+#' loaded to the working memory anymore. Method \code{multSimCsv} stores the 
+#' results in csv files and returnes a class with links to the corresponding 
+#' files instead of returning the simulations themselves. 
 #' 
 #' @section Imported Packages:
 #' The following packages are needed for package \pkg{pdmpsim} to work: \cr
-#' For solving the ODEs during the simulation, package \pkg{deSolve} is required. Another
-#' required package is \pkg{simecol} because class \code{\link{pdmpModel}} is an inherited 
-#' class of \code{\link[simecol]{simObj}} which is defined in this package.
-#' To store multiple simulations as \code{csv} files and work with them without loading
-#' them into the working memory, package \pkg{LaF} is needed. Package \pkg{Deriv} is only
-#' used in function \code{\link{generator}}. Most of the plot methods are based on \pkg{ggplot2}
+#' For solving the ODEs during the simulation, package \pkg{deSolve} is required. 
+#' Another required package is \pkg{simecol} because class 
+#' \code{\link{pdmpModel}} is an inherited class of \code{\link[simecol]{simObj}} 
+#' which is defined in this package. To store multiple simulations as \code{csv} 
+#' files and work with them without loading them into the working memory, 
+#' package \pkg{LaF} is needed. Package \pkg{Deriv} is only used in function
+#' \code{\link{generator}}. Most of the plot methods are based on \pkg{ggplot2}
 #' and some additional \code{ggplot2} packages.
 #'  
 #' @references

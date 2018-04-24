@@ -1,7 +1,7 @@
 #======== todo =================================================================
-# discVarNames rausnehmen und durch slot ersetzen!
-# tests schreiben
-# methode für multSimCsv sehr langsam, eventuell umschreiben?
+#t1 discVarNames rausnehmen und durch slot ersetzen!
+#t2 tests schreiben
+#t2 methode für multSimCsv sehr langsam, eventuell umschreiben?
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R msCsv.R
 NULL

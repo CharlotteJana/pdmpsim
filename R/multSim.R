@@ -1,6 +1,6 @@
 #======== todo =================================================================
-# multSim: filename missing -> nichts abspeichern?? + warning!
-# sollte es wirklich einen fehler geben, wenn nur die description geändert wird
+#t2 multSim: filename missing -> nichts abspeichern?? + warning!
+#t3 wirklich Fehlermeldung geben, wenn nur die Slot descr geändert wird?
 
 #' @include pdmp_class.R pdmp_sim.R
 NULL
