@@ -4,6 +4,7 @@
 #t1 Problem bei mean Funktionen: Es gibt NA simulations (Fehlermeldung angeben!!!)
 #t1 na.rm als variable einfügen -> dann vllt kein aufruf von removeSeeds mehr nötig?
 #t3 mean mit ... testen
+#t3 examples für mean, removeSeeds, moments
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R
 NULL
@@ -38,6 +39,7 @@ removeSeeds <- function(ms){
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimCsv}}
 #' @param ... additional arguments passed to \code{\link[base]{mean}}
 #' @rdname mean
+#' @name mean
 #' @export
 mean.multSim <- function(x, ...){
 

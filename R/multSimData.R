@@ -35,6 +35,11 @@ NULL
 #' values will be considered as discrete, whereas all others are considered
 #' as continous.
 #' @return a data.frame of class \code{multSimData} with simulation results.
+#' @examples 
+#' data("toggleSwitch")
+#' ms <- multSim(toggleSwitch, seeds = 1:5)
+#' d <- getMultSimData(ms, seeds = 1:3, times = c(5, 10))
+#' print(d)
 #' @name multSimData
 #' @aliases getmultsimdata multSimData multsimdata
 #' @export
@@ -93,6 +98,9 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
       else
         seedIndex <- c(seedIndex, a)
     }
+  }
+  else{
+    seedIndex <- seq_along(seeds)
   }
   
   for(j in seq_along(seedIndex)){
@@ -164,6 +172,8 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
         seedIndex <- c(seedIndex, a)
     }
   }
+  else
+    seedIndex <- seq_along(seeds)
 
   ### diese for-Schleife macht das Ganze so langsam!!!
   for(n in seq_along(init(x$model))){

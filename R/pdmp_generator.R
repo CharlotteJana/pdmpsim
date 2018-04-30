@@ -35,6 +35,16 @@ NULL
 #' data("simplePdmp")
 #' g <- function(d, f) d*f
 #' generator(simplePdmp)(g)(t = 10, x = c("d" = -1, "f" = 10))
+#' 
+#' # comparison with theoretic solution:
+#' Qg_theoretic <- function(d, f) d^2-2*d*f
+#' f_values <- seq(from = 0, to = 4, by = 0.01)
+#' Qg_method <- function(d, f) sapply(f, function(fi) 
+#'  generator(simplePdmp)(g)(t = 5, x = c("d" = d, "f" = fi))
+#' )
+#' identical(Qg_theoretic(-1, f_values), Qg_method(-1, f_values))
+#' plot(f_values, Qg_theoretic(1, f_values))
+#' lines(f_values, Qg_method(1, f_values), col = "red", lwd = 3)#' 
 #' @export
 setGeneric("generator", function(obj) standardGeneric("generator"))
 

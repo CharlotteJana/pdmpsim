@@ -1,12 +1,10 @@
 #======== todo =================================================================
 #t1 plot: stetige/diskrete Variablen über pdmp-slot bestimmen
 #t2 NA for den Plots ausführen
-#t2 plot: title und subtitle übergben können
-#t2 subtitle: anzahl der Seeds mit Hinschreiben
+#t2 plot: subtitle: anzahl der Seeds mit Hinschreiben
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL
-
 
 #### output methods #####
 
@@ -57,7 +55,9 @@ print.multSim <- function(x, ...){
 }
 
 #' @export
-summary.multSim <- function(object, entries = 1:(min(5,length(object$seeds))), ...){
+summary.multSim <- function(object, 
+                            entries = 1:(min(5,length(object$seeds))), 
+                            ...){
   for(i in entries){
     cat("\nseed =", object$seeds[i],":\n\n")
     print(object$timeList[[i]])
@@ -89,7 +89,8 @@ density.multSim <- function(x, t, main, ...){
   density(data, main = main, ...)
 }
 
-#' @param seeds vector with seed numbers to plot (only if x is a \code{\link{multSim}} Object)
+#' @param seeds vector with seed numbers to plot 
+#' (only if x is a \code{\link{multSim}} Object)
 #' @rdname plotSeeds
 #' @importFrom ggplot2 ggtitle
 #' @export
@@ -103,9 +104,12 @@ plotSeeds.multSim <- function(x, seeds, ...){
 #' @rdname plotTimes
 #' @importFrom ggplot2 ggtitle
 #' @export
-plotTimes.multSim <- function(x, vars, times, threshold = NULL, plottype = "boxplot", ...){
-  if(missing(vars)) vars <- names(x$model@init)
-  if(missing(times)) times <- seq(x$model@times["from"], x$model@times["to"], len = 10)
+plotTimes.multSim <- function(x, vars, times, threshold = NULL, 
+                              plottype = "boxplot", ...){
+  if(missing(vars)) 
+    vars <- names(x$model@init)
+  if(missing(times)) 
+    times <- seq(x$model@times["from"], x$model@times["to"], len = 10)
   
   data <- getMultSimData(x, times = times)
   plot <- plotTimes(data, ...) + ggplot2::ggtitle(x$model@descr)
@@ -114,10 +118,10 @@ plotTimes.multSim <- function(x, vars, times, threshold = NULL, plottype = "boxp
 
 #' @rdname plotStats
 #' @export
-plotStats.multSim <- function(x, vars, funs){
+plotStats.multSim <- function(x, vars, funs, ...){
  if(missing(vars)) vars <- names(x$model@init) 
  data <- getMultSimData(x)
- plotStats(x, vars, funs)
+ plotStats(data, vars, funs, ...)
 }
 
 #' @importFrom dplyr summarise

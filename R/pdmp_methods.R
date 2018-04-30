@@ -1,5 +1,6 @@
 #======== todo =================================================================
 #t1 print methode dokumentieren
+#t1 ddomain slot von katrin -> format, print
 
 #' @include pdmp_class.R
 NULL
@@ -31,8 +32,9 @@ printVect <- function(v, collapse = ", ", sep = " = "){
 
 #' Format a PDMP for pretty printing.
 #'
-#' Give important information about a pdmpModel in one character string.
-#' This method is used internally to generate default filenames or plot titles.
+#' Give important information about a \code{\link{pdmpModel}} in one character 
+#' string. This method is used internally to generate default filenames or plot 
+#' titles.
 #' 
 #' @param x an object of class \code{\link{pdmpModel}} or one of its subclasses.
 #' @param slots a vector specifying the names of all slots that shall be pasted
@@ -44,10 +46,11 @@ printVect <- function(v, collapse = ", ", sep = " = "){
 #' will be returned (useful to generate filenames). Defaults to TRUE.
 #' @param sep a character string to separate the names and values of slots that 
 #' are vectors or lists (e. g. "times" or "parms"). It defaults to \code{"="} 
-#' if \code{short = TRUE} and to \code{" = "} if \code{short = FALSE}.
+#' if \code{short} is \code{TRUE} and to \code{" = "} if \code{short} is 
+#' \code{FALSE}.
 #' @param collapse a character string to separate the slots.
-#' It defaults to \code{"___"} if \code{short = TRUE} and to \code{". "} 
-#' if \code{short = FALSE}.
+#' It defaults to \code{"___"} if \code{short} is \code{TRUE} and to \code{". "} 
+#' if \code{short} is \code{FALSE}.
 #'
 #' @examples
 #' data("toggleSwitch")
@@ -146,18 +149,28 @@ setMethod(f = "print",
 
 #---------------- plot -----------------
 
-#' Methods for Function \code{plot} in Package \pkg{pdmpsim}
+#' Plot a PDMP
+#' 
+#' This is method plots single simulations of
+#' piecewise deterministic markov processes defined as
+#' \code{\link{pdmpModel}}. There are also other plot
+#' methods available that use \pkg{ggplot2}. 
 #'
 #' @param x an object of class pdmpModel with a simulation 
 #' stored in slot \code{out}
 #' @param y ignored
 #' @param ... optional plotting parameters
-#'
-#' @name plot-methods
-#' @seealso pdmpModel
-NULL
-
-#' @rdname plot-methods
+#' @examples 
+#' data("toggleSwitch")
+#' sim <- sim(toggleSwitch, seed = 1)
+#' plot(sim, col = "red", lwd = 2)
+#' 
+#' # Alternative: plotSeeds
+#' msim <- multSim(toggleSwitch, seeds = 1)
+#' plot <- plotSeeds(msim)
+#' plot + ggplot2::facet_grid(variable ~ seed)
+#' @seealso \code{\link{plotSeeds}} for another plot function
+#' to plot single simulations
 #' @importFrom graphics title
 #' @export
 setMethod("plot", signature(x="pdmpModel", y="missing"),

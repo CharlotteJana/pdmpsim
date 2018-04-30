@@ -40,27 +40,30 @@
 #' @section Imported Packages:
 #' The following packages are needed for package \pkg{pdmpsim} to work: \cr
 #' For solving the ODEs during the simulation, package \pkg{deSolve} is required. 
-#' Another required package is \pkg{simecol} because class 
-#' \code{\link{pdmpModel}} is an inherited class of \code{\link[simecol]{simObj}} 
-#' which is defined in this package. To store multiple simulations as \code{csv} 
-#' files and work with them without loading them into the working memory, 
-#' package \pkg{LaF} is needed. Package \pkg{Deriv} is only used in function
-#' \code{\link{generator}}. Most of the plot methods are based on \pkg{ggplot2}
-#' and some additional \code{ggplot2} packages.
+#' Class \code{\link{pdmpModel}} is an inherited class of 
+#' \code{\link[simecol]{simObj}} which is defined in package \pkg{simecol}. 
+#' To store multiple simulations as \code{csv} files and work with them without 
+#' loading them into the working memory, package \pkg{LaF} is needed. 
+#' Package \pkg{Deriv} is only used in function \code{\link{generator}}. 
+#' Most of the plot methods are based on \pkg{ggplot2} and some additional 
+#' \code{ggplot2} packages.
 #'  
 #' @references
 #' \tabular{ll}{
-#' [Dav84] \tab Davis, M. H. (1984). Piecewise-deterministic Markov processes: 
-#'  A general class of non-diffusion stochastic models. 
-#'  \emph{Journal of the Royal Statistical Society. 
-#'  Series B (Methodological)}, 353-388. \cr
+#' \eqn{\,}{ }[Dav84] \tab Davis, M. H. (1984). Piecewise-deterministic Markov processes: 
+#'  A general class of \cr
+#'  \tab non-diffusion stochastic models. \emph{Journal of the Royal 
+#'  Statistical Society. Series B} \cr
+#'  \tab \emph{(Methodological)}, 353-388. \cr
 #' [Zei09] \tab S. Zeiser. \emph{Classical and Hybrid Modeling of Gene 
 #' Regulatory Networks}. 2009. \cr
 #' [Ben+15]\eqn{\,\,\,\,}{    } \tab Benaïm, M., Le Borgne, S., Malrieu, F., 
-#' & Zitt, P. A. (2015). Qualitative properties of certain piecewise 
-#' deterministic Markov processes. In \emph{Annales de l'Institut Henri 
-#' Poincaré, Probabilités et Statistiques} (Vol. 51, No. 3, pp. 1040-1075). 
-#' Institut Henri Poincaré. \cr
+#' & Zitt, P. A. (2015). Qualitative properties \cr
+#' \tab of certain piecewise deterministic Markov processes. 
+#' In \emph{Annales de l'Institut Henri} \cr
+#' \tab \emph{Poincaré, Probabilités et Statistiques} (Vol. 51, No. 3, 
+#' pp. 1040-1075). Institut \cr
+#' \tab Henri Poincaré. \cr
 #'  }
 #' 
 #' @name pdmpsim

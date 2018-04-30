@@ -5,6 +5,10 @@
 #t3           (einiges ist schon in multSimCsv gemacht und könnte ausgelagert 
 #t3            werden, siehe auch https://www.rdocumentation.org/packages/methods/versions/3.0.3/topics/validObject)
 #t1 laf zu suggests?
+#t3 loadMultSimCsv: wie verlinke ich das LaF-Manual?
+#t3 Wäre der parameter uniqueSeeds auch bei anderen methoden sinnvoll?
+#t3 uniqueSeeds getestet?
+#t3 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
 
 #------------------- multSimCsv --------------------------
 
@@ -50,9 +54,10 @@
 #' If e.g. the \code{init} slot of \code{obj} is given as 
 #' \code{c(f = 1, g = 2, h = 3)} and \code{prefix = "exampleModel"}, 
 #' method \code{multSimCsv} will create three csv files named 
-#' exampleModel_Simulations_f.csv, exampleModel_Simulations_g.csv, and
-#' exampleModel_Simulations_h.csv where the first contains all simulated values 
-#' of variable \code{f}, the second of \code{g} and the third of \code{h}.
+#' \code{exampleModel_Simulations_f.csv}, \code{exampleModel_Simulations_g.csv},
+#' and \code{exampleModel_Simulations_h.csv} where the first contains all 
+#' simulated values of variable \code{f}, the second of \code{g} and the third 
+#' of \code{h}.
 #'
 #' The csv files are constructed as follows:
 #' \itemize{
@@ -86,7 +91,10 @@
 #' saved as null. The returned \code{multSimCsv} object however has a valid 
 #' \code{lafList}. If you want to load a \code{multSimCsv} object from a rda
 #' file, use \code{\link{loadMultSimCsv}} to create \code{lafList} automatically.
-#' @seealso loadMultSimCsv multSim multSim2multSimCsv
+#' @seealso \code{\link{loadMultSimCsv}} to load a stored \code{multSimCsv} 
+#' object, \code{multSim} to perform multiple simulations that need not
+#' too much memory, \code{\link{multSim2multSimCsv}} to convert an object
+#' created with method \code{multSim} into a \code{multSimCsv} object.
 #' @aliases multsimcsv
 #' @importFrom utils write.table
 #' @export
@@ -198,26 +206,34 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
 
 #------------ loadMultSimCsv -------------------
 
-#' loadMultSimCsv
+#' load csv files with simulation results
 #'
-#' Create LaF links for an object of class \code{\link{multSimCsv}} and save 
-#' them in \code{multSimCsv$lafList}.
-#'
+#' Load an object of class \code{multSimCsv} created with method
+#' \code{\link{multSimCsv}} from a directory and create LaF links to
+#' the stored csv files (\pkg{LaF} is a package that provides a fast access
+#' to data stored in csv files). The method returnes an object of class
+#' \code{multSimCsv} with the LaF links stored in element \code{lafList}.
+#' 
 #' @param x either an object  of class \code{\link{multSimCsv}} or a character 
 #' string indicating the filename of a stored multSimCsv object, e. g. 
 #' "exampleModel_MultSimCsv.rda"
 #' @param dir directory where the csv files are stored. 
 #' Defaults to the working directory.
 #' @return object of class \code{\link{multSimCsv}}
+#' @note Opening the saved rda file directly with \code{\link{readRDS}} will 
+#' lead to a \code{multSimCsv} object with \code{lafList} set to NULL.
+#' The links have to be created during run-time which is the reason why
+#' method \code{loadMultSimCsv} exists.
+#' @seealso \code{\link{multSimCsv}} to create the csv files, 
+#' \code{vignette("LaF-manual")} for an introduction of package \pkg{LaF}
 #' @aliases loadmultsimcsv
-#' @seealso multSimCsv
 #' @importFrom LaF laf_open
 #' @export
 loadMultSimCsv <- function(x, dir){
   UseMethod("loadMultSimCsv", x)
 }
 
-#' @describeIn loadMultSimCsv create laf-links for msCsv
+#' @describeIn loadMultSimCsv create laf-links for multSimCsv objects
 loadMultSimCsv.multSimCsv <- function(x, dir = "."){
   x$lafList <- list(0)
   for(i in seq_along(x$csvList)){

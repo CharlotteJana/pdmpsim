@@ -13,6 +13,11 @@
 #' \code{times}, \code{parms}, \code{init}, \code{dynfunc}, \code{ratefunc},
 #' \code{jumpfunc} and \code{initfunc}, which set out to NULL.
 #' Setting a new value for \code{descr} will not affect the slot \code{out}.
+#' 
+#' It is also possible to modify the slots directly,
+#' e.g. the parameters of a model \code{pdmp} with \code{pdmp@parms}, 
+#' but this is normally not recommended as there is no guarantee that this 
+#' will work in a compatible way in future versions.
 #'
 #' @param obj an object of class \code{\link{pdmpModel}}
 #' @param value the value that shall be set

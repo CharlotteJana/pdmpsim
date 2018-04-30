@@ -1,15 +1,14 @@
 #======== todo =================================================================
-#t2 multSim: filename missing -> nichts abspeichern?? + warning!
-#t3 wirklich Fehlermeldung geben, wenn nur die Slot descr geändert wird?
+#t2 multSim besser testen
 
 #' @include pdmp_class.R pdmp_sim.R
 NULL
 
 #' Multiple simulations of a pdmp model
 #'
-#' Perform simulations of a pdmp model with different seeds and optionally save 
+#' Perform simulations of a PDMP with different seeds and optionally save 
 #' the results in a rda file.
-#' @param obj object of class pdmpModel or one of its subclasses
+#' @param obj object of class \code{\link{pdmpModel}} or one of its subclasses
 #' @param seeds integer vector with seeds that shall be simulated
 #' (different seeds lead to different simulated trajectories)
 #' @param filename string which indicates the path where to save the result, 
@@ -45,6 +44,15 @@ NULL
 #' the larger end value.
 #'
 #' Slot \code{obj@out} is not affected by \code{multSim}.
+#' @examples 
+#' data("simplePdmp")
+#' m1 <- multSim(simplePdmp, seeds = 1:10)
+#' plot(m1$outputList[[1]])
+#' 
+#' # expand times:
+#' times(simplePdmp)["to"] <- 20
+#' m2 <- multSim(simplePdmp, seeds = 1:15, ms = m1)
+#' plot(m2$outputList[[15]])
 #' @export
 multSim <- function(obj, seeds, filename = NULL, 
                     ms = NULL, allowDeletion = FALSE){
@@ -72,7 +80,7 @@ multSim <- function(obj, seeds, filename = NULL,
     if(obj@times["to"] > ms$model@times["to"]){
       message("Parameter \'times(ms$model)[\"to\"]\' has changed from ", 
               ms$model@times[["to"]], " to ", obj@times[["to"]], ".")
-      ms <- expandTimes(ms, obj@times[["to"]])
+      ms <- expandTimes(ms, obj@times[["to"]], filename = filename)
     }
   }
 
@@ -86,9 +94,8 @@ multSim <- function(obj, seeds, filename = NULL,
 
   # if all is identical: break
   if(identical(seeds, ms$seeds) && all(!is.na(ms$outputList))){
-    message("Already calculated.")
-    if(is.null(filename)) return(ms)
-    else return(NULL)
+    message("No more seeds to calculate.")
+    return(ms)
   }
 
   # compare seeds and simulate
@@ -98,7 +105,7 @@ multSim <- function(obj, seeds, filename = NULL,
 
 
   # return
-  if(is.null(filename)) return(ms)
+  return(ms)
 }
 
 #' Calculate Seeds
@@ -199,11 +206,12 @@ calcSeeds <- function(ms, seeds, filename = NULL, allowDeletion = FALSE){
 #' be expanded (simulations are in ms$outputList; every NA in ms$outputList 
 #' will be skipped and not simulated)
 #' @param to new stopping time, should be larger than times(ms$model)["to"]
+#' @inheritParams multSim
 #' @return object of class "multSim" containing the simulations
 #'
 #' @keywords internal
 #' @seealso multSim
-expandTimes <- function(ms, to){
+expandTimes <- function(ms, to, filename = NULL){
   if(to <= ms$model@times["to"]) 
     stop("Value \"to\" has to be larger than ", ms$model@times["to"],".")
 
@@ -261,6 +269,11 @@ expandTimes <- function(ms, to){
   ms$model@times[["to"]] <- to
   ms$outputList <- lapply(seq_along(ms$outputList), function(i) 
                      rbind(ms$outputList[[i]], newMS$outputList[[i]][-1, ]))
+  
+  if(!is.null(filename)){
+     saveRDS(ms, file = filename)
+     message("Result is stored in ", paste(getwd(),"/", filename, sep = ""))
+  }
   return(ms)
 }
 

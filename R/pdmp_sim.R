@@ -1,6 +1,5 @@
 #======== todo =================================================================
 #t3 I = survival function?
-#t1 seed der länge 2 dokumentieren
 
 #' @include pdmp_class.R pdmp_methods.R
 NULL
@@ -17,8 +16,15 @@ NULL
 #' @param outSlot boolean variable. If FALSE, only the result of the simulation 
 #' is returned. If TRUE, the whole \code{obj} is returned with the simulation 
 #' result stored in slot \code{out}.
-#' @param initialize This parameter is inherited from \code{\link[simecol]{sim}}. 
-#' It is not necessary for simulating piecewise deterministic Markov models.
+#' @param initialize boolean varialbe. If initialize = TRUE and \code{obj}
+#' contains a user-defined initializing function (\code{initfunc}), this 
+#' function will be called before the simulation. This can be useful i. e. 
+#' to set a random initial value (see examples). If random numbers are 
+#' generated within \code{initfunc}, they will be affected by the given 
+#' \code{seed}. To avoid this, add \code{set.seed(NULL)} to the function
+#' definition of \code{initfunc}.
+#' Parameter \code{initialize} defaults to FALSE, because it is 
+#' not necessary for simulating piecewise deterministic Markov models. 
 #' @param outrate boolean variable. During simulation, the survival function is 
 #' simulated too, because it is needed to determine the next jump time. 
 #' Setting outrate = TRUE will return all simulated values including the 
@@ -60,7 +66,7 @@ setMethod("sim", "pdmpModel", function(obj, initialize = FALSE,
   #   and is simulated along with the other variables.
 
   # initialization
-  seed <- rep(seed, 2)
+  seed <- rep(seed, len = 2)
   set.seed(seed[1])
   if(initialize) {
     obj <- initialize(obj)
