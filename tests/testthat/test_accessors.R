@@ -47,11 +47,16 @@ test_that("changing of important slots resets slot out", {
 
 })
 
-test_that("changing of slots descr or initfunc does not affect slot out", {
+test_that("changing of slots descr or discState does not affect slot out", {
 
   # slot descr
   obj <- sim(obj)
   descr(obj) <- "another description"
+  expect_false(is.null(out(obj)))
+  
+  # slot discStates
+  obj <- sim(obj)
+  discStates(obj) <- list(d = c(1, 0, -1))
   expect_false(is.null(out(obj)))
 
 })

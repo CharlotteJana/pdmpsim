@@ -2,7 +2,7 @@
 #t2 hist: bei mehreren diskreten Variablen wird der Barplot nicht 
 #t2       korrekt beschriftet (names.arg = c("dA", "dB") geht nicht!)
 #t2 plotStats: label oben hinzufügen
-#t2 plotStats: missing funktioniert nicht, warum?
+#t1 plotStats, plotTimes: missing funktioniert nicht, warum?
 #t2 plotStats: Titel ermöglichen
 #t1 summarize_at: correct generic function definition?
 #t2 density: in plotDensity umbenennen?
@@ -205,7 +205,7 @@ plotSeeds.multSimData <- function(x, ...){
                        size = 1) +
     ggplot2::scale_colour_manual(
       name = "continous\nvariables", 
-      values = cols[1:length(levels(contData$variable))])
+      values = cols[seq_along(levels(contData$variable))])
   
   # facet_wrap
   plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
@@ -407,8 +407,11 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   }
 
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
-  if(missing(times)) times <- seq(min(x$time), max(x$time), len = 10)
-  x <- getMultSimData(x, times = times)
+  if(missing(times)){
+    t <- unique(x$time)
+    times <- t[seq(1, length(t), 10)]
+  }
+    x <- getMultSimData(x, times = times)
   
   if(length(unique(x$time)) > 12)
     stop("To many different values for variable \"time\".")
@@ -461,7 +464,9 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   # plot <- plot + ggplot2::labs(y = "logarithmic scale") + 
   #                ggplot2::scale_y_log10()
   
-  plot <- plot + ggplot2::facet_grid( ~ time)
+  plot <- plot + ggplot2::facet_grid(variable ~ time) +
+    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                   axis.ticks.x = ggplot2::element_blank())
   
   print(plot)
   invisible(plot)
@@ -639,8 +644,8 @@ density.multSimData <- function(x, t, main, sub, ...){
   #barplot for discrete variable
   for(name in d){
     specVals <- sapply(lapply(t, 
-                  function(j) subset(discData, time==j & variable==name)$value), 
-                  cbind)
+                 function(j) subset(discData, time==j & variable==name)$value), 
+                 cbind)
     discRange <- unique(c(specVals))
     discVal <- sapply(seq_along(t), function(m) 
       as.matrix(table(c(specVals[,m], discRange))) - rep(1, length(discRange)))

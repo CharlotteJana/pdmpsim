@@ -2,6 +2,8 @@
 #t2 simecol slot "inputs" importieren?
 #t2 auch ... einfügen wie in simecol accessors (siehe ?parms)
 #t3 Die Hilfe ist sehr lang, aber wenn ich weniger dokumentiere, kommen Fehler
+#t3 wenn discStates geändert, verify aufrufen
+#t1 discStates sollte out löschen, oder nicht?
 
 #======== Description ===========
 
@@ -12,7 +14,8 @@
 #' (where the simulation result can be stored). This applies to slots 
 #' \code{times}, \code{parms}, \code{init}, \code{dynfunc}, \code{ratefunc},
 #' \code{jumpfunc} and \code{initfunc}, which set out to NULL.
-#' Setting a new value for \code{descr} will not affect the slot \code{out}.
+#' Setting a new value for \code{descr} or \code{discStates} will not affect 
+#' the slot \code{out}.
 #' 
 #' It is also possible to modify the slots directly,
 #' e.g. the parameters of a model \code{pdmp} with \code{pdmp@parms}, 
@@ -57,6 +60,12 @@ setGeneric("descr", function(obj) standardGeneric("descr"))
 #' @rdname pdmp-accessors
 #' @export
 setGeneric("descr<-", function(obj, value) standardGeneric("descr<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("discStates", function(obj) standardGeneric("discStates"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("discStates<-", function(obj, value) standardGeneric("discStates<-"))
 
 #======= Getters ==========
 
@@ -72,6 +81,9 @@ setMethod("jumpfunc", "pdmpModel", function(obj) obj@jumpfunc)
 #' @rdname pdmp-accessors
 #' @export
 setMethod("descr", "pdmpModel", function(obj) obj@descr)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("discStates", "pdmpModel", function(obj) obj@discStates)
 
 #======= Setters that set obj@out <- NULL =========
 
@@ -99,6 +111,12 @@ setMethod("jumpfunc<-", "pdmpModel", function(obj, value) {
 
 #======= Setters that don't change slot out =======
 
+#' @rdname pdmp-accessors
+#' @export
+setMethod("discStates<-", "pdmpModel", function(obj, value) {
+  obj@discStates <- value
+  invisible(obj)
+})
 #' @rdname pdmp-accessors
 #' @export
 setMethod("descr<-", "pdmpModel", function(obj, value) {

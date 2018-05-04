@@ -7,6 +7,7 @@ simplePdmp <- pdmpModel(
   descr = "a simple pdmp",
   init = c(f = 0, d = 0),
   times = c(from = 0, to = 10, by = 0.1),
+  discStates = list(d = -1:1),
   dynfunc = function(t, x, parms) c(x["d"], 0),
   ratefunc = function(t, x, parms) c(1+x["d"], 1-x["d"]),
   jumpfunc = function(t, x, parms, jtype){

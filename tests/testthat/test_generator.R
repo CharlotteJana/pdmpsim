@@ -6,6 +6,7 @@ test_that("method generator is correct for a pdmp with one discrete variable", {
     descr = "a simple pdmp",
     init = c(f = 0, d = 0),
     times = c(from = 0, to = 10, by = 0.01),
+    discStates = list(d = c(-1, 0, 1)),
     dynfunc = function(t, x, parms) c(x["d"], 0),
     ratefunc = function(t, x, parms) c(1+x["d"], 1-x["d"]),
     jumpfunc = function(t, x, parms, jtype){
@@ -40,11 +41,12 @@ test_that("method generator is correct for a pdmp with one discrete variable", {
   expect_equal(test1, test2)
 })
 
-test_that("method generator is correct for a pdmp with two discrete variables", {
+test_that("method generator is correct for a pdmp with 2 discrete variables", {
 
   discPdmp <- pdmpModel(
     descr = "a pdmp with 2 discrete variables and 2 jumptypes",
     init = c(f = 0, d1 = 0, d2 = 0),
+    discStates = list(d1 = 0:1, d2 = 0:1),
     times = c(from = 0, to = 10, by = 0.01),
     dynfunc = function(t, x, parms) c(x["d1"]-x["d2"], 0, 0),
     ratefunc = function(t, x, parms) c(1,1),
@@ -54,8 +56,8 @@ test_that("method generator is correct for a pdmp with two discrete variables", 
     }
   )
 
-  # The simulations of this model are equivalent ot the simulations of the model 
-  # used in the test before. Therefore the generators should be the same.
+  # The simulations of this model are equivalent ot the simulations of the 
+  # model used in the test before. Therefore the generators should be the same.
 
   fvals <- seq(from = 0, to = 3, by = 0.5)
 
@@ -95,6 +97,7 @@ test_that("method generator is correct for the toggle switch model", {
       parms = list(bA = 0.5, bB = 1,   aA = 2, aB = 4, 
                    k01A = 0.5, k10A = 2, k01B = 1/3, k10B = 3),
       init = c(fA = 0.5, fB = 0.5, dA = 1, dB = 1),
+      discStates = list(dA = 0:1, dB = 0:1),
       dynfunc = function(t, x, parms) {
         df <- with(as.list(c(x, parms)),
                    c(-bA*fA + aA*dA, -bB*fB + aB*dB))

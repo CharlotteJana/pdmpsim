@@ -1,6 +1,5 @@
 #======== todo =================================================================
 #t1 print methode dokumentieren
-#t1 ddomain slot von katrin -> format, print
 
 #' @include pdmp_class.R
 NULL
@@ -39,7 +38,7 @@ printVect <- function(v, collapse = ", ", sep = " = "){
 #' @param x an object of class \code{\link{pdmpModel}} or one of its subclasses.
 #' @param slots a vector specifying the names of all slots that shall be pasted
 #' to the string. ' The default is \code{c("parms", "init", "times")}. 
-#' Supported slots are "descr", "parms", "init" and "times".
+#' Supported slots are "descr", "parms", "init", "times" and "discStates".
 #' @param begin a character string that is pasted at the beginning.
 #' @param end a character string that is pasted at the end.
 #' @param short logical. If TRUE, a shorter version without space characters
@@ -83,6 +82,7 @@ setMethod(f = "format",
     result <- paste0(result, paste0(descrName, descrVals, collapse))
   }
   if("parms" %in% slots){
+    if(length(parms(x)) == 0) break()
     parmsName <- ifelse(short, "Parms_", ifelse(length(parms(x)) == 1, 
                                                 "Parameter: ", 
                                                 "Parameters: "))
@@ -97,6 +97,19 @@ setMethod(f = "format",
                                               "Initial Values: "))
     initVals <- printVect(init(x), sep = sep, collapse = vectCollapse)
     result <- paste0(result, paste0(initName, initVals, collapse))
+  }
+  if("discStates" %in% slots){
+   statesName <- ifelse(short, "discStates_", "Discrete States: ")
+   statesVals <- ""
+   for(i in seq_along(discStates(x))){
+     statesVals <- paste0(statesVals, 
+                         names(discStates(x))[i],
+                         ifelse(short, "", " ϵ "),
+                         "{",
+                         paste(discStates(x)[[i]], collapse = ","),
+                         ifelse(short, "}", "}"))
+   }
+   result <- paste0(result, paste0(statesName, statesVals, collapse))
   }
   if("times" %in% slots){
     timeName <- ifelse(short, "Times_", "Times: ")

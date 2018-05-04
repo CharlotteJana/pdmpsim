@@ -108,11 +108,13 @@ plotTimes.multSim <- function(x, vars, times, threshold = NULL,
                               plottype = "boxplot", ...){
   if(missing(vars)) 
     vars <- names(x$model@init)
-  if(missing(times)) 
-    times <- seq(x$model@times["from"], x$model@times["to"], len = 10)
+  if(missing(times)){
+    t <- fromtoby(x$model@times)
+    times <- t[seq(1, length(t), 10)]
+  }
   
   data <- getMultSimData(x, times = times)
-  plot <- plotTimes(data, ...) + ggplot2::ggtitle(x$model@descr)
+  plot <- plotTimes(data, times = times, ...) + ggplot2::ggtitle(x$model@descr)
   return(plot)
 }
 

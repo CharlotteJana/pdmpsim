@@ -10,6 +10,7 @@ test_that("sim is correct for a simple model", {
     descr = "a simple model",
     init = c(f = 10, d = 1),
     times = c(from = 0, to = 10, by = 0.01),
+    discStates = list(d = c(-1, 1)),
     dynfunc = function(t, x, parms) c(x["d"]*t, 0),
     ratefunc = function(t, x, parms) 1,
     jumpfunc = function(t, x, parms, jtype) c(-x["f"], (-1)*x["d"])
@@ -39,6 +40,7 @@ test_that("sim is correct for a pdmp with 2 jumptypes", {
     descr = "a pdmp with 2 jumptypes",
     init = c(f = 0, d = 0),
     times = c(from = 0, to = 10, by = 0.01),
+    discStates = list(d = -1:1),
     dynfunc = function(t, x, parms) c(x["d"], 0),
     ratefunc = function(t, x, parms) c(1+x["d"], 1-x["d"]),
     jumpfunc = function(t, x, parms, jtype){
@@ -74,6 +76,7 @@ test_that("sim is correct for a pdmp with 2 discrete variables", {
     descr = "a pdmp with 2 discrete variables and 2 jumptypes",
     init = c(f = 0, d1 = 0, d2 = 0),
     times = c(from = 0, to = 10, by = 0.01),
+    discStates = list(d1 = 0:1, d2 = 0:1),
     dynfunc = function(t, x, parms) c(x["d1"]-x["d2"], 0, 0),
     ratefunc = function(t, x, parms) c(1,1),
     jumpfunc = function(t, x, parms, jtype){
@@ -108,7 +111,7 @@ test_that("variable 'initialize' works as expected", {
   initModel <- pdmpModel(
     init = c(f = 0, d = 1),
     initfunc = function(pdmp){
-      init(pdmp) <- c(f = pdmp@init[[1]] + 1, d = 1) # add 1 to the initial value of f
+      init(pdmp) <- c(f = pdmp@init[[1]] + 1, d = 1)
       invisible(pdmp)
     },
     times = c(from = 0, to = 10, by = 0.01),

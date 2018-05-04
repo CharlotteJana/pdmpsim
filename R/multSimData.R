@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t1 discVarNames rausnehmen und durch slot ersetzen!
 #t2 tests schreiben
 #t2 methode für multSimCsv sehr langsam, eventuell umschreiben?
 
@@ -30,10 +29,6 @@ NULL
 #' results (for all times) shall appear in the data.frame
 #' @param times vector with specific time values for which the simulation
 #' results (for all seeds) shall appear in the data.frame
-#' @param discVarNames character vector giving the names of all discrete
-#' variables. If no vector is given, all variables with less than six different
-#' values will be considered as discrete, whereas all others are considered
-#' as continous.
 #' @return a data.frame of class \code{multSimData} with simulation results.
 #' @examples 
 #' data("toggleSwitch")
@@ -43,18 +38,19 @@ NULL
 #' @name multSimData
 #' @aliases getmultsimdata multSimData multsimdata
 #' @export
-getMultSimData <- function (x, times, seeds, discVarNames)  {
+getMultSimData <- function (x, times, seeds)  {
   UseMethod("getMultSimData", x)
 }
 
 #' @rdname multSimData
 #' @importFrom dplyr select everything
 #' @export
-getMultSimData.multSim <- function(x, times, seeds, discVarNames){
+getMultSimData.multSim <- function(x, times, seeds){
   data <- NULL
   timeIndex <- NULL
   seedIndex <- NULL
   all.times <- fromtoby(x$model@times)
+  discVarNames <- names(discStates(x$model))
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
   time <- seed <- type <- variable <- value <- NULL
@@ -66,14 +62,6 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
   if(missing(seeds) || is.null(seeds)){
     seeds <- x$seeds
     seedIndex <- seq_along(seeds)
-  }
-  if(missing(discVarNames)){
-    discVarNames <- NULL
-  }
-  
-  for(i in seq_along(x$model@init)){
-    if(length(unique(x$outputList[[1]][, i+1])) < 6) 
-      discVarNames <- cbind(discVarNames, names(init(x$model))[i])
   }
   
   # select times
@@ -129,7 +117,7 @@ getMultSimData.multSim <- function(x, times, seeds, discVarNames){
 
 #' @rdname multSimData
 #' @export
-getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
+getMultSimData.multSimCsv <- function(x, times, seeds){
   data <- data.frame(time = numeric(),
                      seed = numeric(),
                      type = character(),
@@ -139,6 +127,7 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
   timeIndex <- NULL
   seedIndex <- NULL
   all.times <- fromtoby(x$model@times)
+  discVarNames <- names(discStates(x$model))
   
   if(missing(times) || is.null(times)){
     times <- all.times
@@ -198,7 +187,7 @@ getMultSimData.multSimCsv <- function(x, times, seeds, discVarNames){
 
 #' @rdname multSimData
 #' @export
-getMultSimData.multSimData <- function(x, times, seeds, discVarNames = NULL){
+getMultSimData.multSimData <- function(x, times, seeds){
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
   time <- seed <- NULL
@@ -207,8 +196,7 @@ getMultSimData.multSimData <- function(x, times, seeds, discVarNames = NULL){
     times <- unique(x$time)
   if(missing(seeds) || is.null(seeds))
     seeds <- unique(x$seed)
-  x <- subset(x, time == times)
-  x <- subset(x, seed == seeds)
+  x <- subset(x, time == times && seed == seeds)
   return(x)
 }
 

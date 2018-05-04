@@ -9,6 +9,7 @@ pdmp <- pdmpModel(
   descr = "a simple model",
   init = c(f = 10, d = 1),
   times = c(from = 0, to = 10, by = 0.01),
+  discStates = list(d = c(-1, 1)),
   parms = c(alpha = 3),
   dynfunc = function(t, x, parms) c(3*x["d"]*t, 0),
   ratefunc = function(t, x, parms) 1,
@@ -46,7 +47,8 @@ test_that("method 'plot' plots correctly for multSimData objects", {
 test_that("method 'plotStats' plots correctly for multSimData objects",{
   skip_on_cran()
   msd <- getMultSimData(ms)
-  testplot <- function() plotStats(msd, vars = "f", funs = dplyr::funs(min, max, mean))
+  testplot <- function() 
+    plotStats(msd, vars = "f", funs = dplyr::funs(min, max, mean))
   vdiffr::expect_doppelganger("plotStats", testplot(), path = "")
 })
 

@@ -32,6 +32,9 @@ NULL
 #' edited with fixParms.
 #' @slot init initial state of the simulation. This is a named vector giving
 #' the names of all variables and their start value.
+#' @slot discStates a list. For every discrete variable, \code{discStates} contains
+#' a vector with all its possible state values. This entry should have the
+#' same name as the discrete variable.
 #' @slot dynfunc a \code{function(time, variables, parms)} that returns a vector
 #' with odes for every variable. The order and length of the vector should be the 
 #' same as in slot "init", discrete variables should have 0 as entry.
@@ -91,6 +94,7 @@ setClass("pdmpModel",
          slots = list(descr = "character", 
                       parms = "numericOrlist", 
                       init = "numeric", 
+                      discStates = "list",
                       times = "numeric",
                       dynfunc = "function", 
                       jumpfunc = "function", 
@@ -108,6 +112,9 @@ setClass("pdmpModel",
 #' be edited with fixParms.
 #' @param init initial state of the simulation. This is a named vector giving
 #' the names of all variables and their start value.
+#' @param discStates a list. For every discrete variable, \code{discStates} contains
+#' a vector with all its possible state values. This entry should have the
+#' same name as the discrete variable.
 #' @param dynfunc a \code{function(time, variables, parms)} that returns a 
 #' vector with odes for every variable. The order and length of the vector 
 #' should be the same as in slot "init", discrete variables should have 0 
@@ -141,11 +148,13 @@ pdmpModel <- function(obj = NULL,
                       times = c(from = 0, to = 10, by = 1), 
                       init = c(0, 0), 
                       parms = c(0), 
+                      discStates = list(0),
                       out = NULL, 
                       solver = "lsodar", 
                       initfunc = NULL) {
-  obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc, 
+  obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc,
              descr = descr, ratefunc = ratefunc, times = times, init = init, 
-             parms = parms, initfunc = initfunc, solver = solver, out = out)
+             parms = parms, initfunc = initfunc, solver = solver, out = out,
+             discStates = discStates)
   invisible(obj)
 }

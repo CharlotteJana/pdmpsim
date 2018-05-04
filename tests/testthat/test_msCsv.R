@@ -1,3 +1,6 @@
+#======== todo =================================================================
+#t3 test LaF links are correct sinnlos, weil gleicher code im Quelltext?
+
 context("multSimCsv")
 
 #--------------- set working directory and simulate --------------
@@ -45,7 +48,8 @@ test_that("results ms and msCsv are equal", {
   expect_identical(length(msCsv$timeList), length(ms$timeList))
 })
 
-test_that("LaF links are correct", { #! hier wird im Quellcode die gleiche Funktion benutzt -> sinnloser test?
+test_that("LaF links are correct", { 
+  #! hier wird im Quellcode die gleiche Funktion benutzt -> sinnloser test?
   loaded <- loadMultSimCsv("mscsv_MultSimCsv.rda")
   expect_equal(msCsv$seeds, unlist(loaded$lafList[[1]][,1], use.names = FALSE))
   expect_equal(msCsv$lafList[[2]][,20], loaded$lafList[[2]][,20])

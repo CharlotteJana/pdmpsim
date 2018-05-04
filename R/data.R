@@ -12,8 +12,8 @@
 #' examples.
 #' @slot parms There are no parameters for this model.
 #' @slot init  There is one continous variable \code{f} with initial value 0
-#' and one discrete variable \code{d} with codomain \{-1, 0, 1\} and initial 
-#' value 0.
+#' and one discrete variable \code{d} initial value 0.
+#' @slot discStates The discrete variable \code{d} has codomain \{-1, 0, 1\}.
 #' @slot dynfunc The continous variable \code{f} evolves as linear function
 #' \eqn{f(t) = t} if \code{d = 1},
 #' as \eqn{f(t) = -t} if \code{d = -1} and is constant zero if \code{d = 0}. 
@@ -39,6 +39,7 @@
 #' simplePdmp <- pdmpModel(
 #'     descr = "A simple PDMP",
 #'     init = c(f = 0, d = 0),
+#'     discStates = list(d = c(-1, 0, 1)),
 #'     times = c(from = 0, to = 10, by = 0.01),
 #'     dynfunc = function(t, x, parms) c(x["d"], 0),
 #'     ratefunc = function(t, x, parms) c(1+x["d"], 1-x["d"]),
@@ -67,8 +68,10 @@
 #' which describe the concentration of gene products from gene A and gene B, 
 #' respectivly. Both have initial value 0.5. The two discrete variables 
 #' \eqn{d_A}{dA} and \eqn{d_B}{dB} describe the expression state of gene A and 
-#' gene B. They have a codomain \{0, 1\} where 0 stands for "blocked" and 1 
-#' stands for "unblocked" and have the initial value 1.
+#' gene B and have initial value 1, which means that both genes are not blocked.
+#' @slot discStates The discrete variables \eqn{d_A}{dA} and \eqn{d_B}{dB} both
+#' have codomain \{0, 1\} where 0 stands for "Gene A/B is blocked" and 1 
+#' stands for "Gene A/B is unblocked".
 #' @slot dynfunc The dynamic of the continous variable \eqn{f_A}{fA} depends on 
 #' the state of discrete variable \eqn{d_A}{dA}. In case \eqn{d_A = 0}{dA = 0} 
 #' it is given by \eqn{\frac{df_A}{dt} = -b_A \cdot f_A}{dfA/dt = -bA⋅fA} 
@@ -110,6 +113,7 @@
 #'     descr = "Toggle Switch with two Promotors",
 #'     parms = list(bA = 0.1, bB = 1, aA = 2, aB = 4, k01A = 0.5, k10A = 2, k01B = 1/3, k10B = 3),
 #'     init = c(fA = 0.5, fB = 0.5, dA = 1.0, dB = 1.0),
+#'     discStates = list(dA = c(0, 1), dB = c(0, 1)),
 #'     times = c(from = 0, to = 10, by = 0.01),
 #'     dynfunc = function(t, x, parms) {
 #'        df <- with(as.list(c(x, parms)), c(-bA*fA + aA*dA, -bB*fB + aB*dB))
