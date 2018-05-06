@@ -1,6 +1,5 @@
 #======== todo =================================================================
-#t1 example das zeigt, dass die ergebnisse von mean.multSim und 
-#t1 mean.multSimCsv nicht exakt übereinstimmen
+
 
 #'@rdname mean
 #'@importFrom LaF colmean

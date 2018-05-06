@@ -1,7 +1,6 @@
 #======== todo =================================================================
-#t1 plot: stetige/diskrete Variablen über pdmp-slot bestimmen
-#t2 NA for den Plots ausführen
-#t2 plot: subtitle: anzahl der Seeds mit Hinschreiben
+#t2 NA vor den Plots ausführen
+#t3 plot: subtitle: anzahl der Seeds mit Hinschreiben
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL
@@ -110,11 +109,12 @@ plotTimes.multSim <- function(x, vars, times, threshold = NULL,
     vars <- names(x$model@init)
   if(missing(times)){
     t <- fromtoby(x$model@times)
-    times <- t[seq(1, length(t), 10)]
+    times <- t[seq(1, length(t), length.out = 10)]
   }
-  
   data <- getMultSimData(x, times = times)
-  plot <- plotTimes(data, times = times, ...) + ggplot2::ggtitle(x$model@descr)
+  plot <- plotTimes(data, times = times, vars = vars, 
+                    threshold = threshold, plottype = plottype, ...) + 
+          ggplot2::ggtitle(x$model@descr)
   return(plot)
 }
 

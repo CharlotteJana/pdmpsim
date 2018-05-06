@@ -1,12 +1,9 @@
 #======== todo =================================================================
 #t1 Beispiele verändern (simplePdmp?, mit Initfunc?)
-#t1 jumptype beschreiben
 #t2 Warum muss die Dokumentation doppelt sein? Konstruktor anders definieren?
 #t3 initialize method schreiben wie in polyPdmpKlasse
 #t2 achtung: zur zeit MUSS solver = "lsodar" mitübergeben werden. warum?
 #t3 validity method schreiben wie in polyPdmpKlasse (aber mit Inhalt!)
-#t1 lsodar von deSolve importieren und in Description schreiben? 
-#t1 Sonst Probleme mit examples!
 
 #' @import methods
 NULL

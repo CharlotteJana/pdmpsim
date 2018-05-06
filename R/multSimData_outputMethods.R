@@ -1,16 +1,10 @@
 #======== todo =================================================================
-#t2 hist: bei mehreren diskreten Variablen wird der Barplot nicht 
-#t2       korrekt beschriftet (names.arg = c("dA", "dB") geht nicht!)
 #t2 plotStats: label oben hinzufügen
-#t1 plotStats, plotTimes: missing funktioniert nicht, warum?
 #t2 plotStats: Titel ermöglichen
-#t1 summarize_at: correct generic function definition?
-#t2 density: in plotDensity umbenennen?
+#t3 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
-#t1 docmuentation anpassen, nachdem ddomain slot eingefügt
 #t2 plotSeeds: parameter seeds - warum nur wenn x multSim ist?
-#t1 hist & density mit toggleSwitch zeigen nur eine diskrete Variable
 
 #' @include multSimData.R
 NULL
@@ -295,7 +289,6 @@ plotStats <- function(x, vars, funs, ...){
 #' @export
 plotStats.multSimData <- function(x, vars, funs, ...){
   
-  ##todo: missing funktioniert nicht, warum ????
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
   if(missing(funs)) funs <- dplyr::funs("min", "median", "mean", "max", "sd")
   
@@ -409,9 +402,9 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
   if(missing(times)){
     t <- unique(x$time)
-    times <- t[seq(1, length(t), 10)]
+    times <- t[seq(1, length(t), length.out = 10)]
   }
-    x <- getMultSimData(x, times = times)
+  x <- getMultSimData(x, times = times)
   
   if(length(unique(x$time)) > 12)
     stop("To many different values for variable \"time\".")
@@ -464,7 +457,7 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   # plot <- plot + ggplot2::labs(y = "logarithmic scale") + 
   #                ggplot2::scale_y_log10()
   
-  plot <- plot + ggplot2::facet_grid(variable ~ time) +
+  plot <- plot + ggplot2::facet_grid(variable ~ time, scales = "free") +
     ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                    axis.ticks.x = ggplot2::element_blank())
   
@@ -481,8 +474,6 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
 #' (\code{\link{PDMP}}). It plots every continous variable in its own histogram 
 #' and all discrete variables in a stacked barplot. 
 #' 
-#' @note All variables with more than six different values are considered as 
-#' continous.
 #' @param x object of class \code{\link{multSimData}} or \code{\link{multSim}}.
 #' @param t a single time value at which the histogram shall be plotted.
 #' The parameter can be omitted if \code{x} contains only one time value.

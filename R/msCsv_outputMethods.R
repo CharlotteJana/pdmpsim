@@ -1,6 +1,5 @@
 #======== todo =================================================================
-#t1 dokumentieren, dass man getMultSimData aufrufen muss, um die entsprechenden 
-#t1 print-methoden verwenden zu können.
+
 
 #' @importFrom utils str
 #' @importFrom stats median

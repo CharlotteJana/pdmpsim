@@ -4,7 +4,11 @@
 #t1 Problem bei mean Funktionen: Es gibt NA simulations (Fehlermeldung angeben!!!)
 #t1 na.rm als variable einfügen -> dann vllt kein aufruf von removeSeeds mehr nötig?
 #t3 mean mit ... testen
+#t1 toggleSwitch -> mean(dA) sollte gleich sein für msCsv und ms!
 #t3 examples für mean, removeSeeds, moments
+#t1 example das zeigt, dass die ergebnisse von mean.multSim und 
+#t1 mean.multSimCsv nicht exakt übereinstimmen
+
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R
 NULL

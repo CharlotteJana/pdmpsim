@@ -196,7 +196,7 @@ getMultSimData.multSimData <- function(x, times, seeds){
     times <- unique(x$time)
   if(missing(seeds) || is.null(seeds))
     seeds <- unique(x$seed)
-  x <- subset(x, time == times && seed == seeds)
+  x <- subset(x, time %in% times & seed %in% seeds)
   return(x)
 }
 

@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t1 print methode dokumentieren
 
 #' @include pdmp_class.R
 NULL
@@ -129,6 +128,12 @@ setMethod(f = "format",
 
 #---------- print --------------
 
+#' Methods for funktion print in package \pkg{pdmpsim}
+#' 
+#' @param x an object of class \code{pdmpModel} or one of its subclasses.
+#' @param all speciefies whether all slots are printed. If FALSE (the default),
+#' only the slots that characterize the model will be printed.
+#' @param ... optional parameters passed to print.
 #' @importFrom utils str
 #' @export
 setMethod(f = "print",

@@ -95,6 +95,28 @@
 #' object, \code{multSim} to perform multiple simulations that need not
 #' too much memory, \code{\link{multSim2multSimCsv}} to convert an object
 #' created with method \code{multSim} into a \code{multSimCsv} object.
+#' 
+#' @section Working with the simulations:
+#' 
+#' If you stored your simulations in csv files with \code{multSimCsv}, you
+#' can access the results by loading the corresponding \code{rda} object
+#' with \code{\link{loadMultSimCsv}} and store them in a variable, i.e. 
+#' \code{msCsv}. Then you can read out i.e. the simulated values of 
+#' the second variable (referring to the order of your variables in 
+#' slot \code{init}) with the third seed via \code{msCsv$lafList[[2]][3, ]}.\cr
+#' 
+#' There are also a lot of plot methods available. To use them, you first
+#' have to choose some seed numbers and time values and use method
+#' \code{\link{getMultSimData}} to store them in a \code{data.frame}. 
+#' This method may need some time for calculation and the result needs to
+#' fit into the working memory. Afterwards, you can apply methods
+#' \code{\link{plot}}, \code{\link{plotTimes}}, \code{\link{plotStats}},
+#' \code{\link{summarize_at}}, \code{\link{hist}}, \code{\link{density}} 
+#' and \code{\link{plotSeeds}} on the data.frame created with 
+#' \code{getMultSimData}. You can also use \code{\link{plotTimes}} to find 
+#' the seed numbers of interesting outliers by setting an appropriate threshold.
+#' 
+#' \code{}
 #' @aliases multsimcsv
 #' @importFrom utils write.table
 #' @export
