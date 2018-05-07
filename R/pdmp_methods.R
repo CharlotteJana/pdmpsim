@@ -54,8 +54,9 @@ printVect <- function(v, collapse = ", ", sep = " = "){
 #' data("toggleSwitch")
 #' format(toggleSwitch, begin = "ToggleSwitch__", end = ".rda")
 #' format(toggleSwitch, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
-#' toggleSwitch@parms <- list()
+#' parms(toggleSwitch) <- list()
 #' cat(format(toggleSwitch, short = FALSE, collapse = ".\n",
+#'            slots = c("init", "times", "discStates"),
 #'            begin = "A model without parameters:\n"))
 #' 
 #' @aliases format
@@ -80,8 +81,7 @@ setMethod(f = "format",
     descrVals <- descr(x)
     result <- paste0(result, paste0(descrName, descrVals, collapse))
   }
-  if("parms" %in% slots){
-    if(length(parms(x)) == 0) break()
+  if("parms" %in% slots & length(parms(x)) != 0){
     parmsName <- ifelse(short, "Parms_", ifelse(length(parms(x)) == 1, 
                                                 "Parameter: ", 
                                                 "Parameters: "))
@@ -103,10 +103,12 @@ setMethod(f = "format",
    for(i in seq_along(discStates(x))){
      statesVals <- paste0(statesVals, 
                          names(discStates(x))[i],
-                         ifelse(short, "", " ϵ "),
+                         ifelse(short, "", " \U220A "),
                          "{",
                          paste(discStates(x)[[i]], collapse = ","),
-                         ifelse(short, "}", "}"))
+                         "}")
+     if(i != length(discStates(x)) & !short)
+       statesVals <- paste0(statesVals, ", ")
    }
    result <- paste0(result, paste0(statesName, statesVals, collapse))
   }

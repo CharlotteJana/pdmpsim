@@ -5,6 +5,7 @@
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
 #t2 plotSeeds: parameter seeds - warum nur wenn x multSim ist?
+#t1 plotTimes: threshold sollte um den Median herum gehen und nicht um 0
 
 #' @include multSimData.R
 NULL

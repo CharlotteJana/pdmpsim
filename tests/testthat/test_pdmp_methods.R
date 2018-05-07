@@ -32,7 +32,7 @@ test_that("format works as expected", {
   expect_identical(format(pdmp, short=TRUE, collapse = "\n"),
                    "Parms_α=3\nInit_f=10_d=1\nTimes_0_10_0.01")
   expect_identical(format(pdmp, short = FALSE, slots = "discStates", end = "."),
-                   "Discrete States: d ϵ {-1,1}.")
+                   "Discrete States: d ∊ {-1,1}.")
 })
 
 test_that("method 'print' prints something", {

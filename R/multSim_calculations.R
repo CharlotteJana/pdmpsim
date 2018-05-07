@@ -87,3 +87,10 @@ moments.multSim <- function(x, order){
   colnames(moments) <- colnames(x$outputList[[1]])
   return(data.frame(moments))
 }
+
+#' @rdname summarise_at
+#' @export
+summarise_at.multSim <- function(.tbl, .vars, .funs, ...){
+  x <- getMultSimData(.tbl)
+  summarise_at(x, .vars, .funs, ...)
+}
