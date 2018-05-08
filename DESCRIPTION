@@ -1,7 +1,7 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.0-1
+Version: 1.0-2
 Author: Volkmar Liebscher, Charlotte Jana
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic 
