@@ -47,6 +47,7 @@ leads to a probability of \eqn{\frac{1}{2}}{½} to have a jumptype of type
 
 \examples{
 ## the code used to generate this model:
+
 simplePdmp <- pdmpModel(
     descr = "A simple PDMP",
     init = c(f = 0, d = 0),
