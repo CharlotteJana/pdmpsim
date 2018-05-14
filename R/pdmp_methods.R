@@ -1,4 +1,5 @@
 #======== todo =================================================================
+#t1 Plot methode wird nicht exportiert. Warum nicht???
 
 #' @include pdmp_class.R
 NULL
@@ -197,10 +198,9 @@ setMethod("plot", signature(x="pdmpModel", y="missing"),
           function(x, y, ...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
-            o.par <- par(oma = c(0,0,2,0))
+            par(oma = c(0,0,2,0))
             do.call("plot", alist(x@out, ...))
             graphics::title(x@descr, line = -0.3, outer = TRUE)
-            par(o.par)
           }
 )
 

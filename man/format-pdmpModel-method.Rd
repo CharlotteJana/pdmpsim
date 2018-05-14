@@ -43,7 +43,7 @@ format(toggleSwitch, begin = "ToggleSwitch__", end = ".rda")
 format(toggleSwitch, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
 parms(toggleSwitch) <- list()
 cat(format(toggleSwitch, short = FALSE, collapse = ".\\n",
-           slots = c("parms", "init", "times", "discStates"),
+           slots = c("init", "times", "discStates"),
            begin = "A model without parameters:\\n"))
 
 }

@@ -4,6 +4,7 @@
 #t3 Die Hilfe ist sehr lang, aber wenn ich weniger dokumentiere, kommen Fehler
 #t3 wenn discStates geändert, verify aufrufen
 #t1 discStates sollte out löschen, oder nicht?
+#t3 warum muss ich eine generic für parms<- schreiben?
 
 #======== Description ===========
 
@@ -25,8 +26,8 @@
 #' @param obj an object of class \code{\link{pdmpModel}}
 #' @param value the value that shall be set
 #'
-#' @importMethodsFrom simecol "parms" "parms<-" "times" "times<-" 
-#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "solver" "solver<-"
+#' @importMethodsFrom simecol "times" "times<-" "solver" "solver<-"
+#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms"
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
 #' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
 #' @include pdmp_class.R
@@ -66,6 +67,9 @@ setGeneric("discStates", function(obj) standardGeneric("discStates"))
 #' @rdname pdmp-accessors
 #' @export
 setGeneric("discStates<-", function(obj, value) standardGeneric("discStates<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("parms<-", function(obj, value) standardGeneric("parms<-"))
 
 #======= Getters ==========
 
@@ -105,6 +109,13 @@ setMethod("ratefunc<-", "pdmpModel", function(obj, value) {
 #' @export
 setMethod("jumpfunc<-", "pdmpModel", function(obj, value) {
   obj@jumpfunc <- value
+  out(obj) <- NULL
+  invisible(obj)
+})
+#' @rdname pdmp-accessors
+#' @export
+setMethod("parms<-", "pdmpModel", function(obj, value) {
+  obj@parms <- value
   out(obj) <- NULL
   invisible(obj)
 })

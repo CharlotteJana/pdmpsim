@@ -13,6 +13,7 @@
 \alias{descr<-}
 \alias{discStates}
 \alias{discStates<-}
+\alias{parms<-}
 \alias{dynfunc,pdmpModel-method}
 \alias{ratefunc,pdmpModel-method}
 \alias{jumpfunc,pdmpModel-method}
@@ -21,6 +22,7 @@
 \alias{dynfunc<-,pdmpModel-method}
 \alias{ratefunc<-,pdmpModel-method}
 \alias{jumpfunc<-,pdmpModel-method}
+\alias{parms<-,pdmpModel-method}
 \alias{discStates<-,pdmpModel-method}
 \alias{descr<-,pdmpModel-method}
 \alias{main<-,pdmpModel-method}
@@ -48,6 +50,8 @@ discStates(obj)
 
 discStates(obj) <- value
 
+parms(obj) <- value
+
 \S4method{dynfunc}{pdmpModel}(obj)
 
 \S4method{ratefunc}{pdmpModel}(obj)
@@ -63,6 +67,8 @@ discStates(obj) <- value
 \S4method{ratefunc}{pdmpModel}(obj) <- value
 
 \S4method{jumpfunc}{pdmpModel}(obj) <- value
+
+\S4method{parms}{pdmpModel}(obj) <- value
 
 \S4method{discStates}{pdmpModel}(obj) <- value
 

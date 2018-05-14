@@ -88,13 +88,13 @@ edited with fixParms.}
 \item{\code{init}}{initial state of the simulation. This is a named vector giving
 the names of all variables and their start value.}
 
-\item{\code{discStates}}{a list. For every discrete variable, \code{discStates} contains
-a vector with all its possible state values. This entry should have the
-same name as the discrete variable.}
+\item{\code{discStates}}{a list. For every discrete variable, \code{discStates} 
+contains a vector with all its possible state values. This entry should have 
+the same name as the discrete variable.}
 
 \item{\code{dynfunc}}{a \code{function(time, variables, parms)} that returns a vector
-with odes for every variable. The order and length of the vector should be the 
-same as in slot "init", discrete variables should have 0 as entry.}
+with odes for every variable. The order and length of the vector should be 
+the same as in slot "init", discrete variables should have 0 as entry.}
 
 \item{\code{ratefunc}}{a \code{function(t, x, parms)} that returns a vector with
 transition rates from the actual state to another state. Only non zero rates 
@@ -161,8 +161,8 @@ print(head(out(discPdmp)))
 }
 \references{
 \tabular{ll}{
-\eqn{\,}{ }[Dav84] \tab Davis, M. H. (1984). Piecewise-deterministic Markov processes: 
- A general class of \cr
+\eqn{\,}{ }[Dav84] \tab Davis, M. H. (1984). Piecewise-deterministic Markov 
+processes: A general class of \cr
  \tab non-diffusion stochastic models. \emph{Journal of the Royal 
  Statistical Society. Series B} \cr
  \tab \emph{(Methodological)}, 353-388. \cr
