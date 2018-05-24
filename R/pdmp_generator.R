@@ -24,13 +24,14 @@ NULL
 #' sums over all j ϵ D.}
 #'
 #' @param obj an object of class pdmpModel or one of its subclasses
-#' @return The generator \code{Q} of \code{obj} as defined above. 
-#' This is a function which takes as argument a single function \code{f}. 
-#' The arguments of function \code{f} have to be the same as the variables of 
-#' the process \eqn{X_t}{Xₜ} and should therefore have the same names as 
-#' \code{init(obj)}. The resulting function \code{Q(f)} is a function with 
-#' parameters t, x where t is the time value and x is a named vector with the 
-#' same names as in \code{init(obj)}.
+#' @return The generator \code{Q} of \code{obj} as defined above. This is a
+#'   function which takes as argument a single function \code{f}. The arguments
+#'   of function \code{f} have to be the same as the variables of the process
+#'   \eqn{X_t}{Xₜ} and should therefore have the same names and the same order
+#'   as the variables given in \code{init(obj)}. The resulting function
+#'   \code{Q(f)} is a function with parameters t, x where t is the time value
+#'   and x is a named vector with the same names (in the same order) as in
+#'   \code{init(obj)}.
 #' @examples
 #' data("simplePdmp")
 #' g <- function(d, f) d*f
