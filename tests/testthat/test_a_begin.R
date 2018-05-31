@@ -16,6 +16,6 @@ simplePdmp <- pdmpModel(
 )
 
 suppressMessages(try({
-  multSimCsv(simplePdmp, seeds = 1:10, prefix = "test")
-  saveRDS(multSim(simplePdmp, seeds = 1:10), file = "test_MultSim.rda")
+  multSimCsv(simplePdmp, seeds = 1:5, prefix = "test")
+  saveRDS(multSim(simplePdmp, seeds = 1:5), file = "test_MultSim.rda")
 }, silent = TRUE))

@@ -45,7 +45,7 @@ NULL
 #' )
 #' identical(Qg_theoretic(-1, f_values), Qg_method(-1, f_values))
 #' plot(f_values, Qg_theoretic(1, f_values))
-#' lines(f_values, Qg_method(1, f_values), col = "red", lwd = 3)#' 
+#' lines(f_values, Qg_method(1, f_values), col = "red", lwd = 3)
 #' @export
 setGeneric("generator", function(obj) standardGeneric("generator"))
 

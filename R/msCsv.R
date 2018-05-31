@@ -9,6 +9,7 @@
 #t3 Wäre der parameter uniqueSeeds auch bei anderen methoden sinnvoll?
 #t3 uniqueSeeds getestet?
 #t3 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
+#t2 absolute paths in msCsv$csvlist?
 
 #------------------- multSimCsv --------------------------
 
@@ -222,7 +223,13 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
                            model = obj),
                       class = "multSimCsv")
   saveRDS(msCsv, file = multSimName)
-  msCsv <- loadMultSimCsv(msCsv)
+  
+  #load laf
+  msCsv$lafList <- list(0)
+  for(i in seq_along(msCsv$csvList)){
+    msCsv$lafList[[i]] <- laf_open(msCsv$datamodel, file = csvNames[[i]])
+  }
+  
   return(msCsv)
 }
 
@@ -260,18 +267,18 @@ loadMultSimCsv.multSimCsv <- function(x, dir = "."){
   x$lafList <- list(0)
   for(i in seq_along(x$csvList)){
     x$lafList[[i]] <- laf_open(x$datamodel, 
-      file = normalizePath(paste0(dir,"/", x$csvList[[i]])))
+      file = normalizePath(file.path(dir, x$csvList[[i]])))
   }
   return(x)
 }
 
 #' @describeIn loadMultSimCsv load multSimCsv from rda file and create LaF links
 loadMultSimCsv.character <- function(x, dir = "."){
-  msCsv <- readRDS(file = normalizePath(paste0(dir, "/", x)))
+  msCsv <- readRDS(file = normalizePath(file.path(dir, x)))
   msCsv$lafList <- list(0)
   for(i in seq_along(msCsv$csvList)){
     msCsv$lafList[[i]] <- laf_open(msCsv$datamodel, 
-      file = normalizePath(paste0(dir,"/", msCsv$csvList[[i]])))
+      file = normalizePath(file.path(dir, msCsv$csvList[[i]])))
   }
   return(msCsv)
 }
