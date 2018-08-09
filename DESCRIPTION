@@ -1,11 +1,14 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.0-4
-Author: Volkmar Liebscher, Charlotte Jana
+Version: 1.1-1
+Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"),email = "volkmar.liebscher@uni-greifswald.de"),
+person("Charlotte", "Jana", role = "aut")
+)
+Author:  Volkmar Liebscher [aut,cre], Charlotte Jana[aut]
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic 
-    markov processes (PDMPs). The package contains methods to simulate, store multiple 
+    markov processes (PDMPs) and mrokov jump processes (MJPs). The package contains methods to simulate, store multiple 
     simulations, calculate some statistics on them, plot methods and a function to 
     calculate the generator of a PDMP. The PDMPs can have multiple discrete and 
     continous variables, but are not allowed to have borders or a varying number 
@@ -48,3 +51,8 @@ Collate:
     'pdmp_accessors.R'
     'pdmp_generator.R'
     'pdmpsim-package.R'
+    'mjp_accessors.R'
+    'mjp_class.R'
+    'mjp_methods.R'
+    'mjp_sim.R'
+    
