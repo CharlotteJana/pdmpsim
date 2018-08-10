@@ -1,6 +1,7 @@
 #======== todo =================================================================
 
 #t1 toggleSwitch: references
+#t2: SIRstoch: implement
 
 #######################################################################
 
@@ -94,3 +95,49 @@
 #' for the formal description of the S4 class.
 #' @example inst/models/toggleSwitch.R
 "toggleSwitch"
+
+
+#######################################################################
+
+#' Kendalls birth-and-death process
+#'
+#' This is a simple example for a markov jump process
+#' defined as \code{\link{mjpModel}}. It is included to the package for 
+#' demonstration purposes.
+#' @slot parms birth and death rate.
+#' @slot init  There is one integer  variable \code{N} with initial value 1.
+#' @slot jumpfunc There are two jumptypes. Births  jump from \code{N} to 
+#' \code{N + 1}, deaths from \code{N} to \code{N - 1}. 
+#' @slot ratefunc A vector of length two determining the probability of a jump 
+#' being a birth or a death. 
+#' @slot times The simulations will start at time \code{t = 0} and end at 
+#' \code{t = 10} with step length 0.01.
+#' @format An object of class \code{\link{mjpModel}}.
+#' @seealso \code{\link{SIRstoch}} for a more sophisticated example of a 
+#' \code{mjpModel} and \code{\link{mjpModel-class}}
+#' for the formal description of the S4 class.
+#' @example inst/models/KendallBD.R
+"KendallBD"
+
+
+#######################################################################
+
+#' Stochastic SIR dynamics
+#'
+#' This is a mor complicated example for a markov jump process
+#' defined as \code{\link{mjpModel}}. It is included to the package for 
+#' demonstration purposes.
+#' @slot parms infection (\code{beta}) and recovery  rate (\code{gamma}).
+#' @slot init  There are three integer  variables \code{S,I,R} with initial value (10,1,0).
+#' @slot jumpfunc There are two jumptypes. infections  jump from \code{(S,I,R)} to 
+#' \code{(S-1,I+1,R)}, recoveries from \code{(S,I,R)} to \code{(S,I-1,R+1)}. 
+#' @slot ratefunc A vector of length two determining the probability of a jump 
+#' being a recovery or infection. 
+#' @slot times The simulations will start at time \code{t = 0} and end at 
+#' \code{t = 10} with step length 0.01.
+#' @format An object of class \code{\link{mjpModel}}.
+#' @seealso \code{\link{KendallBD}} for a  simpler example of a 
+#' \code{mjpModel} and \code{\link{mjpModel-class}}
+#' for the formal description of the S4 class.
+#' @example inst/models/SIRstoch.R
+"SIRstoch"

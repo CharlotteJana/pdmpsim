@@ -1,7 +1,8 @@
 #======== todo =================================================================
 #t3 I = survival function?
-
-#' @include mjp_class.R mjp_methods.R
+#' @useDynLib pdmpsim, .registration = TRUE
+#' @include pdmp_class.R pdmp_methods.R pdmp_sim.R mjp_class.R mjp_methods.R mjp_accessors.R
+#' @name mjp.sim
 NULL
 
 ##### method sim ####
@@ -41,18 +42,15 @@ NULL
 #' @example /inst/examples/ex_mjp_sim.R
 #' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 #' for multiple simulations, ... for plot and summary methods of the simulation.
-#' @aliases sim
 #' @importMethodsFrom simecol sim
 #' @importFrom simecol fromtoby
-#' @importFrom stats rexp
+#' @importFrom stats approx
+#' @aliases sim sim,mjpModel-method sim,mjpModel,ANY-method sim,mjpModel,mjpModel-method 
+#' @rdname mjp.sim
 #' @export
-
-
-
 setMethod("sim", "mjpModel", function(obj, initialize = FALSE, 
                                        seed = 1,  
                                        njump = 1e+06, outSlot = TRUE, ...) {
-  
   # initialization
   seed <- rep(seed, len = 2)
   set.seed(seed[1])
@@ -63,24 +61,23 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
   times <- fromtoby(obj@times)
   parms <- obj@parms
   #check consistency
-  objdim <- length(obj@init) # = n = continous variables + discrete variables
-  ratesdim<-length(obj@ratesfunc(obj@init));
-    for (i in 1:ratesdim) {if (length(obj@jumpfunc(init,i)) != objdim) stop("jump function has wrong dimension of output")}
+  objdim <- length(obj@init) #  number of variables
+  ratesdim<-length(obj@ratesfunc(obj@init,obj@parms));
+    for (i in 1:ratesdim) {if (length(obj@jumpfunc(init,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
   #actual   
     outa<-.Call("sim_mjp",as.integer(njump),
                as.double(init),
-               obj@parms,environment(obj@parms),
+               as.double(obj@parms),
                as.double(range(times)),
-               obj@jumpfunc,environment(obj@jumpfunc),
-               obj@ratesfunc,environment(obj@ratesfunc),
+               obj@jumpfunc,
+               obj@ratesfunc,parent.frame(),
                NAOK=TRUE,PACKAGE="pdmpsim");
-    out<-as.data.frame(out)
-    colnames(out)<-c("t",names)
-    return(out)
-
+    out<-as.data.frame(apply(x=outa[,-1],
+                             MARGIN = 2,
+                             FUN=function(u) stats::approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")))
+    colnames(out)<-c("t",names(obj@init))
   class(out) <- c("deSolve", "matrix")
   obj@out <- out
-
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
 })

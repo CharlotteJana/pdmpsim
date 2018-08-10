@@ -1,19 +1,12 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.1-1
-Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"),email = "volkmar.liebscher@uni-greifswald.de"),
-person("Charlotte", "Jana", role = "aut")
-)
-Author:  Volkmar Liebscher [aut,cre], Charlotte Jana[aut]
+Version: 1.1-11
+Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
+Author:  Volkmar Liebscher [aut, cre], 
+  Charlotte Jana[aut]
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
-Description: Simulate certain stochastic processes  known as piecewise deterministic 
-    markov processes (PDMPs) and mrokov jump processes (MJPs). The package contains methods to simulate, store multiple 
-    simulations, calculate some statistics on them, plot methods and a function to 
-    calculate the generator of a PDMP. The PDMPs can have multiple discrete and 
-    continous variables, but are not allowed to have borders or a varying number 
-    of continous variables (the number should be independent of the state of the 
-    discrete variable).
+Description: Simulate certain stochastic processes  known as piecewise deterministic Markov processes (PDMPs) and Markov jump processes (MJPs). The package contains methods to simulate, store multiple simulations, calculate some statistics on them, plot methods and a function to calculate the generator of a PDMP. The PDMPs can have multiple discrete and continous variables, but are not allowed to have borders or a varying number of continous variables (the number should be independent of the state of the discrete variable).
 License: GPL(>= 2)
 Encoding: UTF-8
 URL: https://github.com/CharlotteJana/pdmpsim
@@ -51,8 +44,8 @@ Collate:
     'pdmp_accessors.R'
     'pdmp_generator.R'
     'pdmpsim-package.R'
+    'markovjp_class.R'
     'mjp_accessors.R'
-    'mjp_class.R'
     'mjp_methods.R'
     'mjp_sim.R'
     

@@ -1,33 +1,9 @@
 #======== todo =================================================================
 #t1 Plot methode wird nicht exportiert. Warum nicht???
 #t2 examples anpassen
-#' @include mjp_class.R
+#' @include  pdmp_class.R pdmp_methods.R mjp_class.R mjp_accessors.R
 NULL
 
-#---------- private methods -----------
-
-#' printVect
-#' 
-#' Convert a named numeric vector to a string. All numbers are rounded up to 2 
-#' significant digits. This is a helpfunction for method \code{\link{format}}.
-#' 
-#' @param v a named numeric vector
-#' @param sep a character string to separate the names and terms. 
-#' Not \code{\link{NA_character_}}.
-#' @inheritParams base::paste 
-#' @return a string containing the names and rounded values of the vector.
-#' @examples
-#' pdmpsim:::printVect(c("foo" = 1/3, "bar" = sqrt(2)))
-#' pdmpsim:::printVect(c("a" = 1, "b" = 2, "c" = 3), sep = "~", collapse = NULL)
-#' @keywords internal
-printVect <- function(v, collapse = ", ", sep = " = "){
-  if(length(v) == 0) return(NULL)
-  if(is.numeric(v)) v <- signif(v, digits = 2)
-  paste(vapply(seq_along(v), 
-               function(i) paste(names(v)[i], v[[i]], sep = sep), 
-               character(1)), 
-        collapse = collapse)
-}
 
 #' Format a MJP for pretty printing.
 #'
@@ -52,15 +28,15 @@ printVect <- function(v, collapse = ", ", sep = " = "){
 #' if \code{short} is \code{FALSE}.
 #'
 #' @examples
-#' data("toggleSwitch")
-#' format(toggleSwitch, begin = "ToggleSwitch__", end = ".rda")
-#' format(toggleSwitch, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
-#' parms(toggleSwitch) <- list()
-#' cat(format(toggleSwitch, short = FALSE, collapse = ".\n",
-#'            slots = c("init", "times", "discStates"),
-#'            begin = "A model without parameters:\n"))
+#' data("KendallBD")
+#' format(KendallBD, begin = "ToggleSwitch__", end = ".rda")
+#' format(KendallBD, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
+#' parms(KendallBD) <- list()
+#' cat(format(KendallBD, short = FALSE, collapse = ".\n",
+#'            slots = c("init", "times","parms"),
+#'            begin = "Kendalls birth-death-process:\n"))
 #' 
-#' @aliases format
+#' @aliases format format,mjpModel-method
 #' @export
 setMethod(f = "format", 
           signature = "mjpModel", 

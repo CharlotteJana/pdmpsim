@@ -1,6 +1,7 @@
 #======== todo =================================================================
-#t1 
-
+#t1 document generics
+#' @name mjpaccessors
+NULL
 
 #======== Description ===========
 
@@ -23,50 +24,41 @@
 #' @param value the value that shall be set
 #'
 #' @importMethodsFrom simecol "times" "times<-" "solver" "solver<-"
-#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms"
+#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms" "parms<-"
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
 #' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
-#' @include mjp_class.R
-#' @name mjp-accessors
+#' @include pdmp_class.R pdmp_accessors.R markovjp_class.R
 #' @seealso Class definition \code{\link{mjpModel}}
-NULL
+
 
 #Setgeneric-already in pdmp
 
 #======= Getters ==========
 
-#' @rdname mjp-accessors
-#' @export
-setMethod("dynfunc", "mjpModel", function(obj) obj@dynfunc)
-#' @rdname mjp-accessors
-#' @export
+#' @rdname mjpaccessors
 setMethod("ratefunc", "mjpModel", function(obj) obj@ratefunc)
-#' @rdname mjp-accessors
-#' @export
+#' @rdname mjpaccessors
 setMethod("jumpfunc", "mjpModel", function(obj) obj@jumpfunc)
-#' @rdname mjp-accessors
-#' @export
+#' @rdname mjpaccessors
 setMethod("descr", "mjpModel", function(obj) obj@descr)
 
 
 #======= Setters that set obj@out <- NULL =========
 
-#' @rdname mjp-accessors
-#' @export
+#' @rdname mjpaccessors
 setMethod("ratefunc<-", "mjpModel", function(obj, value) {
   obj@ratefunc <- value
   out(obj) <- NULL
   invisible(obj)
 })
-#' @rdname mjp-accessors
-#' @export
-setMethod("jumpfunc<-", "mjpModel", function(obj, value,jtype) {
+#' @rdname mjpaccessors
+setMethod("jumpfunc<-", "mjpModel", function(obj, value) {
   obj@jumpfunc <- value
   out(obj) <- NULL
   invisible(obj)
 })
-#' @rdname mjp-accessors
-#' @export
+
+#' @rdname mjpaccessors
 setMethod("parms<-", "mjpModel", function(obj, value) {
   obj@parms <- value
   out(obj) <- NULL
@@ -75,33 +67,28 @@ setMethod("parms<-", "mjpModel", function(obj, value) {
 
 #======= Setters that don't change slot out =======
 
-#' @rdname mjp-accessors
-#' @export
-setMethod("discStates<-", "mjpModel", function(obj, value) {
-  obj@discStates <- value
-  invisible(obj)
-})
-#' @rdname mjp-accessors
+
+#' @rdname mjp.accessors
 #' @export
 setMethod("descr<-", "mjpModel", function(obj, value) {
   obj@descr <- value
   invisible(obj)
 })
-#' @rdname mjp-accessors
+#' @rdname mjp.accessors
 #' @export
 setMethod("main<-", "mjpModel", function(obj, value) {
   warning("Slot 'main' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed. Please modify slot 'dynfunc' instead'.")
+  and cannot be changed. Probably you mischose the model type'.")
   invisible(obj)
 })
-#' @rdname mjp-accessors
+#' @rdname mjp.accessors
 #' @export
 setMethod("equations<-", "mjpModel", function(obj, value) {
   warning("Slot 'equations' is a slot inherited by 'simObj' of class 'simecol' 
   and cannot be changed.")
   invisible(obj)
 })
-#' @rdname mjp-accessors
+#' @rdname mjp.accessors
 #' @export
 setMethod("observer<-", "mjpModel", function(obj, value) {
   warning("Slot 'observer' is a slot inherited by 'simObj' of class 'simecol' 

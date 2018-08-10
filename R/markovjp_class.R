@@ -70,7 +70,8 @@ setClass("mjpModel",
                       times = "numeric", 
                       jumpfunc = "function", 
                       ratefunc = "function", 
-                      initfunc = "functionOrNULL"),
+                      initfunc = "functionOrNULL",
+                      solver="character"),
          contains = "simObj")
 
 #' @rdname mjpModel-class
