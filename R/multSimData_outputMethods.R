@@ -129,6 +129,7 @@ plotSeeds.multSimData <- function(x, ...){
   contData <- subset(x, type == "cont")
   discData <- subset(x, type == "disc")
   discData$variable <- factor(discData$variable)
+  contData$variable <- factor(contData$variable)
   discVarNames <- sort(levels(discData$variable))
   discData <- tidyr::spread(discData, variable, value)
   
@@ -187,23 +188,27 @@ plotSeeds.multSimData <- function(x, ...){
          ymin = min - i*height, ymax = min - (i - 1)*height))
   }
   plot <- plot + ggplot2::scale_fill_identity(
-    "discrete\nvariables", guide = "legend", breaks = discCols,
+    ifelse(length(levels(discData$variable)) > 1,
+                 "discrete\nvariables",
+                 "discrete\nvariable"), 
+           guide = "legend", breaks = discCols,
     labels = printVect(discValues,collapse = NULL)
   )
 
   #** Plot continous variables
-  cols <- c("#009E73", "#0072B2", "#D55E00", "#E69F00", 
-            "#56B4E9", "#CC79A7", "#F0E442")
+  cols <- c("#000000", #0072B2", "#009E73", "#D55E00", 
+            "#E69F00", "#56B4E9", "#CC79A7", "#F0E442")
   plot <- plot + 
     ggplot2::geom_line(data = contData, 
                        ggplot2::aes(x = time, y = value, colour = variable), 
                        size = 1) +
     ggplot2::scale_colour_manual(
-      name = "continous\nvariables", 
+      name = ifelse(length(levels(contData$variable)) > 1, 
+                    "continous\nvariables", 
+                    "continous\nvariable"), 
       values = cols[seq_along(levels(contData$variable))])
-  
   # facet_wrap
-  plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
+  #plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
   #plot <- plot + facet_grid(variable ~ seed)
   
   print(plot)
