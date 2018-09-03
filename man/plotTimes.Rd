@@ -7,9 +7,9 @@
 \alias{plotTimes.multSim}
 \title{Plot at different times}
 \usage{
-plotTimes(x, vars, times, threshold = NULL, plottype = "boxplot", ...)
+plotTimes(x, vars, times, nolo = 0, plottype = "boxplot", ...)
 
-\method{plotTimes}{multSimData}(x, vars, times, threshold = NULL,
+\method{plotTimes}{multSimData}(x, vars, times, nolo = 0,
   plottype = "boxplot", ...)
 
 \method{plotTimes}{multSim}(x, vars, times, threshold = NULL,
@@ -24,8 +24,8 @@ plotTimes(x, vars, times, threshold = NULL, plottype = "boxplot", ...)
 ten values between the minimum and maximum provided time values will be 
 plotted.}
 
-\item{threshold}{a positive number. Seed numbers will be printed aside
-every outlier whose absolute value is greater than threshold.}
+\item{nolo}{an integer giving the number of outliers that shall be
+labelled with the seed number that was used for simulation. Defaults to 0.}
 
 \item{plottype}{character vector determining the type of the plot.
 Possible values are 'boxplot', 'violin' or 'dotplot'. Defaults to 'boxplot'.}
@@ -36,9 +36,10 @@ geom_boxplot, geom_violin or geom_dotplot, depending on parameter plottype).}
 \description{
 Plot a boxplot or violin plot or dotplot for every time value 
 in the data.frame (a maximum of 12 different time values is allowed).
-All outliers that outreach a given threshold will be plotted with a
-number on their side. This number represents the seed number that was
-used to simulate the simulation that causes the outlier.
+Outliers can be plotted with a number on their side which represents the 
+seed number that was #' used to simulate the simulation that causes the 
+outlier. The number of outliers that shall be plotted this way is determined
+by parameter \emph{nolo}(= number of labelled outliers).
 A red diamond represents the median of the simulated values.
 The plot is created with \pkg{ggplot2} and can be modified afterwards.
 }
@@ -47,5 +48,5 @@ data("simplePdmp")
 times(simplePdmp) <- c(from = 0, to = 5, by = 1)
 md <- getMultSimData(multSim(simplePdmp, 1:8), times = 1:5)
 plotTimes(md, plottype = 'violin')
-plotTimes(md, threshold = 1)
+plotTimes(md, nolo = 3)
 }

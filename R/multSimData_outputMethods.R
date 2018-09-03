@@ -5,7 +5,6 @@
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
 #t2 plotSeeds: parameter seeds - warum nur wenn x multSim ist?
-#t1 plotTimes: threshold sollte um den Median herum gehen und nicht um 0
 
 #' @include multSimData.R
 NULL
@@ -367,9 +366,10 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' 
 #' Plot a boxplot or violin plot or dotplot for every time value 
 #' in the data.frame (a maximum of 12 different time values is allowed).
-#' All outliers that outreach a given threshold will be plotted with a
-#' number on their side. This number represents the seed number that was
-#' used to simulate the simulation that causes the outlier.
+#' Outliers can be plotted with a number on their side which represents the 
+#' seed number that was #' used to simulate the simulation that causes the 
+#' outlier. The number of outliers that shall be plotted this way is determined
+#' by parameter \emph{nolo}(= number of labelled outliers).
 #' A red diamond represents the median of the simulated values.
 #' The plot is created with \pkg{ggplot2} and can be modified afterwards.
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
@@ -377,8 +377,8 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' @param times numeric vector with time values to plot. If no vector is given,
 #' ten values between the minimum and maximum provided time values will be 
 #' plotted.
-#' @param threshold a positive number. Seed numbers will be printed aside
-#' every outlier whose absolute value is greater than threshold.
+#' @param nolo an integer giving the number of outliers that shall be
+#' labelled with the seed number that was used for simulation. Defaults to 0.
 #' @param plottype character vector determining the type of the plot.
 #' Possible values are 'boxplot', 'violin' or 'dotplot'. Defaults to 'boxplot'.
 #' @param ... additional parameters for the plotting function (either 
@@ -388,16 +388,16 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' times(simplePdmp) <- c(from = 0, to = 5, by = 1)
 #' md <- getMultSimData(multSim(simplePdmp, 1:8), times = 1:5)
 #' plotTimes(md, plottype = 'violin')
-#' plotTimes(md, threshold = 1)
+#' plotTimes(md, nolo = 3)
 #' @importFrom dplyr mutate
 #' @export
-plotTimes <- function(x, vars, times, threshold=NULL, plottype="boxplot", ...){
+plotTimes <- function(x, vars, times, nolo = 0, plottype = "boxplot", ...){
   UseMethod("plotTimes", x)
 }
   
 #' @rdname plotTimes
 #' @export
-plotTimes.multSimData <- function(x, vars, times, threshold = NULL, 
+plotTimes.multSimData <- function(x, vars, times, nolo = 0, 
                                   plottype = "boxplot", ...){
   
   if (!requireNamespace("ggrepel", quietly = TRUE)) {
@@ -408,7 +408,7 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
   if(missing(times)){
     t <- unique(x$time)
-    times <- t[seq(1, length(t), length.out = 10)]
+    times <- t[seq(1, length(t), length.out = 11)]
   }
   x <- getMultSimData(x, times = times)
   
@@ -428,20 +428,33 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   
   #----- Find seeds that belong to outliers --------
   
-  if(is.null(threshold)) threshold <- max(abs(data$value))
+  data[,"print.outlier"] <- NA
   
-  print_outlier <- function(x) {
-    return(x < -abs(threshold) | x > abs(threshold))
+  if(nolo != 0){
+    for(t in levels(x$time)){
+      for(var in vars){
+        d <- subset(data, time == t & variable == var)
+        bxp <- boxplot.stats(d$value)
+        o <- bxp$out
+        print(t)
+        print(o)
+        median <- bxp$stats[3]
+        o <- o[order(abs(o-median), decreasing = TRUE)][1:nolo]
+        print(o)
+        o <- o[!is.na(o)]
+        print(o)
+        index <- which(data$time == t & data$variable == var & data$value %in% o)
+        print(index)
+        data[index, "print.outlier"] <- data[index, "seed"]
+      }
+    }
   }
-  data <- mutate(data, print.outlier = ifelse(print_outlier(data$value), 
-                                              data$seed, as.numeric(NA)))
-  
+
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = variable, y = value)) +
-    ggplot2::labs(y = "", x = "") +
-    ggplot2::geom_hline(yintercept = 1, col = "grey")
-  
+    ggplot2::labs(y = "", x = "")
+   
   if(plottype == "boxplot")
     plot <- plot + ggplot2::geom_boxplot(...)
   else if(plottype == "violin")
@@ -457,15 +470,16 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
                                        shape = 23, size = 3, fill = "red")
   # print seed numbers for outliers > threshold
   plot <- plot + ggrepel::geom_text_repel(ggplot2::aes(label = print.outlier), 
-                                          na.rm = TRUE, nudge_x = 0.3, 
-                                          segment.size = 0) 
-  # logarithmic scale
-  # plot <- plot + ggplot2::labs(y = "logarithmic scale") + 
-  #                ggplot2::scale_y_log10()
+                                          na.rm = TRUE, nudge_x = 0.3,
+                                          segment.color = "grey70")
+                                         #color = "blue", segment.size = 0) 
   
+ # plot <- plot + ggplot2::geom_point(data = subset(data, !is.na(print.outlier)),
+ #                                    color = "blue")
+
   plot <- plot + ggplot2::facet_grid(variable ~ time, scales = "free") +
-    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
-                   axis.ticks.x = ggplot2::element_blank())
+  ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                 axis.ticks.x = ggplot2::element_blank())
   
   print(plot)
   invisible(plot)
