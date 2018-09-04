@@ -2,7 +2,6 @@
 #t3 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
-#t2 plotSeeds: parameter seeds - warum nur wenn x multSim ist?
 
 #' @include multSimData.R
 NULL
@@ -79,6 +78,8 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' The plot is created with \pkg{ggplot2} and can be modified afterwards.
 #' 
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
+#' @param seeds vector with seed numbers to plot. This is optional if \code{x}
+#' is a \code{\link{multSimData}} object.
 #' @param ... additional arguments, currently not used.
 #' @note A maximal number of 4 seeds can be plotted. 
 #' The method requires the package \pkg{tidyr}.
@@ -92,13 +93,13 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' @importFrom ggplot2 ggplot aes labs geom_rect aes_string geom_line
 #' @importFrom ggplot2 scale_fill_identity scale_color_manual facet_wrap
 #' @export
-plotSeeds <- function(x, ...){
+plotSeeds <- function(x, seeds, ...){
   UseMethod("plotSeeds", x)
 }
 
 #' @rdname plotSeeds
 #' @export
-plotSeeds.multSimData <- function(x, ...){
+plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   
   if(!requireNamespace("tidyr", quietly = TRUE)) {
     stop("Pkg 'tidyr' needed for this function to work. 
@@ -106,6 +107,9 @@ plotSeeds.multSimData <- function(x, ...){
   }
   if(!is.multSimData(x)){
     stop("Parameter x has to be of type 'multSimData'.")
+  }
+  if(!is.null(seeds)){
+    x <- subset(x, seed %in% seeds)
   }
   if(length(unique(x$seed)) > 4){
     stop("To many seeds to plot. A maximum of 4 seeds can be plotted.")
@@ -117,7 +121,7 @@ plotSeeds.multSimData <- function(x, ...){
   #* These notes occur because surv, lower, upper, and variable are called
   #* within transform(), melt(), and ddply() where there is a data argument
   #* that R CMD check can't reconcile with the variables.
-  time <- value <- variable <- type <- NULL
+  time <- value <- variable <- type <- seed <- NULL
   
   #------ Prepare the data for plotting ------------
   
@@ -131,18 +135,26 @@ plotSeeds.multSimData <- function(x, ...){
   discData <- tidyr::spread(discData, variable, value)
   
   # define colors for discrete variables
-  color_mapping <- function(discVar, value){
-    index <- which(discVar == discVarNames)
-    allValues <- unique(discData[, discVar])
-    levelindex <- which(value == allValues)
-    rainbow(length(discVarNames), v = levelindex/length(allValues))[index]
+  color_mapping <- function(index, value, states){
+    discVar <- discVarNames[index]
+    print(discVar)
+    levelindex <- which(value == states)
+    print(value)
+    rainbow(length(discVarNames), v = levelindex/length(states))[index]
   }
-  for(name in discVarNames){
-    discData[, paste0("col_", name)] <- vapply(discData[, name],
-                                            function(v) color_mapping(name, v),
-                                            character(1))
+  
+  d <- length(discVarNames)
+  for(index in seq_along(discVarNames)){
+    name <- discVarNames[index]
+    discData[, paste0("col_", name)] <- NA
+    states <- unique(discData[, name])
+    for(value in states){
+      levelindex <- which(value == states)
+      color <- rainbow(d, v = levelindex/length(states))[index]
+      discData[which(discData[name] == value), paste0("col_", name)] <- color
+    }
   }
-
+  
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
@@ -184,8 +196,10 @@ plotSeeds.multSimData <- function(x, ...){
          xmin = "time", xmax = "time+1", 
          ymin = min - i*height, ymax = min - (i - 1)*height))
   }
+  
+  #t2: ifelse fehlerhaft
   plot <- plot + ggplot2::scale_fill_identity(
-    ifelse(length(levels(discData$variable)) > 1,
+    ifelse(length(discVarNames) > 1,
                  "discrete\nvariables",
                  "discrete\nvariable"), 
            guide = "legend", breaks = discCols,
@@ -193,8 +207,8 @@ plotSeeds.multSimData <- function(x, ...){
   )
 
   #** Plot continous variables
-  cols <- c("#000000", #0072B2", "#009E73", "#D55E00", 
-            "#E69F00", "#56B4E9", "#CC79A7", "#F0E442")
+  cols <- c("#000000", "#56B4E9", "#CC79A7", "#009E73", 
+            "#D55E00", "#0072B2", "#F0E442")
   plot <- plot + 
     ggplot2::geom_line(data = contData, 
                        ggplot2::aes(x = time, y = value, colour = variable), 
@@ -204,8 +218,9 @@ plotSeeds.multSimData <- function(x, ...){
                     "continous\nvariables", 
                     "continous\nvariable"), 
       values = cols[seq_along(levels(contData$variable))])
+  
   # facet_wrap
-  #plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
+  plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
   #plot <- plot + facet_grid(variable ~ seed)
   
   print(plot)

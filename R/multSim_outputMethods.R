@@ -88,8 +88,6 @@ density.multSim <- function(x, t, main, ...){
   density(data, main = main, ...)
 }
 
-#' @param seeds vector with seed numbers to plot 
-#' (only if x is a \code{\link{multSim}} Object)
 #' @rdname plotSeeds
 #' @importFrom ggplot2 ggtitle
 #' @export

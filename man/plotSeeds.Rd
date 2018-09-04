@@ -7,19 +7,19 @@
 \alias{plotSeeds.multSim}
 \title{Plot method for simulations}
 \usage{
-plotSeeds(x, ...)
+plotSeeds(x, seeds, ...)
 
-\method{plotSeeds}{multSimData}(x, ...)
+\method{plotSeeds}{multSimData}(x, seeds = NULL, ...)
 
 \method{plotSeeds}{multSim}(x, seeds, ...)
 }
 \arguments{
 \item{x}{object of class \code{\link{multSim}} or \code{\link{multSimData}}.}
 
-\item{...}{additional arguments, currently not used.}
+\item{seeds}{vector with seed numbers to plot. This is optional if \code{x}
+is a \code{\link{multSimData}} object.}
 
-\item{seeds}{vector with seed numbers to plot 
-(only if x is a \code{\link{multSim}} Object)}
+\item{...}{additional arguments, currently not used.}
 }
 \description{
 This method plots the simulation for every seed in the input. 
