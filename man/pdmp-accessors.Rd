@@ -90,8 +90,8 @@ Get or set the slot values for an object of class \code{\link{pdmpModel}}.
 In most cases, setting a new value also affects the slot \code{out} 
 (where the simulation result can be stored). This applies to slots 
 \code{times}, \code{parms}, \code{init}, \code{dynfunc}, \code{ratefunc},
-\code{jumpfunc} and \code{initfunc}, which set out to NULL.
-Setting a new value for \code{descr} or \code{discStates} will not affect 
+\code{jumpfunc}, \code{discStates} and \code{initfunc}, which set out to 
+NULL. Setting a new value for \code{descr} will not affect 
 the slot \code{out}.
 }
 \details{
