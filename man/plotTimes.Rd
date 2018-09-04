@@ -12,8 +12,8 @@ plotTimes(x, vars, times, nolo = 0, plottype = "boxplot", ...)
 \method{plotTimes}{multSimData}(x, vars, times, nolo = 0,
   plottype = "boxplot", ...)
 
-\method{plotTimes}{multSim}(x, vars, times, threshold = NULL,
-  plottype = "boxplot", ...)
+\method{plotTimes}{multSim}(x, vars, times, nolo = 0, plottype = "boxplot",
+  ...)
 }
 \arguments{
 \item{x}{object of class \code{\link{multSim}} or \code{\link{multSimData}}.}
