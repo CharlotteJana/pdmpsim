@@ -59,7 +59,7 @@ value of the other slots is changed via <-.
 See \code{\link{pdmp-accessors}} for further informations.
 }
 \examples{
-\dontshow{
+dontshow{
   require("simecol")
 }
 data("simplePdmp") # load object of class pdmpModel

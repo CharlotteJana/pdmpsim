@@ -6,8 +6,8 @@
 \alias{format}
 \title{Format a PDMP for pretty printing.}
 \usage{
-\S4method{format}{pdmpModel}(x, begin = NULL, end = NULL,
-  short = TRUE, slots = c("parms", "init", "times"), sep, collapse)
+\S4method{format}{pdmpModel}(x, begin = NULL, end = NULL, short = TRUE,
+  slots = c("parms", "init", "times"), sep, collapse)
 }
 \arguments{
 \item{x}{an object of class \code{\link{pdmpModel}} or one of its subclasses.}
