@@ -1,6 +1,5 @@
 #======== todo =================================================================
 #t2 NA vor den Plots ausführen
-#t3 plot: subtitle: anzahl der Seeds mit Hinschreiben
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL
