@@ -1,6 +1,6 @@
 #======== todo =================================================================
 #t1 document generics
-#' @name mjpaccessors
+#' @name mjp-accessors
 NULL
 
 #======== Description ===========
@@ -28,37 +28,39 @@ NULL
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
 #' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
 #' @include pdmp_class.R pdmp_accessors.R mjp_class.R
+#' @name mjp-accessors
 #' @seealso Class definition \code{\link{mjpModel}}
+NULL
 
 
 #Setgeneric-already in pdmp
 
 #======= Getters ==========
 
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("ratefunc", "mjpModel", function(obj) obj@ratefunc)
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("jumpfunc", "mjpModel", function(obj) obj@jumpfunc)
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("descr", "mjpModel", function(obj) obj@descr)
 
 
 #======= Setters that set obj@out <- NULL =========
 
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("ratefunc<-", "mjpModel", function(obj, value) {
   obj@ratefunc <- value
   out(obj) <- NULL
   invisible(obj)
 })
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("jumpfunc<-", "mjpModel", function(obj, value) {
   obj@jumpfunc <- value
   out(obj) <- NULL
   invisible(obj)
 })
 
-#' @rdname mjpaccessors
+#' @rdname mjp-accessors
 setMethod("parms<-", "mjpModel", function(obj, value) {
   obj@parms <- value
   out(obj) <- NULL
@@ -68,27 +70,27 @@ setMethod("parms<-", "mjpModel", function(obj, value) {
 #======= Setters that don't change slot out =======
 
 
-#' @rdname mjp.accessors
+#' @rdname mjp-accessors
 #' @export
 setMethod("descr<-", "mjpModel", function(obj, value) {
   obj@descr <- value
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjp-accessors
 #' @export
 setMethod("main<-", "mjpModel", function(obj, value) {
   warning("Slot 'main' is a slot inherited by 'simObj' of class 'simecol' 
   and cannot be changed. Probably you mischose the model type'.")
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjp-accessors
 #' @export
 setMethod("equations<-", "mjpModel", function(obj, value) {
   warning("Slot 'equations' is a slot inherited by 'simObj' of class 'simecol' 
   and cannot be changed.")
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjp-accessors
 #' @export
 setMethod("observer<-", "mjpModel", function(obj, value) {
   warning("Slot 'observer' is a slot inherited by 'simObj' of class 'simecol' 

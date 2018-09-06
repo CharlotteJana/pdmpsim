@@ -2,6 +2,7 @@
 #t1 Beispiele verändern 
 #t2 Warum muss die Dokumentation doppelt sein? Konstruktor anders definieren?
 #t3 add tau-leap method from other packages
+#t2 @example /inst/examples/ex_mjp_class.R
 
 
 #' @import methods
@@ -42,8 +43,6 @@ NULL
 #' or before starting a simulation with \code{sim(obj, initialize = TRUE)}.
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
-#'
-#' @example /inst/examples/ex_mjp_class.R
 #'
 #' @references
 #' \tabular{ll}{
