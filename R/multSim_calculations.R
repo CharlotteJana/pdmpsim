@@ -1,14 +1,7 @@
 #======== todo =================================================================
-#t2 removeSeeds: allgemein für bestimmte Nummern? Auch für msCsv machen?
-#t2 removeSeeds: message?
-#t1 Problem bei mean Funktionen: Es gibt NA simulations (Fehlermeldung angeben!!!)
-#t1 na.rm als variable einfügen -> dann vllt kein aufruf von removeSeeds mehr nötig?
+#t3 removeSeeds: bestimmte seednummern löschen können
 #t3 mean mit ... testen
-#t1 toggleSwitch -> mean(dA) sollte gleich sein für msCsv und ms!
-#t3 examples für mean, removeSeeds, moments
-#t1 example das zeigt, dass die ergebnisse von mean.multSim und 
-#t1 mean.multSimCsv nicht exakt übereinstimmen
-
+#t3 examples für removeSeeds, moments
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R
 NULL
@@ -42,6 +35,10 @@ removeSeeds <- function(ms){
 #' @return data.frame with calculated mean values
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimCsv}}
 #' @param ... additional arguments passed to \code{\link[base]{mean}}
+#' @note Methods \code{mean.multSim} and \code{mean.multSimCsv} can lead to 
+#' slightly different results. The reason for this is that the simulation results 
+#' created by \code{\link{multSimCsv}} are stored with a fewer number of digits.
+#' @example /inst/examples/ex_mean.R
 #' @rdname mean
 #' @name mean
 #' @export
@@ -52,9 +49,9 @@ mean.multSim <- function(x, ...){
   means <- NULL
   for(j in seq_len(ncol(ms$outputList[[1]]))){
     h <- vapply(ms$outputList, function(out) out[,j], numeric(length(times)))
-    means <- cbind(means, rowMeans(h))
+    means <- cbind(means, rowMeans(h, ...))
   }
-  colnames(means) <- colnames(ms$outputList[[1]], ...)
+  colnames(means) <- colnames(ms$outputList[[1]])
   return(data.frame(means))
 }
 

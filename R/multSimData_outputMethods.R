@@ -1,11 +1,7 @@
 #======== todo =================================================================
-#t2 plotStats: label oben hinzufügen
-#t2 plotStats: Titel ermöglichen
 #t3 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
-#t2 plotSeeds: parameter seeds - warum nur wenn x multSim ist?
-#t1 plotTimes: threshold sollte um den Median herum gehen und nicht um 0
 
 #' @include multSimData.R
 NULL
@@ -82,6 +78,8 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' The plot is created with \pkg{ggplot2} and can be modified afterwards.
 #' 
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
+#' @param seeds vector with seed numbers to plot. This is optional if \code{x}
+#' is a \code{\link{multSimData}} object.
 #' @param ... additional arguments, currently not used.
 #' @note A maximal number of 4 seeds can be plotted. 
 #' The method requires the package \pkg{tidyr}.
@@ -95,13 +93,13 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' @importFrom ggplot2 ggplot aes labs geom_rect aes_string geom_line
 #' @importFrom ggplot2 scale_fill_identity scale_color_manual facet_wrap
 #' @export
-plotSeeds <- function(x, ...){
+plotSeeds <- function(x, seeds, ...){
   UseMethod("plotSeeds", x)
 }
 
 #' @rdname plotSeeds
 #' @export
-plotSeeds.multSimData <- function(x, ...){
+plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   
   if(!requireNamespace("tidyr", quietly = TRUE)) {
     stop("Pkg 'tidyr' needed for this function to work. 
@@ -109,6 +107,9 @@ plotSeeds.multSimData <- function(x, ...){
   }
   if(!is.multSimData(x)){
     stop("Parameter x has to be of type 'multSimData'.")
+  }
+  if(!is.null(seeds)){
+    x <- subset(x, seed %in% seeds)
   }
   if(length(unique(x$seed)) > 4){
     stop("To many seeds to plot. A maximum of 4 seeds can be plotted.")
@@ -120,7 +121,7 @@ plotSeeds.multSimData <- function(x, ...){
   #* These notes occur because surv, lower, upper, and variable are called
   #* within transform(), melt(), and ddply() where there is a data argument
   #* that R CMD check can't reconcile with the variables.
-  time <- value <- variable <- type <- NULL
+  time <- value <- variable <- type <- seed <- NULL
   
   #------ Prepare the data for plotting ------------
   
@@ -129,22 +130,31 @@ plotSeeds.multSimData <- function(x, ...){
   contData <- subset(x, type == "cont")
   discData <- subset(x, type == "disc")
   discData$variable <- factor(discData$variable)
+  contData$variable <- factor(contData$variable)
   discVarNames <- sort(levels(discData$variable))
   discData <- tidyr::spread(discData, variable, value)
   
   # define colors for discrete variables
-  color_mapping <- function(discVar, value){
-    index <- which(discVar == discVarNames)
-    allValues <- unique(discData[, discVar])
-    levelindex <- which(value == allValues)
-    rainbow(length(discVarNames), v = levelindex/length(allValues))[index]
+  color_mapping <- function(index, value, states){
+    discVar <- discVarNames[index]
+    print(discVar)
+    levelindex <- which(value == states)
+    print(value)
+    rainbow(length(discVarNames), v = levelindex/length(states))[index]
   }
-  for(name in discVarNames){
-    discData[, paste0("col_", name)] <- vapply(discData[, name],
-                                            function(v) color_mapping(name, v),
-                                            character(1))
+  
+  d <- length(discVarNames)
+  for(index in seq_along(discVarNames)){
+    name <- discVarNames[index]
+    discData[, paste0("col_", name)] <- NA
+    states <- unique(discData[, name])
+    for(value in states){
+      levelindex <- which(value == states)
+      color <- rainbow(d, v = levelindex/length(states))[index]
+      discData[which(discData[name] == value), paste0("col_", name)] <- color
+    }
   }
-
+  
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
@@ -186,20 +196,27 @@ plotSeeds.multSimData <- function(x, ...){
          xmin = "time", xmax = "time+1", 
          ymin = min - i*height, ymax = min - (i - 1)*height))
   }
+  
+  #t2: ifelse fehlerhaft
   plot <- plot + ggplot2::scale_fill_identity(
-    "discrete\nvariables", guide = "legend", breaks = discCols,
+    ifelse(length(discVarNames) > 1,
+                 "discrete\nvariables",
+                 "discrete\nvariable"), 
+           guide = "legend", breaks = discCols,
     labels = printVect(discValues,collapse = NULL)
   )
 
   #** Plot continous variables
-  cols <- c("#009E73", "#0072B2", "#D55E00", "#E69F00", 
-            "#56B4E9", "#CC79A7", "#F0E442")
+  cols <- c("#000000", "#56B4E9", "#CC79A7", "#009E73", 
+            "#D55E00", "#0072B2", "#F0E442")
   plot <- plot + 
     ggplot2::geom_line(data = contData, 
                        ggplot2::aes(x = time, y = value, colour = variable), 
                        size = 1) +
     ggplot2::scale_colour_manual(
-      name = "continous\nvariables", 
+      name = ifelse(length(levels(contData$variable)) > 1, 
+                    "continous\nvariables", 
+                    "continous\nvariable"), 
       values = cols[seq_along(levels(contData$variable))])
   
   # facet_wrap
@@ -219,7 +236,7 @@ plotSeeds.multSimData <- function(x, ...){
 #' package \pkg{dplyr} to work with data generated by function 
 #' \code{\link{getMultSimData}}. It basically groups the data before 
 #' summarising, so that the functions are applied for every time value 
-#' separately.
+#' separately. 
 #' @param .tbl a data.frame returned by method \code{\link{getMultSimData}}
 #' @param .vars a character vector of variable names to apply the functions for
 #' @param .funs a list of function calls generated by \code{\link[dplyr]{funs}}, 
@@ -261,48 +278,44 @@ summarise_at.multSimData <- function(.tbl, .vars, .funs, ...){
 #' 
 #' This method plots descriptive statistics as i. e. mean, min, max, sd
 #' over all simulations depending on the time. The desired statistic values
-#' can be specified individually with the parameter \code{funs}.
+#' can be specified individually with the parameter \code{funs}. The plot is 
+#' created with \pkg{ggplot2} and can be modified afterwards.
 #' 
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
 #' @param vars character vector giving the names of variables to plot the 
 #' statistics for.
 #' @param funs a list of function calls generated by \code{\link[dplyr]{funs}}, 
 #' or a character vector of function names, or simply a function.
+#' @param plottype a string indicating which plotmethod should be used.
+#' Either "line" for  \code{\link[ggplot2]{geom_line}} or "smooth" for
+#' \code{\link[ggplot2]{geom_smooth}} are possible. Other values are ignored.
 #' @param ... Additional arguments for the function calls in funs.
 #' @examples 
 #' data("toggleSwitch")
 #' ms <- multSim(toggleSwitch, seeds = 1:10)
 #' plotStats(ms, vars = c("fA", "fB"), funs = "mean")
 #' plotStats(ms, vars = "fB", funs = c("min", "max", "mean"))
-#' @note The method requires the packages \pkg{grid} and \pkg{gtable}.
 #' @seealso \link{summarise_at} to get the calculated values of the statistics
 #' @importFrom reshape2 melt
-#' @importFrom ggplot2 ggplot aes geom_line scale_x_continuous theme ggplotGrob
-#' @importFrom ggplot2 unit geom_blank geom_segment arrow geom_text
-#' @importFrom ggplot2 guides theme_minimal element_blank element_rect
+#' @importFrom ggplot2 ggplot aes geom_line geom_smooth theme
+#' @importFrom ggplot2 element_blank labs
 #' @importFrom dplyr mutate if_else group_by funs
 #' @export
-plotStats <- function(x, vars, funs, ...){
+plotStats <- function(x, vars, funs, plottype, ...){
   UseMethod("plotStats", x)
 }
 
 #' @rdname plotStats
 #' @export
-plotStats.multSimData <- function(x, vars, funs, ...){
+plotStats.multSimData <- function(x, vars, funs, plottype = "line", ...){
   
-  if(missing(vars)) vars <- levels(x$variable) # names of all variables
+  if(missing(vars)) vars <- as.vector(unique(subset(x, type == "cont")$variable))
   if(missing(funs)) funs <- dplyr::funs("min", "median", "mean", "max", "sd")
-  
-  if (!requireNamespace("grid", quietly = TRUE)) {
-    stop("Pkg 'grid' needed for this function to work. 
-         Please install it.", call. = FALSE)
+  if(!plottype %in% c("line", "smooth")){
+    warning("Parameter plottype is set to \"line\". Value \"", plottype, 
+            "\" is ignored.")
+    plottype <- "line"
   }
- 
-  if (!requireNamespace("gtable", quietly = TRUE)) {
-    stop("Pkg 'gtable' needed for this function to work. 
-         Please install it.", call. = FALSE)
-  }
-  
   #------ Prepare the data for plotting ------------
 
   data <- reshape2::melt(summarise_at(x, vars, funs, ...), id = c("time"))
@@ -315,45 +328,23 @@ plotStats.multSimData <- function(x, vars, funs, ...){
   
   plot <- ggplot2::ggplot(data = data, ggplot2::aes(
     x = time, y = value, group = fun, color = fun)) +
-    ggplot2::geom_line() + 
-    ggplot2::scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
-    ggplot2::theme(legend.position = "none", 
-                   plot.margin = unit(c(1,0,1,1),"line"))
+    ggplot2::theme(legend.title = element_blank()) +
+    ggplot2::labs(
+      title = ifelse(length(vars) == 1,
+                     paste("Variable:", vars),
+                     paste("Variables:", paste(vars, collapse = ", "))),
+      subtitle = paste("Number of simulations:", length(unique(x$seed))))
   
-  #---------- Create labeling on the right side ---------
+  if(plottype == "line"){
+    plot <- plot + ggplot2::geom_line()
+  }
+  if(plottype == "smooth"){
+    plot <- plot + ggplot2::geom_smooth(method = "auto")
+  }
   
-  d2 <- data[which(data$time == max(data$time)),]
-  #d2 <- ddply(data, "fun", summarise, time=0, value=value[length(value)])
-  
-  plegend <- ggplot2::ggplot(data, ggplot2::aes(x=time, y=value, colour=fun)) + 
-    ggplot2::geom_blank() +
-    ggplot2::geom_segment(data = d2, 
-                          ggplot2::aes(x=2, xend = 0, y = value, yend = value),
-                          arrow = ggplot2::arrow(length=unit(2,"mm"), 
-                                                 type="closed")) +
-    ggplot2::geom_text(data = d2, ggplot2::aes(x=2.5, label = fun), hjust = 0) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) + # cut plot region at xmax
-    ggplot2::guides(colour = "none") + 
-    ggplot2::theme_minimal() + 
-    ggplot2::theme(line = ggplot2::element_blank(),
-                    text = ggplot2::element_blank(),
-                   panel.background = ggplot2::element_rect(fill="grey95", 
-                                                            linetype = "blank"))
-  gl <- gtable::gtable_filter(ggplotGrob(plegend), "panel")
-  
-  # add a cell next to the main plot panel, and insert gl there
-  g <- ggplot2::ggplotGrob(plot)
-  index <- subset(g$layout, name == "panel")
-  g <- gtable::gtable_add_cols(g, ggplot2::unit(1, "strwidth", "line # 1") + 
-                                  ggplot2::unit(1, "cm"))
-  g <- gtable::gtable_add_grob(g, gl, t = index$t, 
-                               l = ncol(g), b = index$b, r = ncol(g))
-  #grid::grid.newpage()
-  grid::grid.draw(g)
-  
-  #print(g)
-  #invisible(g)
-  #return(g) 
+  print(plot)
+  invisible(plot)
+  return(plot)
 }
 
 #========== plotTimes ===============
@@ -362,9 +353,10 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' 
 #' Plot a boxplot or violin plot or dotplot for every time value 
 #' in the data.frame (a maximum of 12 different time values is allowed).
-#' All outliers that outreach a given threshold will be plotted with a
-#' number on their side. This number represents the seed number that was
-#' used to simulate the simulation that causes the outlier.
+#' Outliers can be plotted with a number on their side which represents the 
+#' seed number that was #' used to simulate the simulation that causes the 
+#' outlier. The number of outliers that shall be plotted this way is determined
+#' by parameter \emph{nolo}(= number of labelled outliers).
 #' A red diamond represents the median of the simulated values.
 #' The plot is created with \pkg{ggplot2} and can be modified afterwards.
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
@@ -372,8 +364,8 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' @param times numeric vector with time values to plot. If no vector is given,
 #' ten values between the minimum and maximum provided time values will be 
 #' plotted.
-#' @param threshold a positive number. Seed numbers will be printed aside
-#' every outlier whose absolute value is greater than threshold.
+#' @param nolo an integer giving the number of outliers that shall be
+#' labelled with the seed number that was used for simulation. Defaults to 0.
 #' @param plottype character vector determining the type of the plot.
 #' Possible values are 'boxplot', 'violin' or 'dotplot'. Defaults to 'boxplot'.
 #' @param ... additional parameters for the plotting function (either 
@@ -383,16 +375,17 @@ plotStats.multSimData <- function(x, vars, funs, ...){
 #' times(simplePdmp) <- c(from = 0, to = 5, by = 1)
 #' md <- getMultSimData(multSim(simplePdmp, 1:8), times = 1:5)
 #' plotTimes(md, plottype = 'violin')
-#' plotTimes(md, threshold = 1)
+#' plotTimes(md, nolo = 3)
 #' @importFrom dplyr mutate
+#' @importFrom grDevices boxplot.stats
 #' @export
-plotTimes <- function(x, vars, times, threshold=NULL, plottype="boxplot", ...){
+plotTimes <- function(x, vars, times, nolo = 0, plottype = "boxplot", ...){
   UseMethod("plotTimes", x)
 }
   
 #' @rdname plotTimes
 #' @export
-plotTimes.multSimData <- function(x, vars, times, threshold = NULL, 
+plotTimes.multSimData <- function(x, vars, times, nolo = 0, 
                                   plottype = "boxplot", ...){
   
   if (!requireNamespace("ggrepel", quietly = TRUE)) {
@@ -403,7 +396,7 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   if(missing(vars)) vars <- levels(x$variable) # names of all variables
   if(missing(times)){
     t <- unique(x$time)
-    times <- t[seq(1, length(t), length.out = 10)]
+    times <- t[seq(1, length(t), length.out = 11)]
   }
   x <- getMultSimData(x, times = times)
   
@@ -419,24 +412,32 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
   data <- data[data$variable %in% vars, ]
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
-  variable <- value <- print.outlier <- type <- NULL
+  variable <- value <- print.outlier <- type <- time <- NULL
   
   #----- Find seeds that belong to outliers --------
   
-  if(is.null(threshold)) threshold <- max(abs(data$value))
+  data[,"print.outlier"] <- NA
   
-  print_outlier <- function(x) {
-    return(x < -abs(threshold) | x > abs(threshold))
+  if(nolo != 0){
+    for(t in levels(x$time)){
+      for(var in vars){
+        d <- subset(data, time == t & variable == var)
+        bxp <- boxplot.stats(d$value)
+        o <- bxp$out
+        median <- bxp$stats[3]
+        o <- o[order(abs(o-median), decreasing = TRUE)][1:nolo]
+        o <- o[!is.na(o)]
+        index <- which(data$time == t & data$variable == var & data$value %in% o)
+        data[index, "print.outlier"] <- data[index, "seed"]
+      }
+    }
   }
-  data <- mutate(data, print.outlier = ifelse(print_outlier(data$value), 
-                                              data$seed, as.numeric(NA)))
-  
+
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = data, ggplot2::aes(x = variable, y = value)) +
-    ggplot2::labs(y = "", x = "") +
-    ggplot2::geom_hline(yintercept = 1, col = "grey")
-  
+    ggplot2::labs(y = "", x = "")
+   
   if(plottype == "boxplot")
     plot <- plot + ggplot2::geom_boxplot(...)
   else if(plottype == "violin")
@@ -452,15 +453,16 @@ plotTimes.multSimData <- function(x, vars, times, threshold = NULL,
                                        shape = 23, size = 3, fill = "red")
   # print seed numbers for outliers > threshold
   plot <- plot + ggrepel::geom_text_repel(ggplot2::aes(label = print.outlier), 
-                                          na.rm = TRUE, nudge_x = 0.3, 
-                                          segment.size = 0) 
-  # logarithmic scale
-  # plot <- plot + ggplot2::labs(y = "logarithmic scale") + 
-  #                ggplot2::scale_y_log10()
+                                          na.rm = TRUE, nudge_x = 0.3,
+                                          segment.color = "grey70")
+                                         #color = "blue", segment.size = 0) 
   
+ # plot <- plot + ggplot2::geom_point(data = subset(data, !is.na(print.outlier)),
+ #                                    color = "blue")
+
   plot <- plot + ggplot2::facet_grid(variable ~ time, scales = "free") +
-    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
-                   axis.ticks.x = ggplot2::element_blank())
+  ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                 axis.ticks.x = ggplot2::element_blank())
   
   print(plot)
   invisible(plot)

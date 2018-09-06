@@ -88,8 +88,6 @@ density.multSim <- function(x, t, main, ...){
   density(data, main = main, ...)
 }
 
-#' @param seeds vector with seed numbers to plot 
-#' (only if x is a \code{\link{multSim}} Object)
 #' @rdname plotSeeds
 #' @importFrom ggplot2 ggtitle
 #' @export
@@ -103,7 +101,7 @@ plotSeeds.multSim <- function(x, seeds, ...){
 #' @rdname plotTimes
 #' @importFrom ggplot2 ggtitle
 #' @export
-plotTimes.multSim <- function(x, vars, times, threshold = NULL, 
+plotTimes.multSim <- function(x, vars, times, nolo = 0, 
                               plottype = "boxplot", ...){
   if(missing(vars)) 
     vars <- names(x$model@init)
@@ -113,7 +111,7 @@ plotTimes.multSim <- function(x, vars, times, threshold = NULL,
   }
   data <- getMultSimData(x, times = times)
   plot <- plotTimes(data, times = times, vars = vars, 
-                    threshold = threshold, plottype = plottype, ...) + 
+                    nolo = nolo, plottype = plottype, ...) + 
           ggplot2::ggtitle(x$model@descr)
   return(plot)
 }
@@ -123,7 +121,8 @@ plotTimes.multSim <- function(x, vars, times, threshold = NULL,
 plotStats.multSim <- function(x, vars, funs, ...){
  if(missing(vars)) vars <- names(x$model@init) 
  data <- getMultSimData(x)
- plotStats(data, vars, funs, ...)
+ plot <- plotStats(data, vars, funs, ...) 
+ return(plot)
 }
 
 #' @importFrom dplyr summarise

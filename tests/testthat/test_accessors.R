@@ -44,19 +44,19 @@ test_that("changing of important slots resets slot out", {
     obj <- sim(obj, initialize = FALSE)
     initfunc(obj) <- NULL
     expect_null(out(obj))
+    
+    # slot discStates
+    obj <- sim(obj, initialize = FALSE)
+    discStates(obj) <- list(d = c(1, 0, -1))
+    expect_null(out(obj))
 
 })
 
-test_that("changing of slots descr or discState does not affect slot out", {
+test_that("changing of slots descr does not affect slot out", {
 
   # slot descr
   obj <- sim(obj)
   descr(obj) <- "another description"
-  expect_false(is.null(out(obj)))
-  
-  # slot discStates
-  obj <- sim(obj)
-  discStates(obj) <- list(d = c(1, 0, -1))
   expect_false(is.null(out(obj)))
 
 })
@@ -77,6 +77,5 @@ test_that("unused slots inherited by 'simObj' can not be set",{
   expect_warning(
     observer(obj) <- function(time, init) time*init[1]
   )
-
 
 })

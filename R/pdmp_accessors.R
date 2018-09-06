@@ -3,7 +3,6 @@
 #t2 auch ... einfügen wie in simecol accessors (siehe ?parms)
 #t3 Die Hilfe ist sehr lang, aber wenn ich weniger dokumentiere, kommen Fehler
 #t3 wenn discStates geändert, verify aufrufen
-#t1 discStates sollte out löschen, oder nicht?
 #t3 warum muss ich eine generic für parms<- schreiben?
 
 #======== Description ===========
@@ -14,8 +13,8 @@
 #' In most cases, setting a new value also affects the slot \code{out} 
 #' (where the simulation result can be stored). This applies to slots 
 #' \code{times}, \code{parms}, \code{init}, \code{dynfunc}, \code{ratefunc},
-#' \code{jumpfunc} and \code{initfunc}, which set out to NULL.
-#' Setting a new value for \code{descr} or \code{discStates} will not affect 
+#' \code{jumpfunc}, \code{discStates} and \code{initfunc}, which set out to 
+#' NULL. Setting a new value for \code{descr} will not affect 
 #' the slot \code{out}.
 #' 
 #' It is also possible to modify the slots directly,
@@ -119,15 +118,16 @@ setMethod("parms<-", "pdmpModel", function(obj, value) {
   out(obj) <- NULL
   invisible(obj)
 })
-
-#======= Setters that don't change slot out =======
-
 #' @rdname pdmp-accessors
 #' @export
 setMethod("discStates<-", "pdmpModel", function(obj, value) {
   obj@discStates <- value
+  out(obj) <- NULL
   invisible(obj)
 })
+
+#======= Setters that don't change slot out =======
+
 #' @rdname pdmp-accessors
 #' @export
 setMethod("descr<-", "pdmpModel", function(obj, value) {
