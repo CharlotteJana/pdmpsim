@@ -62,7 +62,7 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
   parms <- obj@parms
   #check consistency
   objdim <- length(obj@init) #  number of variables
-  ratesdim<-length(obj@ratesfunc(obj@init,obj@parms));
+  ratesdim<-length(obj@ratefunc(obj@init,obj@parms));
     for (i in 1:ratesdim) {if (length(obj@jumpfunc(init,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
   #actual   
     outa<-.Call("sim_mjp",as.integer(njump),
