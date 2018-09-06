@@ -3,7 +3,7 @@ Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
 Version: 1.1-11
 Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
-Author:  Volkmar Liebscher [aut, cre], 
+Author: Volkmar Liebscher [aut, cre], 
   Charlotte Jana[aut]
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic Markov processes (PDMPs) and Markov jump processes (MJPs). The package contains methods to simulate, store multiple simulations, calculate some statistics on them, plot methods and a function to calculate the generator of a PDMP. The PDMPs can have multiple discrete and continous variables, but are not allowed to have borders or a varying number of continous variables (the number should be independent of the state of the discrete variable).
@@ -29,22 +29,21 @@ Suggests: Deriv,
 RoxygenNote: 6.0.1
 Collate: 
     'data.R'
+    'mjp_class.R'
+    'pdmp_class.R'
+    'pdmp_accessors.R'
+    'mjp_accessors.R'
+    'pdmp_methods.R'
+    'mjp_methods.R'
+    'pdmp_sim.R'
+    'mjp_sim.R'
     'msCsv.R'
     'msCsv_calculations.R'
     'msCsv_outputMethods.R'
-    'pdmp_class.R'
-    'pdmp_methods.R'
-    'pdmp_sim.R'
     'multSim.R'
     'multSimData.R'
     'multSimData_outputMethods.R'
     'multSim_calculations.R'
     'multSim_outputMethods.R'
-    'pdmp_accessors.R'
     'pdmp_generator.R'
     'pdmpsim-package.R'
-    'markovjp_class.R'
-    'mjp_accessors.R'
-    'mjp_methods.R'
-    'mjp_sim.R'
-    

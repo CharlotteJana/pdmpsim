@@ -27,7 +27,7 @@ NULL
 #' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms" "parms<-"
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
 #' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
-#' @include pdmp_class.R pdmp_accessors.R markovjp_class.R
+#' @include pdmp_class.R pdmp_accessors.R mjp_class.R
 #' @seealso Class definition \code{\link{mjpModel}}
 
 
