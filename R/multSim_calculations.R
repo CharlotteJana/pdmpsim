@@ -80,8 +80,8 @@ moments.multSim <- function(x, order){
     momentvector <- apply(h, 1, function(row) sum(row^order)/length(row))
     moments <- cbind(moments, momentvector)
   }
-  moments <- cbind(times, moments)
-  colnames(moments) <- colnames(x$outputList[[1]])
+  moments <- cbind(order, times, moments)
+  colnames(moments) <- c("order", colnames(x$outputList[[1]]))
   return(data.frame(moments))
 }
 
