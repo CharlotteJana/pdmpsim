@@ -21,6 +21,7 @@ Imports: deSolve,
     stats
 Suggests: Deriv,
     ggrepel,
+    gridExtra,
     plot3Drgl,
     RColorBrewer,
     testthat,
