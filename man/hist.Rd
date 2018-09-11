@@ -7,15 +7,17 @@
 \alias{hist.multSim}
 \title{Histogram over all simulations}
 \usage{
-\method{hist}{multSimData}(x, t, main, sub, ...)
+\method{hist}{multSimData}(x, t, bins = 15, main, sub, ...)
 
-\method{hist}{multSim}(x, t, main, ...)
+\method{hist}{multSim}(x, t, main, sub, ...)
 }
 \arguments{
 \item{x}{object of class \code{\link{multSimData}} or \code{\link{multSim}}.}
 
 \item{t}{a single time value at which the histogram shall be plotted.
 The parameter can be omitted if \code{x} contains only one time value.}
+
+\item{bins}{integer. Number of bins for the histogram of the continous variables.}
 
 \item{main}{optional character string for the title of the plot. If \code{x} 
 is a \code{multSim} object, \code{main} will be set as \code{descr(x$model)} 
@@ -26,12 +28,16 @@ default value for a \code{multSim} object \code{x} gives informations about
 parameters and the initial values.}
 
 \item{...}{additional parameters passed to the default method of 
-\code{\link[graphics]{hist}}}
+\code{\link[ggplot2]{geom_histogram}}}
 }
 \description{
 A plot method for simulations of a piecewise deterministic markov process 
 (\code{\link{PDMP}}). It plots every continous variable in its own histogram 
 and all discrete variables in a stacked barplot.
+}
+\note{
+Package \code{\pkg{gridExtra}} is needed for this method. If you don't 
+have installed it, an alternative plot will be returned.
 }
 \examples{
 data("simplePdmp")

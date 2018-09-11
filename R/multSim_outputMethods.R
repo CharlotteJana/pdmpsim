@@ -70,10 +70,12 @@ summary.multSim <- function(object,
 
 #' @rdname hist
 #' @export
-hist.multSim <- function(x, t, main, ...){
+hist.multSim <- function(x, t, main, sub, ...){
   if(missing(main)) main <- x$model@descr
+  if(missing(sub)) sub <- paste0("Histogram for t = ", t, "\n",
+                                format(x$model, short = FALSE, slots = "parms"))
   data <- getMultSimData(x, times = t)
-  hist(data, t = t, main = main, ...)
+  hist(data, t = t, main = main, sub = sub, ...)
 }
 
 #' @rdname density
