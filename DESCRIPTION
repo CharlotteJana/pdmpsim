@@ -29,8 +29,7 @@ Suggests: Deriv,
     plot3Drgl,
     RColorBrewer,
     testthat,
-    tidyr,
-    vdiffr
+    tidyr
 RoxygenNote: 6.0.1
 Collate: 
     'data.R'
