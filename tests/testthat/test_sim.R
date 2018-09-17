@@ -78,3 +78,32 @@ test_that("outrate = TRUE only affects column 'pdmpsim:negcumrate'", {
   
   expect_identical(out1, out2)
 })
+
+test_that("order of variables in init doesn't matter for sim", {
+  data(toggleSwitch)
+  times(toggleSwitch) <- c(from = 0, to = 10, by = 0.1)
+  init(toggleSwitch) <-  c(fA = 0.5, fB = 0.5, dA = 1.0, dB = 1.0)
+  sim1 <- sim(toggleSwitch, seed = 3, outSlot = FALSE)
+  
+  model <- pdmpModel(
+    descr = "Toggle Switch different order of variables",
+    parms = parms(toggleSwitch),
+    init = c(fA = 0.5, dA = 1.0, fB = 0.5, dB = 1.0),
+    discStates = list(dA = c(0, 1), dB = c(0, 1)),
+    times = times(toggleSwitch),
+    dynfunc = function(t, x, parms) {
+      df <- with(as.list(c(x, parms)), c(-bA*fA + aA*dA, -bB*fB + aB*dB))
+      return(c(df[1], 0, df[2], 0))
+    },
+    ratefunc = function(t, x, parms) {
+      return(with(as.list(c(x, parms)), c(switch(dB+1, k01B, k10B*fA),
+                                          switch(dA+1, k01A, k10A*fB))))
+    },
+    jumpfunc = function(t, x, parms, jtype){
+      return(with(as.list(c(x, parms)), c(fA, switch(jtype, dA, 1-dA), 
+                                          fB, switch(jtype, 1-dB, dB))))
+    })
+  sim2 <- sim(toggleSwitch, seed = 3, outSlot = FALSE)
+  
+  expect_identical(sim1, sim2)
+})
