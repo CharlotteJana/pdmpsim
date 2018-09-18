@@ -60,23 +60,25 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
   set.seed(seed[2])
   times <- fromtoby(obj@times)
   parms <- obj@parms
+  init <- obj@init
   #check consistency
-  objdim <- length(obj@init) #  number of variables
-  ratesdim<-length(obj@ratefunc(obj@init,obj@parms));
-    for (i in 1:ratesdim) {if (length(obj@jumpfunc(init,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
+  objdim <- length(init) #  number of variables
+  ratesdim<-length(obj@ratefunc(t=times[1],x=init,parms=parms));
+    for (i in 1:ratesdim) {if (length(obj@jumpfunc(t=times[1],x=init,parms=parms,i)) != objdim) stop("jump function has wrong dimension of output")}
   #actual   
     outa<-.Call("sim_mjp",as.integer(njump),
                as.double(init),
-               as.double(obj@parms),
+               as.double(parms),
                as.double(range(times)),
                obj@jumpfunc,
-               obj@ratesfunc,parent.frame(),
+               obj@ratefunc,parent.frame(),
                NAOK=TRUE,PACKAGE="pdmpsim");
-    out<-as.data.frame(apply(x=outa[,-1],
+    out<-as.data.frame(apply(X=outa[,-1],
                              MARGIN = 2,
-                             FUN=function(u) stats::approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")))
-    colnames(out)<-c("t",names(obj@init))
-  class(out) <- c("deSolve", "matrix")
+                             FUN=function(u) stats::approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y))
+    out<-cbind(times,out)
+    colnames(out)<-c("t",names(init))
+  class(out) <- c("deSolve", "data.frame")
   obj@out <- out
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
