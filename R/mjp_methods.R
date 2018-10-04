@@ -133,7 +133,7 @@ setMethod(f = "print",
 
 #---------------- plot -----------------
 
-#' Plot a PDMP
+#' Plot a MJP
 #' 
 #' This is method plots single simulations of
 #' markov jump processes defined as
@@ -145,12 +145,12 @@ setMethod(f = "print",
 #' @param y ignored
 #' @param ... optional plotting parameters
 #' @examples 
-#' data("toggleSwitch")
-#' sim <- sim(toggleSwitch, seed = 1)
+#' data("SIRstoch")
+#' sim <- sim(SIRstoch, seed = 1)
 #' plot(sim, col = "red", lwd = 2)
 #' 
 #' # Alternative: plotSeeds
-#' msim <- multSim(toggleSwitch, seeds = 1)
+#' msim <- multSim(SIRstoch, seeds = 1)
 #' plot <- plotSeeds(msim)
 #' plot + ggplot2::facet_grid(variable ~ seed)
 #' @seealso \code{\link{plotSeeds}} for another plot function
@@ -160,12 +160,12 @@ setMethod(f = "print",
 #' @aliases plot,mjpModel,missing-method
 #' @export
 setMethod("plot", signature(x="mjpModel", y="missing"),
-          function(x, y, ...) {
+          function(x, y,...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
             par(oma = c(0,0,2,0))
-            do.call("plot", alist(x@out, ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            do.call("plot", alist(x=x@out, panel=function(...) lines(...,type="S"),...))
+            graphics::title(x@descr, outer = TRUE)
           }
 )
 
