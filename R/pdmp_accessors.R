@@ -38,6 +38,7 @@ NULL
 #========= setGenerics ===========
 
 #' @rdname pdmp-accessors
+#' @docType methods
 #' @export
 setGeneric("dynfunc", function(obj) standardGeneric("dynfunc"))
 #' @rdname pdmp-accessors
@@ -63,13 +64,13 @@ setGeneric("descr", function(obj) standardGeneric("descr"))
 setGeneric("descr<-", function(obj, value) standardGeneric("descr<-"))
 #' @rdname pdmp-accessors
 #' @export
+setGeneric("parms<-", function(obj, value) standardGeneric("parms<-"))
+#' @rdname pdmp-accessors
+#' @export
 setGeneric("discStates", function(obj) standardGeneric("discStates"))
 #' @rdname pdmp-accessors
 #' @export
 setGeneric("discStates<-", function(obj, value) standardGeneric("discStates<-"))
-#' @rdname pdmp-accessors
-#' @export
-setGeneric("parms<-", function(obj, value) standardGeneric("parms<-"))
 
 #======= Getters ==========
 
@@ -112,6 +113,7 @@ setMethod("jumpfunc<-", "pdmpModel", function(obj, value) {
   out(obj) <- NULL
   invisible(obj)
 })
+#' @importFrom simecol "parms<-"
 #' @rdname pdmp-accessors
 #' @export
 setMethod("parms<-", "pdmpModel", function(obj, value) {

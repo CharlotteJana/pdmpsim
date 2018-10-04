@@ -4,16 +4,15 @@
 \name{pdmpModel-class}
 \alias{pdmpModel-class}
 \alias{pdmp}
-\alias{pdmpmodel}
-\alias{PDMP}
 \alias{pdmpModel}
+\alias{PDMP}
 \title{Class pdmpModel}
 \usage{
 pdmpModel(obj = NULL, descr = character(0), dynfunc = function(t, x,
   parms) 0 * x, jumpfunc = function(t, x, parms, jtype) x,
-  ratefunc = function(t, x, parms) c(0), times = c(from = 0, to = 10, by =
-  1), init = c(0, 0), parms = c(0), discStates = list(0), out = NULL,
-  solver = "lsodar", initfunc = NULL)
+  ratefunc = function(t, x, parms) c(0), times = c(from = 0, to = 10,
+  by = 1), init = c(0, 0), parms = c(0), discStates = list(0),
+  out = NULL, solver = "lsodar", initfunc = NULL)
 }
 \arguments{
 \item{obj}{pdmpModel object that is being built.}
@@ -122,7 +121,7 @@ method \code{\link{sim}}, the result will be stored in this slot.}
 }}
 
 \examples{
-\dontshow{
+dontshow{
   require("simecol")
 }
 

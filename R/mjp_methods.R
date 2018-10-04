@@ -1,7 +1,9 @@
 #======== todo =================================================================
 #t1 Plot methode wird nicht exportiert. Warum nicht???
 #t2 examples anpassen
-#' @include  pdmp_class.R pdmp_methods.R mjp_class.R mjp_accessors.R
+#' @include  pdmp_class.R pdmp_methods.R markovjp_class.R mjp_accessors.R
+#' @name mjpModel-methods
+#' @rdname mjp-methods
 NULL
 
 
@@ -35,9 +37,9 @@ NULL
 #' cat(format(KendallBD, short = FALSE, collapse = ".\n",
 #'            slots = c("init", "times","parms"),
 #'            begin = "Kendalls birth-death-process:\n"))
-#' 
-#' @aliases format format,mjpModel-method
+#' @rdname mjp-methods
 #' @export
+#' @aliases format,mjpModel-method
 setMethod(f = "format", 
           signature = "mjpModel", 
           definition = function(x, begin = NULL, end = NULL, short = TRUE, 
@@ -94,12 +96,12 @@ setMethod(f = "format",
 
 #' Methods for funktion print in package \pkg{pdmpsim}
 #' 
-#' @param x an object of class \code{mjpModel} or one of its subclasses.
-#' @param all speciefies whether all slots are printed. If FALSE (the default),
+#' @param all specifies whether all slots are printed. If FALSE (the default),
 #' only the slots that characterize the model will be printed.
 #' @param ... optional parameters passed to print.
 #' @importFrom utils str
 #' @export
+#' @aliases print,mjpModel-method
 setMethod(f = "print",
           signature = "mjpModel",
           definition = function(x, all = FALSE, ...){
@@ -154,6 +156,8 @@ setMethod(f = "print",
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title
+#' @rdname mjp-methods
+#' @aliases plot,mjpModel,missing-method
 #' @export
 setMethod("plot", signature(x="mjpModel", y="missing"),
           function(x, y, ...) {
