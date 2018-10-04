@@ -1,7 +1,7 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.1-18
+Version: 1.1-19
 Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
 Author: Volkmar Liebscher [aut, cre], 
   Charlotte Jana[aut]
@@ -13,7 +13,7 @@ URL: https://github.com/CharlotteJana/pdmpsim
 BugReports: https://github.com/CharlotteJana/pdmpsim/issues
 LazyData: true
 NeedsCompilation: true
-Depends:simecol, 
+Depends: simecol, 
     methods
 Imports: deSolve,
     dplyr,
@@ -31,7 +31,7 @@ Suggests: Deriv,
 RoxygenNote: 6.1.0
 Collate: 
     'data.R'
-    'markovjp_class.R'
+    'mjp_class.R'
     'pdmp_class.R'
     'pdmp_accessors.R'
     'mjp_accessors.R'

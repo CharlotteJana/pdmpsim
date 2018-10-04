@@ -27,7 +27,7 @@ NULL
 #' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms" "parms<-"
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
 #' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
-#' @include pdmp_class.R pdmp_accessors.R markovjp_class.R
+#' @include pdmp_class.R pdmp_accessors.R mjp_class.R
 #' @seealso Class definition \code{\link{mjpModel}}
 
 
@@ -68,27 +68,27 @@ setMethod("parms<-", "mjpModel", function(obj, value) {
 #======= Setters that don't change slot out =======
 
 
-#' @rdname mjp.accessors
+#' @rdname mjpaccessors
 #' @export
 setMethod("descr<-", "mjpModel", function(obj, value) {
   obj@descr <- value
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjpaccessors
 #' @export
 setMethod("main<-", "mjpModel", function(obj, value) {
   warning("Slot 'main' is a slot inherited by 'simObj' of class 'simecol' 
   and cannot be changed. Probably you mischose the model type'.")
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjpaccessors
 #' @export
 setMethod("equations<-", "mjpModel", function(obj, value) {
   warning("Slot 'equations' is a slot inherited by 'simObj' of class 'simecol' 
   and cannot be changed.")
   invisible(obj)
 })
-#' @rdname mjp.accessors
+#' @rdname mjpaccessors
 #' @export
 setMethod("observer<-", "mjpModel", function(obj, value) {
   warning("Slot 'observer' is a slot inherited by 'simObj' of class 'simecol' 

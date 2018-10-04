@@ -52,7 +52,7 @@ value of the other slots is changed via <-.
 See \code{\link{mjp-accessors}} for further informations.
 }
 \examples{
-dontshow{
+\dontshow{
   require("simecol")
 }
 
@@ -80,7 +80,7 @@ init(KendallBD) <- c(N = 10)
 head(out(KendallBD)) # NULL, because slot init has changed
 
 simBD <- sim(KendallBD, outSlot = FALSE)
-str(simBD) # only the simulation result, the pdmpModel object is lost
+str(simBD) # only the simulation result, the mjpModel object is lost
 
 
 }

@@ -8,9 +8,7 @@
 \S4method{print}{mjpModel}(x, all = FALSE, ...)
 }
 \arguments{
-\item{x}{an object of class \code{mjpModel} or one of its subclasses.}
-
-\item{all}{speciefies whether all slots are printed. If FALSE (the default),
+\item{all}{specifies whether all slots are printed. If FALSE (the default),
 only the slots that characterize the model will be printed.}
 
 \item{...}{optional parameters passed to print.}

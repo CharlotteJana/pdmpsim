@@ -1,7 +1,7 @@
 #======== todo =================================================================
 #t1 Plot methode wird nicht exportiert. Warum nicht???
 #t2 examples anpassen
-#' @include  pdmp_class.R pdmp_methods.R markovjp_class.R mjp_accessors.R
+#' @include  pdmp_class.R pdmp_methods.R mjp_class.R mjp_accessors.R
 #' @name mjpModel-methods
 #' @rdname mjp-methods
 NULL

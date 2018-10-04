@@ -121,7 +121,7 @@ method \code{\link{sim}}, the result will be stored in this slot.}
 }}
 
 \examples{
-dontshow{
+\dontshow{
   require("simecol")
 }
 

@@ -44,7 +44,7 @@ NULL
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
 #'
-#' @example /inst/examples/ex_mjp_class.R
+# @example /inst/examples/ex_mjp_class.R not yet present - necessary
 #'
 #' @references
 #' \tabular{ll}{

@@ -1,7 +1,7 @@
 #======== todo =================================================================
 #t3 I = survival function?
 #' @useDynLib pdmpsim, .registration = TRUE
-#' @include pdmp_class.R pdmp_methods.R pdmp_accessors.R pdmp_sim.R markovjp_class.R mjp_methods.R mjp_accessors.R
+#' @include pdmp_class.R pdmp_methods.R pdmp_accessors.R pdmp_sim.R mjp_class.R mjp_methods.R mjp_accessors.R
 #' @name mjpModel-simulation
 #' @rdname mjpModel-sim
 NULL
