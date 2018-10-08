@@ -75,7 +75,7 @@ NULL
 #' \tab Henri Poincaré. \cr
 #'  }
 #'
-#' @aliases pdmp pdmpmodel PDMP
+#' @aliases pdmp pdmpModel PDMP
 #' @seealso
 #' See \code{\link{simplePdmp}} and \code{\link{toggleSwitch}} for two examples
 #' that have a detailed documentation explaining every slot.

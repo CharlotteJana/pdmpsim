@@ -1,6 +1,7 @@
-dontshow{
+\dontshow{
   require("simecol")
 }
+
 data("simplePdmp") # load object of class pdmpModel
 
 #### simulations

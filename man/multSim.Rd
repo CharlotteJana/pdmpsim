@@ -4,7 +4,8 @@
 \alias{multSim}
 \title{Multiple simulations of a pdmp model}
 \usage{
-multSim(obj, seeds, filename = NULL, ms = NULL, allowDeletion = FALSE)
+multSim(obj, seeds, filename = NULL, ms = NULL,
+  allowDeletion = FALSE)
 }
 \arguments{
 \item{obj}{object of class \code{\link{pdmpModel}} or one of its subclasses}

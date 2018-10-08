@@ -6,6 +6,7 @@
 
 
 #' @import methods
+#' @name mjpModel-class
 NULL
 
 #=========== mjpModel ===============
@@ -44,6 +45,8 @@ NULL
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
 #'
+# @example /inst/examples/ex_mjp_class.R not yet present - necessary
+#'
 #' @references
 #' \tabular{ll}{
 #' \eqn{\,}{ }[Gil77] \tab Gillespie, Daniel T. (1977). "Exact Stochastic Simulation of Coupled Chemical Reactions". \cr
@@ -55,7 +58,7 @@ NULL
 #' See \code{\link{SIRstoch}} and \code{\link{KendallBD}} for two examples
 #' that have a detailed documentation explaining every slot.
 #' Class \code{mjpModel} provides a method \code{\link{sim}} for simulation, 
-#' \code{\link{mjp-accessors}{accessor functions}} (with names identical to the 
+#' \code{\link{mjpModel-accessors}{accessor functions}} (with names identical to the 
 #' slot names) to get or set model parameters, time steps, initial values, the 
 #' vectorfields, the transition rates and the solver.
 #' See \code{\link{multSim}} and \code{\link{multSimCsv}} to perform multiple 

@@ -10,9 +10,9 @@
 \title{Class mjpModel}
 \usage{
 mjpModel(obj = NULL, descr = character(0), jumpfunc = function(t, x,
-  parms, jtype) x, ratefunc = function(t, x, parms) c(0), times = c(from =
-  0, to = 10, by = 1), init = c(0, 0), parms = c(0), out = NULL,
-  solver = "Gdirect", initfunc = NULL)
+  parms, jtype) x, ratefunc = function(t, x, parms) c(0),
+  times = c(from = 0, to = 10, by = 1), init = c(0, 0), parms = c(0),
+  out = NULL, solver = "Gdirect", initfunc = NULL)
 }
 \arguments{
 \item{obj}{pdmpModel object that is being built.}
@@ -107,7 +107,7 @@ method \code{\link{sim}}, the result will be stored in this slot.}
 See \code{\link{SIRstoch}} and \code{\link{KendallBD}} for two examples
 that have a detailed documentation explaining every slot.
 Class \code{mjpModel} provides a method \code{\link{sim}} for simulation, 
-\code{\link{mjp-accessors}{accessor functions}} (with names identical to the 
+\code{\link{mjpModel-accessors}{accessor functions}} (with names identical to the 
 slot names) to get or set model parameters, time steps, initial values, the 
 vectorfields, the transition rates and the solver.
 See \code{\link{multSim}} and \code{\link{multSimCsv}} to perform multiple 

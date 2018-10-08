@@ -1,15 +1,16 @@
 #======== todo =================================================================
 #t3 I = survival function?
 #' @useDynLib pdmpsim, .registration = TRUE
-#' @include pdmp_class.R pdmp_methods.R pdmp_sim.R mjp_class.R mjp_methods.R mjp_accessors.R
-#' @name mjp.sim
+#' @include pdmp_class.R pdmp_methods.R pdmp_accessors.R pdmp_sim.R mjp_class.R mjp_methods.R mjp_accessors.R
+#' @name mjpModel-simulation
+#' @rdname mjpModel-sim
 NULL
 
 ##### method sim ####
 
 #' Simulation of a mjpModel object
 #'
-#' @param obj obj of class \code{\link{mjpModel}} or one of its subclasses
+#' @param obj object of class \code{\link{mjpModel}} or one of its subclasses
 #' @param seed an integer or NULL. This makes the result of \code{sim} 
 #' reproducible, although random numbers are used during execution. 
 #' Simulation with equal seeds will lead to equal results. If seed is set to 
@@ -42,11 +43,9 @@ NULL
 #' @example /inst/examples/ex_mjp_sim.R
 #' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 #' for multiple simulations, ... for plot and summary methods of the simulation.
-#' @importMethodsFrom simecol sim
-#' @importFrom simecol fromtoby
 #' @importFrom stats approx
-#' @aliases sim sim,mjpModel-method sim,mjpModel,ANY-method sim,mjpModel,mjpModel-method 
-#' @rdname mjp.sim
+#' @rdname mjpModel-sim
+#' @aliases sim,mjpModel-method 
 #' @export
 setMethod("sim", "mjpModel", function(obj, initialize = FALSE, 
                                        seed = 1,  
@@ -61,10 +60,12 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
   times <- fromtoby(obj@times)
   parms <- obj@parms
   init <- obj@init
+  
   #check consistency
-  objdim <- length(init) #  number of variables
-  ratesdim<-length(obj@ratefunc(t=times[1],x=init,parms=parms));
-    for (i in 1:ratesdim) {if (length(obj@jumpfunc(t=times[1],x=init,parms=parms,i)) != objdim) stop("jump function has wrong dimension of output")}
+  objdim <- length(obj@init) #  number of variables
+  ratesdim<-length(obj@ratefunc(t=times[1],x=init,parms=obj@parms));
+    for (i in 1:ratesdim) {if (length(obj@jumpfunc(times[1],init,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
+
   #actual   
     outa<-.Call("sim_mjp",as.integer(njump),
                as.double(init),
@@ -73,12 +74,12 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
                obj@jumpfunc,
                obj@ratefunc,parent.frame(),
                NAOK=TRUE,PACKAGE="pdmpsim");
-    out<-as.data.frame(apply(X=outa[,-1],
+
+    out<-as.data.frame(cbind(times,apply(X=outa[,-1],
                              MARGIN = 2,
-                             FUN=function(u) stats::approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y))
-    out<-cbind(times,out)
-    colnames(out)<-c("t",names(init))
-  class(out) <- c("deSolve", "data.frame")
+                             FUN=function(u) approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y)))
+    colnames(out)<-c("t",names(obj@init))
+
   obj@out <- out
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
