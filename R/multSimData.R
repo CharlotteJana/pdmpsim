@@ -50,7 +50,13 @@ getMultSimData.multSim <- function(x, times, seeds){
   timeIndex <- NULL
   seedIndex <- NULL
   all.times <- fromtoby(x$model@times)
-  discVarNames <- names(discStates(x$model))
+  
+  if(class(x$model) == "mjpModel"){
+    discVarNames <- NULL
+  }
+  else{
+    discVarNames <- names(discStates(x$model))
+  }
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
   time <- seed <- type <- variable <- value <- NULL
@@ -93,7 +99,7 @@ getMultSimData.multSim <- function(x, times, seeds){
   
   for(j in seq_along(seedIndex)){
     seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
-    if(length(timeIndex) == 1)
+    if(class(seedData) == "numeric")
       seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))
   }

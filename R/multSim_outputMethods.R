@@ -27,7 +27,9 @@ print.multSim <- function(x, ...){
         }
       }
       if (name == "outputList"){
-        bool <- vapply(x$outputList, function(i) is(i, "deSolve"), logical(1))
+        bool <- vapply(x$outputList, 
+                       function(i) class(i) %in% c("deSolve", "data.frame"), 
+                       logical(1))
         h <- which(bool)
         r <- which(diff(h) != 1)
         if(all(bool)) cat("$outputList\n outputs exist for all seeds\n")
@@ -85,6 +87,7 @@ density.multSim <- function(x, t, main, ...){
   # timeText <- ifelse(length(t) == 1, 
   #                    paste("at time t =", t), 
   #                    "at different times")
+  
   data <- getMultSimData(x, times = t)
   density(data, main = main, ...)
 }
@@ -108,7 +111,7 @@ plotTimes.multSim <- function(x, vars, times, nolo = 0,
     vars <- names(x$model@init)
   if(missing(times)){
     t <- fromtoby(x$model@times)
-    times <- t[seq(1, length(t), length.out = 10)]
+    times <- t[seq(1, length(t), length.out = 11)]
   }
   data <- getMultSimData(x, times = times)
   plot <- plotTimes(data, times = times, vars = vars, 
