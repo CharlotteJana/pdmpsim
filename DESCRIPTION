@@ -1,7 +1,7 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.1-20
+Version: 1.1-21
 Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
 Author: Volkmar Liebscher [aut, cre], 
   Charlotte Jana[aut]
@@ -26,8 +26,7 @@ Suggests: Deriv,
     plot3Drgl,
     RColorBrewer,
     testthat,
-    tidyr,
-    vdiffr
+    tidyr
 RoxygenNote: 6.1.0
 Collate: 
     'data.R'
