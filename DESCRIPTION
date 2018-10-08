@@ -30,7 +30,7 @@ Suggests: Deriv,
     RColorBrewer,
     testthat,
     tidyr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Collate: 
     'data.R'
     'msCsv.R'

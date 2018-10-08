@@ -5,8 +5,8 @@
 \alias{multsimcsv}
 \title{Multiple simulations of a pdmp model}
 \usage{
-multSimCsv(obj, seeds, prefix = format(obj, end = "__"), append = FALSE,
-  uniqueSeeds = TRUE, digits = NULL)
+multSimCsv(obj, seeds, prefix = format(obj, end = "__"),
+  append = FALSE, uniqueSeeds = TRUE, digits = NULL)
 }
 \arguments{
 \item{obj}{object of class pdmpModel or one of its subclasses}
