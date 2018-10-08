@@ -35,10 +35,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
     plot <- plot + ggplot2::geom_bin2d(data = contData, 
                                        ggplot2::aes(y = value), ...) +
       #viridis::scale_fill_viridis() +
-      ggplot2::scale_fill_distiller(palette = "Spectral", 
-                                    name = switch(as.character(length(n)),
-                                                  "1" = "Continous\nvariable",
-                                                  "Continous\nvariables"))
+      ggplot2::scale_fill_distiller(palette = "Spectral", name = "Quantity")
   }
   
   if(contPlot == "density_2d"){

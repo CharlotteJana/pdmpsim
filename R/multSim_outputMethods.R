@@ -108,7 +108,7 @@ plotTimes.multSim <- function(x, vars, times, nolo = 0,
     vars <- names(x$model@init)
   if(missing(times)){
     t <- fromtoby(x$model@times)
-    times <- t[seq(1, length(t), length.out = 10)]
+    times <- t[seq(1, length(t), length.out = 11)]
   }
   data <- getMultSimData(x, times = times)
   plot <- plotTimes(data, times = times, vars = vars, 
