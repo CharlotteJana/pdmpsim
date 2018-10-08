@@ -1,3 +1,6 @@
+#======== todo =================================================================
+#t1 tests ohne setwd und ohne dass der ordner testdata existieren muss
+
 #-------- simulate pdmps and save the results for testing -----------
 
 setwd(system.file("testdata", package = "pdmpsim", mustWork = TRUE))
