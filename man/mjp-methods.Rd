@@ -60,12 +60,12 @@ parms(KendallBD) <- list()
 cat(format(KendallBD, short = FALSE, collapse = ".\\n",
            slots = c("init", "times","parms"),
            begin = "Kendalls birth-death-process:\\n"))
-data("toggleSwitch")
-sim <- sim(toggleSwitch, seed = 1)
+data("SIRstoch")
+sim <- sim(SIRstoch, seed = 1)
 plot(sim, col = "red", lwd = 2)
 
 # Alternative: plotSeeds
-msim <- multSim(toggleSwitch, seeds = 1)
+msim <- multSim(SIRstoch, seeds = 1)
 plot <- plotSeeds(msim)
 plot + ggplot2::facet_grid(variable ~ seed)
 }
