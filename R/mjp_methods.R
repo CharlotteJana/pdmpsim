@@ -155,7 +155,7 @@ setMethod(f = "print",
 #' plot + ggplot2::facet_grid(variable ~ seed)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
-#' @importFrom graphics title
+#' @importFrom ggplot2 ggplot aes labs
 #' @rdname mjp-methods
 #' @aliases plot,mjpModel,missing-method
 #' @export
@@ -163,9 +163,15 @@ setMethod("plot", signature(x="mjpModel", y="missing"),
           function(x, y,...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
-            par(oma = c(0,0,2,0))
-            do.call("plot", alist(x=x@out, panel=function(...) lines(...,type="S"),...))
-            graphics::title(x@descr, outer = TRUE)
+            
+            data <- tidyr::gather(out(x), key = "variable", value = "value", names(init(x)))
+            plot <- ggplot(data = data, aes(x = time)) + 
+              geom_line(aes(y = value, color = variable)) +
+              labs(title = descr(x))
+            
+            print(plot)
+            invisible(plot)
+            return(plot)
           }
 )
 

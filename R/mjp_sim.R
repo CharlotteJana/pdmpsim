@@ -51,7 +51,9 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
                                        seed = 1,  
                                        njump = 1e+06, outSlot = TRUE, ...) {
   # initialization
-  seed <- rep(seed, len = 2)
+  suppressWarnings(
+    seed <- rep(seed, len = 2)
+  )
   set.seed(seed[1])
   if(initialize) {
     obj <- initialize(obj)
