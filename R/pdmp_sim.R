@@ -66,7 +66,9 @@ setMethod("sim", "pdmpModel", function(obj, initialize = FALSE,
   #   and is simulated along with the other variables.
 
   # initialization
-  seed <- rep(seed, len = 2)
+  suppressWarnings(
+    seed <- rep(seed, len = 2)
+  )
   set.seed(seed[1])
   if(initialize) {
     obj <- initialize(obj)

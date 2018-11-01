@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t3 example schreiben mit PDMP definition, der "besondere" Variablennamen hat
 
 #' @include pdmp_class.R
 NULL

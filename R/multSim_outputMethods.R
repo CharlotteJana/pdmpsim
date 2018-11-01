@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t2 NA vor den Plots ausführen
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R multSimData_outputMethods.R
 NULL
@@ -28,7 +27,7 @@ print.multSim <- function(x, ...){
       }
       if (name == "outputList"){
         bool <- vapply(x$outputList, 
-                       function(i) class(i) %in% c("deSolve", "data.frame"), 
+                       function(i) sum(class(i) %in% c("deSolve", "data.frame")) > 0, 
                        logical(1))
         h <- which(bool)
         r <- which(diff(h) != 1)
@@ -98,7 +97,10 @@ density.multSim <- function(x, t, main, ...){
 plotSeeds.multSim <- function(x, seeds, ...){
   if(missing(seeds)) seeds <- x$seeds
   data <- getMultSimData(x, seeds = seeds)
-  plot <- plotSeeds(data, ...) + ggplot2::ggtitle(x$model@descr)
+  plot <- plotSeeds(data, ...) + 
+    ggplot2::labs(title = x$model@descr,
+                  subtitle = format(x$model, short = FALSE, collapse = "\n",
+                                    slots = c("init", "parms")))
   return(plot)
 }
 
@@ -113,19 +115,31 @@ plotTimes.multSim <- function(x, vars, times, nolo = 0,
     t <- fromtoby(x$model@times)
     times <- t[seq(1, length(t), length.out = 11)]
   }
+  
   data <- getMultSimData(x, times = times)
   plot <- plotTimes(data, times = times, vars = vars, 
-                    nolo = nolo, plottype = plottype, ...) + 
-          ggplot2::ggtitle(x$model@descr)
+                    nolo = nolo, plottype = plottype, ...) 
+  
+  subtitle <- paste0(plot$label$subtitle, "\n",
+                     format(x$model, short = FALSE, collapse = "\n",
+                            slots = c("init", "parms")))
+  
+   plot <- plot +  ggplot2::labs(title = x$model@descr, subtitle = subtitle)
   return(plot)
 }
 
 #' @rdname plotStats
 #' @export
 plotStats.multSim <- function(x, vars, funs, ...){
- if(missing(vars)) vars <- names(x$model@init) 
+ if(missing(vars)) vars <- names(x$model@init)
  data <- getMultSimData(x)
  plot <- plotStats(data, vars, funs, ...) 
+ 
+ subtitle <- paste0(plot$label$subtitle, "\n",
+                    format(x$model, short = FALSE, collapse = "\n",
+                           slots = c("init", "parms")))
+ 
+ plot <- plot +  ggplot2::labs(title = x$model@descr, subtitle = subtitle)
  return(plot)
 }
 
@@ -133,17 +147,20 @@ plotStats.multSim <- function(x, vars, funs, ...){
 #' @export
 plot.multSim <- function(x, title, subtitle, ...){
   
+  # x <- removeSeeds(x)
   data <- getMultSimData(x)
   
   if(missing(title)) 
     title <- x$model@descr
   
+  plot <- plot(data, title = title, ...)
+  
   if(missing(subtitle)){
-    subtitle <- paste0("Number of simulations: ", length(x$seeds), "\n")
-    subtitle <- paste0(subtitle, format(x$model, 
-                                        short = FALSE, 
-                                        collapse = "\n",
-                                        slots = c("init", "parms")))
+    subtitle <- paste0(plot$label$subtitle, "\n",
+                       format(x$model, short = FALSE, collapse = "\n",
+                             slots = c("init", "parms")))
   }
-  plot(data, title = title, subtitle = subtitle, ...)
+  
+  plot <- plot + ggplot2::labs(subtitle = subtitle)
+  return(plot)
 }

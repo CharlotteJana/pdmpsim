@@ -1,5 +1,5 @@
 #======== todo =================================================================
-#t3 density: in plotDensity umbenennen?
+#v2 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
 #t1 Dokmentation anpassen, so dass sie auch auf mjpModel-plots passt
@@ -36,8 +36,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
     plot <- plot + ggplot2::geom_bin2d(data = contData, 
                                        ggplot2::aes(y = value), ...) +
       #viridis::scale_fill_viridis() +
-      ggplot2::scale_fill_distiller(palette = "Spectral", 
-                                    name = "Quantity")
+      ggplot2::scale_fill_distiller(palette = "Spectral", name = "Quantity")
   }
   
   if(contPlot == "density_2d"){
@@ -461,6 +460,10 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
   ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                  axis.ticks.x = ggplot2::element_blank())
   
+  ### text
+  subtitle <- paste("Number of simulations:", length(unique(x$seed)))
+  plot <- plot + ggplot2::labs(subtitle = subtitle, y = NULL)
+  
   print(plot)
   invisible(plot)
   return(plot)
@@ -595,16 +598,16 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
       b <- graphics::barplot(dVal, beside = FALSE, axes = FALSE, 
                              col = grDevices::gray.colors(nrow(dVal), start = 0.6))
     
-      #text for the bars
-      h <- vapply(seq_len(ncol(dVal)), 
-                  function(i) cumsum(dVal[, i]),
-                  numeric(nrow(dVal)))-dVal/2
-      smallBarIndex <- which(dVal <= 0.04*nrow(discData), arr.ind = TRUE)
-      if(length(smallBarIndex) != 0){
-        for(i in seq_len(nrow(smallBarIndex))){
-          h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
-        }
+    # text for the bars
+    h <- vapply(seq_len(ncol(dVal)), 
+                function(i) cumsum(dVal[, i]),
+                numeric(nrow(dVal)))-dVal/2
+    smallBarIndex <- which(dVal <= 0.04*nrow(discData), arr.ind = TRUE)
+    if(length(smallBarIndex) != 0){
+      for(i in seq_len(nrow(smallBarIndex))){
+        h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
       }
+    }
       graphics::text(b, y = t(h), 
                      labels = rep(levels(factor(dRange)), each = length(d)))
     }
@@ -704,7 +707,7 @@ density.multSimData <- function(x, t, main, sub, ...){
     b <- barplot(discVal, beside = FALSE, xlab = name, add = TRUE, axes = FALSE,
                  col = gray.colors(nrow(discVal), alpha = 0.6, end = 1))
     
-    #text for the bars
+    # text for the bars
     h <- sapply(seq_len(ncol(discVal)), 
                 function(i) cumsum(discVal[,i])) - discVal/2
     text(b, y=t(h), labels = rep(levels(factor(discRange)), each = length(t)))
