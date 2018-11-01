@@ -1,5 +1,5 @@
 #======== todo =================================================================
-#t3 density: in plotDensity umbenennen?
+#v2 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
 
@@ -461,6 +461,10 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
   ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                  axis.ticks.x = ggplot2::element_blank())
   
+  ### text
+  subtitle <- paste("Number of simulations:", length(unique(x$seed)))
+  plot <- plot + ggplot2::labs(subtitle = subtitle, y = NULL)
+  
   print(plot)
   invisible(plot)
   return(plot)
@@ -593,7 +597,7 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     b <- graphics::barplot(dVal, beside = FALSE, axes = FALSE, 
                            col = grDevices::gray.colors(nrow(dVal), start = 0.6))
     
-    #text for the bars
+    # text for the bars
     h <- vapply(seq_len(ncol(dVal)), 
                 function(i) cumsum(dVal[, i]),
                 numeric(nrow(dVal)))-dVal/2
@@ -702,7 +706,7 @@ density.multSimData <- function(x, t, main, sub, ...){
     b <- barplot(discVal, beside = FALSE, xlab = name, add = TRUE, axes = FALSE,
                  col = gray.colors(nrow(discVal), alpha = 0.6, end = 1))
     
-    #text for the bars
+    # text for the bars
     h <- sapply(seq_len(ncol(discVal)), 
                 function(i) cumsum(discVal[,i])) - discVal/2
     text(b, y=t(h), labels = rep(levels(factor(discRange)), each = length(t)))

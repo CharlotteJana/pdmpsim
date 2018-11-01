@@ -46,6 +46,7 @@ getMultSimData <- function (x, times, seeds)  {
 #' @importFrom dplyr select everything
 #' @export
 getMultSimData.multSim <- function(x, times, seeds){
+  x <- removeSeeds(ms)
   data <- NULL
   timeIndex <- NULL
   seedIndex <- NULL

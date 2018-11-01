@@ -12,7 +12,7 @@
 pdmpModel(obj = NULL, descr = character(0), dynfunc = function(t, x,
   parms) 0 * x, jumpfunc = function(t, x, parms, jtype) x,
   ratefunc = function(t, x, parms) c(0), times = c(from = 0, to = 10,
-  by = 1), init = c(0, 0), parms = c(0), discStates = list(0),
+  by = 1), init = c(0, 0), parms = list(), discStates = list(0),
   out = NULL, solver = "lsodar", initfunc = NULL)
 }
 \arguments{
@@ -44,7 +44,7 @@ be edited with fixParms.}
 \item{init}{initial state of the simulation. This is a named vector giving
 the names of all variables and their start value.}
 
-\item{parms}{a list with constant model parameters.}
+\item{parms}{a vector or list with constant model parameters.}
 
 \item{discStates}{a list. For every discrete variable, \code{discStates} contains
 a vector with all its possible state values. This entry should have the
