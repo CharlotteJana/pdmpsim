@@ -1,7 +1,6 @@
 #======== todo =================================================================
-#t3 removeSeeds: bestimmte seednummern löschen können
 #t3 mean mit ... testen
-#t3 examples für removeSeeds, moments
+#t3 examples for moments
 
 #' @include pdmp_class.R pdmp_sim.R multSim.R
 NULL
@@ -14,6 +13,11 @@ NULL
 #' slots accordingly. This method is used internally for other calculation 
 #' methods as e.g. \code{\link{mean}}.
 #' @param ms object of class \code{\link{multSim}}
+#' @examples
+#' data(simplePdmp)
+#' setTimeLimit(cpu = 2)
+#' ms <- multSim(simplePdmp, seeds = 1:100)
+#' removeSeeds(ms)
 #' @return object of class \code{multSim} that does not contain NAs in slot 
 #' \code{outputList}
 #' @aliases removeseeds

@@ -21,3 +21,9 @@ Method \code{removeSeeds} removes these NA entries and changes all other
 slots accordingly. This method is used internally for other calculation 
 methods as e.g. \code{\link{mean}}.
 }
+\examples{
+data(simplePdmp)
+setTimeLimit(cpu = 2)
+ms <- multSim(simplePdmp, seeds = 1:100)
+removeSeeds(ms)
+}
