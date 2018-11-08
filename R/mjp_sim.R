@@ -51,9 +51,7 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
                                        seed = 1,  
                                        njump = 1e+06, outSlot = TRUE, ...) {
   # initialization
-  suppressWarnings(
-    seed <- rep(seed, len = 2)
-  )
+  seed <- rep(seed, len = 2)
   set.seed(seed[1])
   if(initialize) {
     obj <- initialize(obj)
@@ -61,27 +59,23 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
   set.seed(seed[2])
   times <- fromtoby(obj@times)
   parms <- obj@parms
-  init <- obj@init
-  
+  oinit <- obj@init
   #check consistency
   objdim <- length(obj@init) #  number of variables
-  ratesdim<-length(obj@ratefunc(t=times[1],x=init,parms=obj@parms));
-    for (i in 1:ratesdim) {if (length(obj@jumpfunc(times[1],init,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
-
+  ratesdim<-length(obj@ratefunc(t=times[1],x=oinit,parms=obj@parms));
+    for (i in 1:ratesdim) {if (length(obj@jumpfunc(times[1],oinit,parms,i)) != objdim) stop("jump function has wrong dimension of output")}
   #actual   
     outa<-.Call("sim_mjp",as.integer(njump),
-               as.double(init),
-               as.double(parms),
+               as.double(oinit),
+               as.double(obj@parms),
                as.double(range(times)),
                obj@jumpfunc,
                obj@ratefunc,parent.frame(),
                NAOK=TRUE,PACKAGE="pdmpsim");
-
     out<-as.data.frame(cbind(times,apply(X=outa[,-1,drop=FALSE],
                              MARGIN = 2,
                              FUN=function(u) approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y)))
-    colnames(out)<-c("time", names(obj@init))
-
+    colnames(out)<-c("t",names(obj@init))
   obj@out <- out
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
