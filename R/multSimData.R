@@ -20,7 +20,7 @@ NULL
 #' \item \code{variable} for the name of the simulated variable,
 #' \item \code{value} for the simulated value.} 
 #' Methods that use objects of class \code{multSimData} as input are
-#' \code{\link{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' 
 #' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}}
@@ -46,7 +46,7 @@ getMultSimData <- function (x, times, seeds)  {
 #' @importFrom dplyr select everything
 #' @export
 getMultSimData.multSim <- function(x, times, seeds){
-  x <- removeSeeds(ms)
+  x <- removeSeeds(x)
   data <- NULL
   timeIndex <- NULL
   seedIndex <- NULL
