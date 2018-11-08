@@ -1,7 +1,8 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.0-4
+Version: 1.0-5
+Date: 2018-11-08
 Author: Volkmar Liebscher, Charlotte Jana
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic 
@@ -30,7 +31,7 @@ Suggests: Deriv,
     RColorBrewer,
     testthat,
     tidyr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Collate: 
     'data.R'
     'msCsv.R'

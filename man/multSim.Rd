@@ -66,3 +66,8 @@ times(simplePdmp)["to"] <- 20
 m2 <- multSim(simplePdmp, seeds = 1:15, ms = m1)
 plot(m2$outputList[[15]])
 }
+\seealso{
+There are several plot methods for objects of class \code{multSim}:
+\code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+\code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
+}

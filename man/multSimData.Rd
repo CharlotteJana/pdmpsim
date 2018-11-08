@@ -43,7 +43,7 @@ columns:
 \item \code{variable} for the name of the simulated variable,
 \item \code{value} for the simulated value.} 
 Methods that use objects of class \code{multSimData} as input are
-\code{\link{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+\code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 }
 \examples{
