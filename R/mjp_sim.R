@@ -75,7 +75,7 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
     out<-as.data.frame(cbind(times,apply(X=outa[,-1,drop=FALSE],
                              MARGIN = 2,
                              FUN=function(u) approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y)))
-    colnames(out)<-c("t",names(obj@init))
+    colnames(out)<-c("time",names(obj@init))
   obj@out <- out
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
