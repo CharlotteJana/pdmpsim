@@ -220,8 +220,6 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
   #plot <- plot + facet_grid(variable ~ seed)
   
-  print(plot)
-  invisible(plot)
   return(plot)
 }
 
@@ -339,8 +337,6 @@ plotStats.multSimData <- function(x, vars, funs, plottype = "line", ...){
     plot <- plot + ggplot2::geom_smooth(method = "auto")
   }
   
-  print(plot)
-  invisible(plot)
   return(plot)
 }
 
@@ -465,8 +461,6 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
   subtitle <- paste("Number of simulations:", length(unique(x$seed)))
   plot <- plot + ggplot2::labs(subtitle = subtitle, y = NULL)
   
-  print(plot)
-  invisible(plot)
   return(plot)
   }
 
@@ -564,7 +558,8 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     
     grid::grid.newpage()
     grid::grid.draw(p)
-    return(invisible(p))
+    #return(invisible(p))
+    return(p)
   } 
   else{
     n <- unique(contData$variable)
