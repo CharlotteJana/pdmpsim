@@ -11,9 +11,9 @@
 \alias{jumpfunc<-}
 \alias{descr}
 \alias{descr<-}
+\alias{parms<-}
 \alias{discStates}
 \alias{discStates<-}
-\alias{parms<-}
 \alias{dynfunc,pdmpModel-method}
 \alias{ratefunc,pdmpModel-method}
 \alias{jumpfunc,pdmpModel-method}
@@ -48,11 +48,11 @@ descr(obj)
 
 descr(obj) <- value
 
+parms(obj) <- value
+
 discStates(obj)
 
 discStates(obj) <- value
-
-parms(obj) <- value
 
 \S4method{dynfunc}{pdmpModel}(obj)
 

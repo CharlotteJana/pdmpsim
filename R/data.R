@@ -1,6 +1,5 @@
 #======== todo =================================================================
-# eine kleine änderung
-#t1 toggleSwitch: references
+#s1 toggleSwitch: references
 #t2: SIRstoch: implement
 
 #######################################################################

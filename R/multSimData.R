@@ -20,7 +20,7 @@ NULL
 #' \item \code{variable} for the name of the simulated variable,
 #' \item \code{value} for the simulated value.} 
 #' Methods that use objects of class \code{multSimData} as input are
-#' \code{\link{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' 
 #' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}}
@@ -46,11 +46,18 @@ getMultSimData <- function (x, times, seeds)  {
 #' @importFrom dplyr select everything
 #' @export
 getMultSimData.multSim <- function(x, times, seeds){
+  x <- removeSeeds(x)
   data <- NULL
   timeIndex <- NULL
   seedIndex <- NULL
   all.times <- fromtoby(x$model@times)
-  discVarNames <- names(discStates(x$model))
+  
+  if(class(x$model) == "mjpModel"){
+    discVarNames <- NULL
+  }
+  else{
+    discVarNames <- names(discStates(x$model))
+  }
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
   time <- seed <- type <- variable <- value <- NULL
@@ -93,7 +100,7 @@ getMultSimData.multSim <- function(x, times, seeds){
   
   for(j in seq_along(seedIndex)){
     seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
-    if(length(timeIndex) == 1)
+    if(class(seedData) == "numeric")
       seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))
   }

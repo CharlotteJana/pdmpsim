@@ -75,7 +75,7 @@ NULL
 #' \tab Henri Poincaré. \cr
 #'  }
 #'
-#' @aliases pdmp pdmpmodel PDMP
+#' @aliases pdmp pdmpModel PDMP
 #' @seealso
 #' See \code{\link{simplePdmp}} and \code{\link{toggleSwitch}} for two examples
 #' that have a detailed documentation explaining every slot.
@@ -103,7 +103,7 @@ setClass("pdmpModel",
 #' @param obj pdmpModel object that is being built. 
 #' @param descr a string containing a short description of the model. 
 #' This parameter is optional and only used in plot methods.
-#' @param parms a list with constant model parameters.
+#' @param parms a vector or list with constant model parameters.
 #' @param times vector of time steps or vector with three named values 
 #' "from", "to", "by" specifying the simulation time steps. The from-to-by can 
 #' be edited with fixParms.
@@ -144,7 +144,7 @@ pdmpModel <- function(obj = NULL,
                       ratefunc = function(t, x, parms) c(0), 
                       times = c(from = 0, to = 10, by = 1), 
                       init = c(0, 0), 
-                      parms = c(0), 
+                      parms = list(), 
                       discStates = list(0),
                       out = NULL, 
                       solver = "lsodar", 

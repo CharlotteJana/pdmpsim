@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t3 example schreiben mit PDMP definition, der "besondere" Variablennamen hat
 
 #' @include pdmp_class.R
 NULL
@@ -54,6 +53,9 @@ setMethod("generator", signature(obj = "pdmpModel"), function(obj) {
   function(f){
     if(!requireNamespace("Deriv", quietly = TRUE)) 
       stop("Method 'generator' depends on package 'Deriv'. Please install it.")
+    if(class(obj) == "mjpModel")
+      stop("Method 'generator' is not implemented for objects of class 'mjpModel'.")
+    
     function(t, x, parms = obj@parms) {
       n <- length(obj@init)
       nam <- names(obj@init)

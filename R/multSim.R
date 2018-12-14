@@ -20,6 +20,9 @@ NULL
 #' @param allowDeletion logical. If true, seeds with existing simulations 
 #' stored in \code{ms} will be deleted in case they don't appear in 
 #' the new vector of seeds.
+#' @seealso There are several plot methods for objects of class \code{multSim}:
+#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' @return object of class \code{multSim} containing simulations for all 
 #' given seeds
 #'

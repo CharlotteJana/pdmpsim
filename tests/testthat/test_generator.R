@@ -1,7 +1,8 @@
 context("generator")
 
 test_that("method generator is correct for a pdmp with one discrete variable", {
-
+  skip_if_not_installed("Deriv")
+  
   simplePdmp <- pdmpModel(
     descr = "a simple pdmp",
     init = c(f = 0, d = 0),
@@ -42,7 +43,8 @@ test_that("method generator is correct for a pdmp with one discrete variable", {
 })
 
 test_that("method generator is correct for a pdmp with 2 discrete variables", {
-
+  skip_if_not_installed("Deriv")
+  
   discPdmp <- pdmpModel(
     descr = "a pdmp with 2 discrete variables and 2 jumptypes",
     init = c(f = 0, d1 = 0, d2 = 0),
@@ -91,7 +93,8 @@ test_that("method generator is correct for a pdmp with 2 discrete variables", {
 })
 
 test_that("method generator is correct for the toggle switch model", {
-
+  skip_if_not_installed("Deriv")
+  
   toggleSwitch <- pdmpModel(
       descr = "toggle switch with two promotors",
       parms = list(bA = 0.5, bB = 1,   aA = 2, aB = 4, 

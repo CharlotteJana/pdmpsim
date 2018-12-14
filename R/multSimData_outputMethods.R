@@ -1,7 +1,8 @@
 #======== todo =================================================================
-#t3 density: in plotDensity umbenennen?
+#v2 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
+#t1 Dokmentation anpassen, so dass sie auch auf mjpModel-plots passt
 
 #' @include multSimData.R
 NULL
@@ -35,10 +36,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
     plot <- plot + ggplot2::geom_bin2d(data = contData, 
                                        ggplot2::aes(y = value), ...) +
       #viridis::scale_fill_viridis() +
-      ggplot2::scale_fill_distiller(palette = "Spectral", 
-                                    name = switch(as.character(length(n)),
-                                                  "1" = "Continous\nvariable",
-                                                  "Continous\nvariables"))
+      ggplot2::scale_fill_distiller(palette = "Spectral", name = "Quantity")
   }
   
   if(contPlot == "density_2d"){
@@ -133,7 +131,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   contData$variable <- factor(contData$variable)
   discVarNames <- sort(levels(discData$variable))
   discData <- tidyr::spread(discData, variable, value)
-  
+
   # define colors for discrete variables
   color_mapping <- function(index, value, states){
     discVar <- discVarNames[index]
@@ -178,8 +176,9 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   # }
   
   #** Plot discrete variables
-  min <- min(contData$value)
-  height <- abs(max(contData$value) - min)/20
+  min <- ifelse(nrow(contData) == 0, 0, min(contData$value))
+  max <- ifelse(nrow(contData) == 0, 1, max(contData$value))
+  height <- abs(max - min)/20
   discValues <- NULL
   discCols <- NULL
   for(i in seq_along(discVarNames)){
@@ -199,10 +198,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   
   #t2: ifelse fehlerhaft
   plot <- plot + ggplot2::scale_fill_identity(
-    ifelse(length(discVarNames) > 1,
-                 "discrete\nvariables",
-                 "discrete\nvariable"), 
-           guide = "legend", breaks = discCols,
+     "discrete\nstates", guide = "legend", breaks = discCols,
     labels = printVect(discValues,collapse = NULL)
   )
 
@@ -215,16 +211,14 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
                        size = 1) +
     ggplot2::scale_colour_manual(
       name = ifelse(length(levels(contData$variable)) > 1, 
-                    "continous\nvariables", 
-                    "continous\nvariable"), 
+                    "variables", 
+                    "variable"), 
       values = cols[seq_along(levels(contData$variable))])
   
   # facet_wrap
   plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
   #plot <- plot + facet_grid(variable ~ seed)
   
-  print(plot)
-  invisible(plot)
   return(plot)
 }
 
@@ -342,8 +336,6 @@ plotStats.multSimData <- function(x, vars, funs, plottype = "line", ...){
     plot <- plot + ggplot2::geom_smooth(method = "auto")
   }
   
-  print(plot)
-  invisible(plot)
   return(plot)
 }
 
@@ -464,8 +456,10 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
   ggplot2::theme(axis.text.x = ggplot2::element_blank(),
                  axis.ticks.x = ggplot2::element_blank())
   
-  print(plot)
-  invisible(plot)
+  ### text
+  subtitle <- paste("Number of simulations:", length(unique(x$seed)))
+  plot <- plot + ggplot2::labs(subtitle = subtitle, y = NULL)
+  
   return(plot)
   }
 
@@ -486,18 +480,23 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
 #' @param sub optional character string for the subtitle of the plot. The 
 #' default value for a \code{multSim} object \code{x} gives informations about 
 #' parameters and the initial values.
+#' @param bins integer. Number of bins for the histogram of the continous variables.
 #' @param ... additional parameters passed to the default method of 
-#' \code{\link[graphics]{hist}}
+#' \code{\link[ggplot2]{geom_histogram}}
 #' @name hist
 #' @examples 
 #' data("simplePdmp")
 #' ms <- multSim(simplePdmp, seeds = 1:10)
 #' hist(ms, t = 10)
 #' hist(getMultSimData(ms), t = 10, density = 10)
+#' @note Package \code{\pkg{gridExtra}} is needed for this method. If you don't 
+#' have installed it, an alternative plot will be returned.
 #' @importFrom graphics hist par plot.new layout barplot text mtext
 #' @importFrom grDevices dev.list dev.off gray.colors
+#' @importFrom ggplot2 position_stack geom_histogram geom_bar theme
+#' @importFrom ggplot2 ggplot element_blank facet_wrap aes element_line
 #' @export
-hist.multSimData <- function(x, t, main, sub, ...){
+hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
   
   if(missing(t)) t <- unique(x$time)
   if(length(t) > 1) 
@@ -506,7 +505,7 @@ hist.multSimData <- function(x, t, main, sub, ...){
   #------ Prepare the data for plotting ------------
   
   # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
-  time <- type <- variable <- NULL
+  time <- type <- variable <- value <- NULL
   
   data <- subset(x, time == t)
   if(nrow(data) == 0) 
@@ -514,55 +513,107 @@ hist.multSimData <- function(x, t, main, sub, ...){
   
   contData <- subset(data, type == "cont")
   discData <- subset(data, type == "disc")
-  n <- unique(contData$variable)
-  d <- unique(discData$variable)
   
-  #---------- Create Plot ---------------------
-  
-  if(!is.null(grDevices::dev.list())) grDevices::dev.off()
-  graphics::plot.new()
-  opar <- graphics::par(no.readonly = TRUE)
-  on.exit(graphics::par(opar))
-  graphics::par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
-  graphics::layout(t(c(rep(seq_along(n), each = 2), length(n)+1)))
-  
-  for(name in n){
-    graphics::hist(subset(contData, variable == name)$value,
-                   xlab = name, ylab = "", col = "grey", main = NULL, ...)
-  }
-  
-  dVal <- NULL
-  dRange <- unique(discData$value)
-  for(name in d){
-    dVal <- cbind(dVal, as.matrix(table(
-      c(subset(discData, variable==name)$value, dRange) - 1
-    )))
-  }
-  colnames(dVal) <- d
-  # warum funktioniert names.arg = as.character(d) nicht????
-  b <- graphics::barplot(dVal, beside = FALSE, axes = FALSE, 
-                         col = grDevices::gray.colors(nrow(dVal), start = 0.6))
-  
-  #text for the bars
-  h <- vapply(seq_len(ncol(dVal)), 
-              function(i) cumsum(dVal[, i]),
-              numeric(nrow(dVal)))-dVal/2
-  smallBarIndex <- which(dVal <= 0.04*nrow(discData), arr.ind = TRUE)
-  if(length(smallBarIndex) != 0){
-    for(i in seq_len(nrow(smallBarIndex))){
-      h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
+  contData$variable <- factor(contData$variable)
+  discData$variable <- factor(discData$variable)
+  discData$value <- factor(discData$value)
+  if(nrow(discData) > 0)
+    discData$type <- ""
+
+  if(requireNamespace("gridExtra", quietly = TRUE)){
+    plot <- ggplot2::ggplot(data = NULL) + 
+      ggplot2::theme_bw() +
+      ggplot2::theme(axis.title = ggplot2::element_blank())
+    
+    ### continous variables
+    plot1 <- plot + ggplot2::geom_histogram(data = contData, aes(x = value), 
+                                            alpha = 0.3, col = "black", 
+                                            bins = bins, ...)
+    plot1 <- plot1 +  ggplot2::facet_wrap(~ variable)
+    
+    ### discrete variables
+    plot2 <- plot + ggplot2::geom_bar(
+      data = discData, ggplot2::aes(x = type, fill = value), 
+      position = ggplot2::position_stack(reverse = TRUE))
+    plot2 <- plot2 + ggplot2::scale_fill_grey(start = 0.4) +
+      ggplot2::theme(axis.ticks = ggplot2::element_line(colour = "white"),
+                     legend.position = "bottom") +
+      ggplot2::facet_wrap(~ variable)
+    
+    # texts 
+    if(missing(sub))
+      sub <- paste("Histogram at time t =", t)
+    if(missing(main))
+      main <- ""
+    else 
+      main <- grid::textGrob(main, gp = grid::gpar(font = 2,
+                                                   fontsize = 20))
+    
+    
+    p <- gridExtra::arrangeGrob(grobs = list(plot1, plot2),
+                                nrow = 1, 
+                                widths = c(nlevels(contData$variable),1),
+                                bottom = grid::textGrob(sub, x = 0, hjust = 0),
+                                top = main)
+    
+    grid::grid.newpage()
+    grid::grid.draw(p)
+    #return(invisible(p))
+    return(p)
+  } 
+  else{
+    n <- unique(contData$variable)
+    d <- unique(discData$variable)
+    discData <- group_by(discData, variable, time, value)
+    discData <- dplyr::summarise(discData, count = n())
+    discData$value <- as.ordered(discData$value)
+    
+    if(!is.null(grDevices::dev.list())) grDevices::dev.off()
+    graphics::plot.new()
+    opar <- graphics::par(no.readonly = TRUE)
+    on.exit(graphics::par(opar))
+    graphics::par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
+    graphics::layout(t(c(rep(seq_along(n), each = 2), length(n)+1)))
+    
+    for(name in n){
+      graphics::hist(subset(contData, variable == name)$value,
+                     xlab = name, ylab = "", col = "grey", main = NULL, ...)
     }
+    
+    dVal <- NULL
+    dRange <- unique(discData$value)
+    for(name in d){
+      dVal <- cbind(dVal, as.matrix(table(
+        c(subset(discData, variable==name)$value, dRange) - 1
+      )))
+    }
+    if(!is.null(dVal)){
+      colnames(dVal) <- d
+      # warum funktioniert names.arg = as.character(d) nicht????
+      b <- graphics::barplot(dVal, beside = FALSE, axes = FALSE, 
+                             col = grDevices::gray.colors(nrow(dVal), start = 0.6))
+    
+    # text for the bars
+    h <- vapply(seq_len(ncol(dVal)), 
+                function(i) cumsum(dVal[, i]),
+                numeric(nrow(dVal)))-dVal/2
+    smallBarIndex <- which(dVal <= 0.04*nrow(discData), arr.ind = TRUE)
+    if(length(smallBarIndex) != 0){
+      for(i in seq_len(nrow(smallBarIndex))){
+        h[smallBarIndex[i,1], smallBarIndex[i,2]] <- NA
+      }
+    }
+      graphics::text(b, y = t(h), 
+                     labels = rep(levels(factor(dRange)), each = length(d)))
+    }
+    # title
+    if(missing(main)) main <- NULL
+    if(missing(sub)) sub <- paste("Histogram of ", length(unique(data$seed)), 
+                                  " simulations at time t = ", t, ".", sep = "")
+    if(!is.null(main)) graphics::mtext(main, font = 2, line = 1, 
+                                       cex = 1.5, outer = TRUE)
+    if(!is.null(sub)) graphics::mtext(sub, line = -3, outer = TRUE)
   }
-  graphics::text(b, y = t(h), 
-                 labels = rep(levels(factor(dRange)), each = length(d)))
-  
-  # title
-  if(missing(main)) main <- NULL
-  if(missing(sub)) sub <- paste("Histogram of ", length(unique(data$seed)), 
-                                " simulations at time t = ", t, ".", sep = "")
-  if(!is.null(main)) graphics::mtext(main, font = 2, line = 0, 
-                                     cex = 1.5, outer = TRUE)
-  if(!is.null(sub)) graphics::mtext(sub, line = -2, outer = TRUE)
 }
 
 #========== density ================
@@ -651,7 +702,7 @@ density.multSimData <- function(x, t, main, sub, ...){
     b <- barplot(discVal, beside = FALSE, xlab = name, add = TRUE, axes = FALSE,
                  col = gray.colors(nrow(discVal), alpha = 0.6, end = 1))
     
-    #text for the bars
+    # text for the bars
     h <- sapply(seq_len(ncol(discVal)), 
                 function(i) cumsum(discVal[,i])) - discVal/2
     text(b, y=t(h), labels = rep(levels(factor(discRange)), each = length(t)))
