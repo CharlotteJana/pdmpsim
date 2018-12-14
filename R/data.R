@@ -1,5 +1,5 @@
 #======== todo =================================================================
-
+# eine kleine änderung
 #t1 toggleSwitch: references
 #t2: SIRstoch: implement
 
@@ -124,7 +124,7 @@
 
 #' Stochastic SIR dynamics
 #'
-#' This is a mor complicated example for a markov jump process
+#' This is a more complicated example for a markov jump process
 #' defined as \code{\link{mjpModel}}. It is included to the package for 
 #' demonstration purposes.
 #' @slot parms infection (\code{beta}) and recovery  rate (\code{gamma}).
@@ -141,3 +141,84 @@
 #' for the formal description of the S4 class.
 #' @example inst/models/SIRstoch.R
 "SIRstoch"
+
+#######################################################################
+
+#' Increased bouncing ball
+#' 
+#' This is a minimal fictitious example, of a PDMP jumping at borders 
+#' \code{\link{pdmpBorder}}, where no stochastic jumps exist, so that it is easy 
+#' to see the functionality of borders.
+#' Here the minimum border 0 ist the ground where the velocity of the ball
+#' rises and therefore the height of each hop increases up to a second 
+#' fixed border (20), where the process stops.
+#' @slot init  There ist one continous variable, which describes the velocity of 
+#' the ball and no discrete variable.
+#' @slot discStates there are no discstates.
+#' @slot dynfunc The dynamic of the continous variable depends on 
+#' the velocity at the last jump (borderjump or stochastic jump).
+#' @slot jumpfunc 
+#' @slot ratefunc 
+#' @slot parms There are are a number of parameters that appear in the dynamics 
+#' and  no change rates of the process.
+#' @slot times The simulations will start at time \code{t = 0} and end at the time, where the termination terminating value is reached.
+#' @slot borroot It has dimension one and replaces the ground (=minimum)
+#' 
+#' 
+#' @slot terroot Every value, which forces the process to terminate is stored in the vector terroot.
+#' In this example it has dimension one and is the fixes value of 20 which forces the precess to terminate.
+#' @slot borderfunc The simulations will start at time \code{t = 0} and end at time where the termination terminating value is reached.
+#' 
+#' @format An object of class \code{\link{pdmpBorder}}.
+#' @seealso \code{\link{OÖK}} for an easier example of a \code{pdmpBorder}
+#' and \code{\link{pdmpBorder}}
+#' for the formal description of the S4 class.
+#' @example inst/models/IBBall.R
+"IBBall"
+
+#######################################################################
+
+#' Autecological PDMP
+#' 
+#' This is a more complicated example, of a PDMP jumping at borders 
+#' \code{\link{pdmpBorder}}, where we consider stochastic jumps  
+#' as well as fixes jumps at borders.
+#' The model describes the energy of an individual, which can live in 
+#' different areas an be in different modi, which lead to a differant 
+#' dynamic and between which the individual switches
+#' stochastically and fixed, in case of reaching a border.
+#' The minimum border 0 means that the individual dies and therefor the 
+#' process terminates.
+#' The Maximum border forces a jump into another modus.
+#' @slot init There is onecontinous variable \eqn{dz_1}{dz}
+#' which describe the energy of the considered individuum and two discrete variables 
+#' \eqn{dz_2}{dz} and \eqn{dz_3}{dz}, which describe the modus and area of the individuum.
+#' @slot discStates One discrete variable \eqn{dz_3}{dz} models the modus it has codomain \{1, 2, 3\} where 1 means 
+#' that the individuum is in search modus, 2 means that the individuum is eating ans 3 means that it is in flight modus.
+#' The other one \eqn{dz_2}{dz} models the area whith codomain \{1, 2, 3\}.
+#' @slot dynfunc The dynamic of the continous variable depends on 
+#' the velocity at the last jump (borderjump or stochastic jump), and the new discrete state.
+#' @slot jumpfunc There are four jumptypes, the first two just change the modus, and the other ones just the area.
+#' @slot ratefunc  A vector of length four determining the probability of a jump 
+#' being of jumptype 1, 2, 3 or 4 (two possible modusjumps and two possible areajumps).
+#' The rates of modus change are modelled constant but the rates of changing the area are dependig on the engery value.
+#' Here, the rates areachanging are zero iff the modus is unequal to 1, which means that the model assumes, that the individuum
+#' just changes the area iff it is in searching modus.
+#' @slot parms There are are a number of parameters that appear in the dynamics 
+#' and rates of the process. First of all there are the parameters of decrease and increase of energy in the different states \eqn{β, a_11, a_21, a_31, a_22, a_12, a_32, a_23, a_13, a_33}.
+#' Then we have area change rates, which are depending on the engergy and the recent area (=searching individuum) \eqn{s_12, s_21, s_31, s_13, s_23, s_32} 
+#' and we have the modus change rates, differing in each area on the recent modus, because of different food resources, competitors and hunters 
+#' \eqn{κ112, κ113, κ131, κ132, κ121, κ123, κ212, κ213, κ231, κ232, κ221, κ223, κ312, κ313, κ331, κ332, κ321, κ323}. 
+#' The values of the parameters in this example are artificial and are not based on real data.
+#' @slot times The simulations will start at time \code{t = 0} and end at the terminatin borderjump.
+#' @slot borroot Every value, which forces the process to jump into a fixed state is stored in the vector borroot.
+#' In this example it has dimension one and is the engery maximum of 2.
+#' @slot terroot Every value, which forces the process to terminate is stored in the vector terroot.
+#' In this example it has dimension one and is the energy minimum of 0.
+#' @slot borderfunc The simulations will start at time \code{t = 0} and end at 
+#' \code{t = 10} with step length 0.01.
+#' @format An object of class \code{\link{pdmpBorder}}.
+#' @seealso \code{\link{IBBall}} for an easier example of a \code{pdmpBorder}.
+#' @example inst/models/OÖK.R
+"OÖK"
+

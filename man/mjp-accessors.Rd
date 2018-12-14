@@ -3,7 +3,6 @@
 \docType{methods}
 \name{mjp-accessors}
 \alias{mjp-accessors}
-\alias{mjp-accessors}
 \alias{ratefunc,mjpModel-method}
 \alias{jumpfunc,mjpModel-method}
 \alias{descr,mjpModel-method}

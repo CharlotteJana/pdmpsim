@@ -6,8 +6,8 @@
 \alias{format}
 \title{Format a MJP for pretty printing.}
 \usage{
-\S4method{format}{mjpModel}(x, begin = NULL, end = NULL, short = TRUE,
-  slots = c("parms", "init", "times"), sep, collapse)
+\S4method{format}{mjpModel}(x, begin = NULL, end = NULL,
+  short = TRUE, slots = c("parms", "init", "times"), sep, collapse)
 }
 \arguments{
 \item{x}{an object of class \code{\link{mjpModel}} or one of its subclasses.}

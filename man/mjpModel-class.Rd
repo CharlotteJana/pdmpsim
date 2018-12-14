@@ -10,9 +10,9 @@
 \title{Class mjpModel}
 \usage{
 mjpModel(obj = NULL, descr = character(0), jumpfunc = function(t, x,
-  parms, jtype) x, ratefunc = function(t, x, parms) c(0), times = c(from =
-  0, to = 10, by = 1), init = c(0, 0), parms = c(0), out = NULL,
-  solver = "Gdirect", initfunc = NULL)
+  parms, jtype) x, ratefunc = function(t, x, parms) c(0),
+  times = c(from = 0, to = 10, by = 1), init = c(0, 0), parms = c(0),
+  out = NULL, solver = "Gdirect", initfunc = NULL)
 }
 \arguments{
 \item{obj}{pdmpModel object that is being built.}

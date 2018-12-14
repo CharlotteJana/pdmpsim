@@ -9,7 +9,7 @@
 SIRstoch
 }
 \description{
-This is a mor complicated example for a markov jump process
+This is a more complicated example for a markov jump process
 defined as \code{\link{mjpModel}}. It is included to the package for 
 demonstration purposes.
 }

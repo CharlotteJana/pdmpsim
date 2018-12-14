@@ -26,7 +26,7 @@ usually depend on the states of the discrete variables. The number of the
 continous variables is however fixed and does not change during the 
 simulation. This is one restriction compared to the more general definition 
 of PDMPs given in [Dav84]. The other restriction concernes borders for the 
-continous variables which are not yet implemented in the simulation algorithm. 
+continous variables which are implemented in the \code{\link{pdmpBorder}} Subclass. 
 See [Zei09] and [Ben+15] for an introduction of PDMPs with definitions that 
 match with the implementation of this package.
 }

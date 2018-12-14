@@ -26,7 +26,7 @@ Suggests: Deriv,
     testthat,
     tidyr,
     vdiffr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Collate: 
     'data.R'
     'mjp_class.R'
@@ -45,5 +45,10 @@ Collate:
     'multSimData_outputMethods.R'
     'multSim_calculations.R'
     'multSim_outputMethods.R'
+    'pdmpBorder_class.R'
+    'pdmpBorder_accessors.R'
+    'pdmpBorder_methods.R'
+    'pdmpBorder.R'
+    'pdmpBorder_sim.R'
     'pdmp_generator.R'
     'pdmpsim-package.R'

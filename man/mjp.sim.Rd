@@ -9,8 +9,8 @@
 \alias{sim,mjpModel,mjpModel-method}
 \title{Simulation of a mjpModel object}
 \usage{
-\S4method{sim}{mjpModel}(obj, initialize = FALSE, seed = 1, njump = 1e+06,
-  outSlot = TRUE, ...)
+\S4method{sim}{mjpModel}(obj, initialize = FALSE, seed = 1,
+  njump = 1e+06, outSlot = TRUE, ...)
 }
 \arguments{
 \item{obj}{obj of class \code{\link{mjpModel}} or one of its subclasses}
