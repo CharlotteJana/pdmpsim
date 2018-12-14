@@ -47,7 +47,6 @@ NULL
 #' @seealso
 #' Class \code{pdmpModel} provides a method \code{\link{sim}} for simulation, 
 #' \code{\link{pdmpBorder-accessors}{accessor functions}}
-#' @importFrom pdmpsim pdmpModel
 #' @importFrom methods new
 #' @export
 setClass("pdmpBorder",

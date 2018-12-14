@@ -9,11 +9,8 @@
 \usage{
 \S4method{format}{mjpModel}(x, begin = NULL, end = NULL,
   short = TRUE, slots = c("parms", "init", "times"), sep, collapse)
-<<<<<<< HEAD:man/format-mjpModel-method.Rd
-=======
 
 \S4method{plot}{mjpModel,missing}(x, y, ...)
->>>>>>> e1dd096c41a1171ad9e8eed209379b09142abdeb:man/mjp-methods.Rd
 }
 \arguments{
 \item{x}{an object of class \code{\link{mjpModel}} or one of its subclasses.}

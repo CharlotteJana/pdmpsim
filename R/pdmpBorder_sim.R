@@ -133,10 +133,11 @@ setMethod("sim", "pdmpBorder", function(obj, initialize = FALSE,
   } else { 
     out <- do.call(obj@solver, list(y = inity, times = times, 
                                     func = func, initpar = obj@parms, events = events, rootfunc = rootfunc, 
-                                    nroot = nroot, ...))[, -objdim - (length(obj@discStates) + 1)]
-    class(out) <- c("deSolve", "matrix") # geändert (war erst nur deSolve)
+                                    # nroot = nroot, ...))[, -objdim - (length(obj@discStates) + 1)]
+                                    nroot = nroot, ...))[, -objdim - 2]
+    
   }
+  class(out) <- c("deSolve", "matrix")
   obj@out <- out
   invisible(out)
 })
-

@@ -123,6 +123,9 @@
 #' @export
 multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"), 
                        append = FALSE, uniqueSeeds = TRUE, digits = NULL){
+  
+  if(class(obj) == "pdmpBorder")
+    stop("Method 'multSimCsv' is not implemented for objects of class 'pdmpBorder'.")
 
   if(substr(prefix, nchar(prefix)-3, nchar(prefix)) == ".csv"){
     prefix <- substr(prefix, 1, nchar(prefix)-4)

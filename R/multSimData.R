@@ -99,7 +99,8 @@ getMultSimData.multSim <- function(x, times, seeds){
   }
   
   for(j in seq_along(seedIndex)){
-    seedData <- x$outputList[[seedIndex[j]]][timeIndex, ]
+    lastTime <- nrow(x$outputList[[seedIndex[j]]])
+    seedData <- x$outputList[[seedIndex[j]]][timeIndex[timeIndex %in% 1:lastTime], ]
     if(class(seedData) == "numeric")
       seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))

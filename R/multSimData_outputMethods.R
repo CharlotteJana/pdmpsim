@@ -156,7 +156,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
-    ggplot2::coord_cartesian(xlim = c(0, tail(x$time, 1))) +   # zoom in
+    ggplot2::coord_cartesian(xlim = c(0, max(x$time, 1))) +   # zoom in
     ggplot2::labs(y = "", x = "time")  
   
   #** Plot discrete variables

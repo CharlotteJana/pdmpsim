@@ -3,20 +3,20 @@
                                 s_12 = 1, s_21 = 2, s_31 = 1, s_13 = 2, s_23 = 3, s_32 = 4, 
                                 κ112 = 5, κ113 = 3, κ131 = 3, κ132 = 0, κ121 = 0, κ123 = 1, κ212 = 5, κ213 = 3, κ231 = 3, κ232 = 0, κ221 = 0, 
                                 κ223 = 1 , κ312 = 4.5, κ313 = 3, κ331 = 3, κ332 = 0, κ321 = 0, κ323 = 1),
-                  init = c(ξ = 6, θ = c(1, 2)),
+                  init = c(energy = 6, area = 1, modi = 2),
                   borroot = function(t, x, parms){return(c(x[1]-2))}, 
                   terroot = function(t, x, parms){return(c(x[1]))},
                   discStates = list(area = (c(1, 2, 3)), modi = c(1, 2, 3)),
                   dynfunc = function(t, x, parms) {
-                    dξ <- with(as.list(c(x, parms)),switch(θ1, switch(θ2, a_11*ξ - β, a_12 - β*ξ, a_13*ξ - β), 
-                                                            switch(θ2, a_21*ξ - β, a_22 - β*ξ, a_23*ξ - β), 
-                                                            switch(θ2, a_31*ξ - β, a_32 - β*ξ, a_33*ξ - β))) 
-                    return(c(dξ, 0, 0))
+                    denergy <- with(as.list(c(x, parms)),switch(area, switch(modi, a_11*energy - β, a_12 - β*energy, a_13*energy - β), 
+                                                            switch(modi, a_21*energy - β, a_22 - β*energy, a_23*energy - β), 
+                                                            switch(modi, a_31*energy - β, a_32 - β*energy, a_33*energy - β))) 
+                    return(c(denergy, 0, 0))
                   },
                   ratefunc = function(t, x, parms) {
-                    return(with(as.list(c(x, parms)), c(switch(θ1, switch(θ2, c(κ112, κ113, s_12*ξ, s_13*ξ), c(κ123, κ121, 0, 0), c(κ131, κ132, 0, 0)),
-                                                                  switch(θ2, c(κ212, κ213, s_23*ξ, s_21*ξ), c(κ223, κ221, 0, 0), c(κ231, κ232, 0, 0)),
-                                                                  switch(θ2, c(κ312, κ313, s_31*ξ, s_32*ξ), c(κ323, κ321, 0, 0), c(κ331, κ332, 0, 0))))))
+                    return(with(as.list(c(x, parms)), c(switch(area, switch(modi, c(κ112, κ113, s_12*energy, s_13*energy), c(κ123, κ121, 0, 0), c(κ131, κ132, 0, 0)),
+                                                                  switch(modi, c(κ212, κ213, s_23*energy, s_21*energy), c(κ223, κ221, 0, 0), c(κ231, κ232, 0, 0)),
+                                                                  switch(modi, c(κ312, κ313, s_31*energy, s_32*energy), c(κ323, κ321, 0, 0), c(κ331, κ332, 0, 0))))))
                   },
                   jumpfunc = function(t, x, parms, jtype) {
                     return(with(as.list(c(x,parms)), c(x[1], switch(jtype, switch(x[2], 1, 2, 3), switch(x[2], 1, 2, 3), 

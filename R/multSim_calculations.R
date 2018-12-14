@@ -48,6 +48,9 @@ removeSeeds <- function(ms){
 #' @export
 mean.multSim <- function(x, ...){
 
+  if(class(x) == "pdmpBorder")
+    stop("Method 'mean' is not implemented for objects of class 'pdmpBorder'.")
+  
   ms <- removeSeeds(x)
   times <- fromtoby(x$model@times)
   means <- NULL
@@ -75,6 +78,9 @@ moments <- function(x, order){
 #' @rdname moments
 #' @export
 moments.multSim <- function(x, order){
+  
+  if(class(x) == "pdmpBorder")
+    stop("Method 'generator' is not implemented for objects of class 'pdmpBorder'.")
 
   x <- removeSeeds(x)
   times <- fromtoby(x$model@times)

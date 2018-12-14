@@ -50,13 +50,16 @@ setGeneric("generator", function(obj) standardGeneric("generator"))
 
 #' @rdname generator
 setMethod("generator", signature(obj = "pdmpModel"), function(obj) {
+  
+  if(class(obj) == "mjpModel")
+    stop("Method 'generator' is not implemented for objects of class 'mjpModel'.")
+  if(class(obj) == "pdmpBorder")
+    stop("Method 'generator' is not implemented for objects of class 'pdmpBorder'.")
+  if(!requireNamespace("Deriv", quietly = TRUE)) 
+    stop("Method 'generator' depends on package 'Deriv'. Please install it.")
+  
   function(f){
-    if(!requireNamespace("Deriv", quietly = TRUE)) 
-      stop("Method 'generator' depends on package 'Deriv'. Please install it.")
-    if(class(obj) == "mjpModel")
-      stop("Method 'generator' is not implemented for objects of class 'mjpModel'.")
-    
-    function(t, x, parms = obj@parms) {
+      function(t, x, parms = obj@parms) {
       n <- length(obj@init)
       nam <- names(obj@init)
       nj <- length(obj@ratefunc(t, x, parms)) # number of jumptypes
