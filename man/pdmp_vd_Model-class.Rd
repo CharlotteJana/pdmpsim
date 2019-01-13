@@ -130,7 +130,7 @@ method \code{\link{sim}}, the result will be stored in this slot.}
 }
 
 # an imigration-aging process
-imiaging_pdmp <- pdmpModel(
+IASP <- pdmpModel(
   descr = "a PDMP model for imigration and aging",
   init = c(0),
   times = c(from = 0, to = 1e2, by = 1),
@@ -140,8 +140,8 @@ imiaging_pdmp <- pdmpModel(
   summaryfunc= function(x) c(mean=mean(x),size=length(x)),
   parms = c(lambda=1)
 )
-imiaging_pdmp_sim <- sim(simplePdmp, seed = 10) # simulate
-plot(imiaging_pdmp_sim)
+iasp_sim <- sim(IASP, seed = 10) # simulate
+plot(iasp_sim)
 
 
 }

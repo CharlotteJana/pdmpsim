@@ -54,8 +54,8 @@ methods available that use \pkg{ggplot2}.
 }
 \examples{
 data("KendallBD")
-format(KendallBD, begin = "ToggleSwitch__", end = ".rda")
-format(KendallBD, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
+format(KendallBD, begin = "KendallBD__", end = ".rda")
+format(KendallBD, begin = paste0(descr(KendallBD), ": "), short=FALSE)
 parms(KendallBD) <- list()
 cat(format(KendallBD, short = FALSE, collapse = ".\\n",
            slots = c("init", "times","parms"),

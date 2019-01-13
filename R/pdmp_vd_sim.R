@@ -45,7 +45,7 @@ NULL
 #' value of the other slots is changed via <-. 
 #' See \code{\link{pdmp-accessors}} for further informations.
 #'
-#' @example /inst/examples/ex_pdmp_vd_sim.R
+#' @example inst/examples/ex_pdmp_vd_sim.R
 ##' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 ##' for multiple simulations, ... for plot and summary methods of the simulation.
 #' @aliases sim
