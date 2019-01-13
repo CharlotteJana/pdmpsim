@@ -2,14 +2,14 @@
 #t2 more efficient simulation in C 
 #t3 I = survival function?
 
-#' @include pdmp_class.R pdmp_methods.R
+#' @include pdmp_vd_class.R pdmp_vd_methods.R
 NULL
 
 ##### method sim ####
 
-#' Simulation of a pdmpModel object
+#' Simulation of a pdmp_vd_Model object
 #'
-#' @param obj obj of class \code{\link{pdmpModel}} or one of its subclasses
+#' @param obj obj of class \code{\link{pdmp_vd_Model}} or one of its subclasses
 #' @param seed an integer or NULL. This makes the result of \code{sim} 
 #' reproducible, although random numbers are used during execution. 
 #' Simulation with equal seeds will lead to equal results. If seed is set to 
@@ -45,17 +45,17 @@ NULL
 #' value of the other slots is changed via <-. 
 #' See \code{\link{pdmp-accessors}} for further informations.
 #'
-#' @example /inst/examples/ex_pdmp_sim.R
-#' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
-#' for multiple simulations, ... for plot and summary methods of the simulation.
+#' @example /inst/examples/ex_pdmp_vd_sim.R
+##' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
+##' for multiple simulations, ... for plot and summary methods of the simulation.
 #' @aliases sim
 #' @importMethodsFrom simecol sim
 #' @importFrom simecol fromtoby
 #' @importFrom stats rexp
 #' @export
-setMethod("sim", "pdmpModel", function(obj, initialize = FALSE, 
+setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE, 
                                        seed = 1, outrate = FALSE, 
-                                       nroot = 1e+06, outSlot = TRUE, ...) {
+                                       outSlot = TRUE, ...) {
   
   ### important variables:
   # ξ₁,...,ξₖ = k continous variables (only used in comments)
@@ -75,56 +75,65 @@ setMethod("sim", "pdmpModel", function(obj, initialize = FALSE,
   set.seed(seed[2])
   times <- fromtoby(obj@times)
   parms <- obj@parms
-  objdim <- length(obj@init) # = n = continous variables + discrete variables
-
-  # func = rhs of ode system dy/dt
-  #      = list (dξ₁/dt, dξ₂/dt, …, dξₙ/dt, dθ/dt, dI/dt)
-  func <- function(t, y, parms) {
-    # dξᵢ/dt = dynfunc[i], dθ/dt = dynfunc[n] = 0,
-    list(c(obj@dynfunc(t, x = y[-objdim - 1], parms = obj@parms),
-           # dI/dt = Σᵢ ratefunc[i]
-           sum(pmax(obj@ratefunc(t = t, x = y[-objdim - 1], parms = obj@parms),0))))
+  m<-length(times)
+  simf<-function(t0,t1,x){
+    objdim <- length(x)
+    #dynamics:vector field 
+    dfunc <- function(t, y, parms) {
+      # dξᵢ/dt = dynfunc[i], dθ/dt = dynfunc[n] = 0,
+      list(c(obj@dynfunc(t, x = y[-objdim - 1], parms = parms),
+             # dI/dt = Σᵢ ratefunc[i]
+             #make sure rates are positive
+             sum(pmax(obj@ratefunc(t = t, x = y[-objdim - 1], parms = parms),0))))
+    }
+    # rootfunc = I (rootfunc == 0 jumpfunc is executed
+    rootfunc <- function(t, y, parms) y[objdim + 1]
+    # inity = initial state for y = (obj@init, I₀) with I₀ ~ -exp
+    inity <- c(x, -rexp(n = 1))
+    names(inity) <- c(names(x), "pdmpsim:negcumrate")
+    
+    # call of ode-solver (default: lsodar)
+    if (outrate) {
+      lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
+                                func = dfunc, initpar = parms, 
+                                rootfunc = rootfunc,
+                                nroot = 1))
+    }
+    else {
+      lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
+                                      func = dfunc, initpar = parms, 
+                                      rootfunc = rootfunc,
+                                      nroot = 1))[,-objdim-2]
+    }
+    return(list(rf=.hasSlot(lout,iroot) , x=lout[2,-1],t=lout[2,1]))
   }
-
-
-  # rootfunc = I (rootfunc == 0 → eventfunc will be executed)
-  rootfunc <- function(t, y, parms) y[objdim + 1]
-
-  # eventfunc returns c(next state after a jump, I) where I ~ -exp
-  eventfunc <- function(t, y, parms) {
-    # w = ratefunc(ξₜ,θₜ)
-    w <- obj@ratefunc(t = t, x = y[-objdim - 1], parms = obj@parms)
-    # jtype = random number, choosed according to transition measure w
-    jtype <- sample.int(n = length(w), size = 1, prob = w)
-    # jumpfunc(jtype) = next state after the jump
-    return(c(obj@jumpfunc(t = t, x = y[-objdim - 1], 
-                          parms = obj@parms, jtype = jtype),
-             # I is set as negative exponentially distributed random number
-             -rexp(n = 1)))
+  
+  xi<-init
+  out<-vector("list",m)
+  out[[1]]<-list(t=times[1],x=init)
+  #loop
+  for(i in 1:(m-1))
+  {t0<-times[i]
+  t1<-times[i+1]
+  while (t0<t1) {
+    ow<-simf(t0,t1,xi)
+    t0<-ow$t
+    if(ow$rf){
+      w <- obj@ratefunc(t = t0, x = ow$x, parms = parms)
+      #sample the jump type
+      #make sure pobabilities are positive
+      jtype <- sample.int(n = length(w), size = 1, prob = pmax(w,0))
+      # jumpfunc(jtype) = next state after the jump
+      xi<-obj@jumpfunc(t = t0, x = ow$x, 
+                  parms = parms, jtype = jtype)
+      }
+    else {
+      xi<-ow$x
+      }
   }
-
-  # events: this is needed for solver lsodar
-  events <- list(func = eventfunc, root = TRUE, rootfunc = rootfunc)
-
-  # inity = initial state for y = (obj@init, I₀) with I₀ ~ -exp
-  inity <- c(obj@init, -rexp(n = 1))
-  names(inity) <- c(names(obj@init), "pdmpsim:negcumrate")
-
-  # call of ode-solver (default: lsodar)
-  if (outrate) {
-    out <- do.call(obj@solver, list(y = inity, times = times,
-                                    func = func, initpar = obj@parms, 
-                                    events = events, rootfunc = rootfunc,
-                                    nroot = nroot, ...))
-  } else {
-    out <- do.call(obj@solver, list(y = inity, times = times,
-                                    func = func, initpar = obj@parms, 
-                                    events = events, rootfunc = rootfunc,
-                                    nroot = nroot, ...))[, -objdim - 2]
+  out[[i+1]]<-list(t=times[i+1],x=xi)
   }
-  class(out) <- c("deSolve", "matrix")
-  obj@out <- out
-
+  obj@out<-out
   if(outSlot) return(invisible(obj))
   else return(invisible(out))
 })

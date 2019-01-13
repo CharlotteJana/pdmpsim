@@ -1,7 +1,7 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.2-1
+Version: 1.2-2
 Date: 2019-01-13
 Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"), person("Katrin","Wagels",role="aut"))
 Author: Volkmar Liebscher [aut, cre], 
@@ -50,4 +50,9 @@ Collate:
     'multSim_calculations.R'
     'multSim_outputMethods.R'
     'pdmp_generator.R'
+    'pdmp_vd_class.R'
+    'pdmp_vd_accessors.R'
+    'pdmp_vd_generator.R'
+    'pdmp_vd_methods.R'
+    'pdmp_vd_sim.R'
     'pdmpsim-package.R'

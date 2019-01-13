@@ -2,7 +2,7 @@
 
 #t1 toggleSwitch: references
 #t2: SIRstoch: implement
-
+#t2: structured population
 #######################################################################
 
 #' A simple PDMP
@@ -141,3 +141,26 @@
 #' for the formal description of the S4 class.
 #' @example inst/models/SIRstoch.R
 "SIRstoch"
+
+
+
+#######################################################################
+
+#' An age-structured  process with aging and imigration 
+#'
+#' This is a simple example for a variable dimension  process
+#' defined as \code{\link{pdmp_vd_Model}}. It is included to the package for 
+#' demonstration purposes.
+#' @slot parms imigration rate.
+#' @slot init  There is one real variable with initial value 0.
+#' @slot jumpfunc  imigrations   jump from \code{x} to 
+#' \code{c(0,x)}, meaning a newborn is added to the population at a constant rate. 
+#' @slot ratefunc A vector of length two determining the probability of a jump 
+#' being a birth or a death. 
+#' @slot times The simulations will start at time \code{t = 0} and end at 
+#' \code{t = 10} with step length 0.01.
+#' @format An object of class \code{\link{pdmp_vd_Model}}.
+#' @seealso \code{\link{pdmp_vd_Model-class}}
+#' for the formal description of the S4 class.
+#' @example inst/models/IASP.R
+"IASP"

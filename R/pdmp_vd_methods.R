@@ -1,22 +1,21 @@
 #======== todo =================================================================
 #t1 Plot methode wird nicht exportiert. Warum nicht???
-#t2 examples anpassen
-#' @include  pdmp_class.R pdmp_methods.R mjp_class.R mjp_accessors.R
-#' @name mjpModel-methods
-#' @rdname mjp-methods
+#t2 examples adapt to vd
+#' @include pdmp_vd_class.R pdmp_class.R pdmp_methods.R
 NULL
 
+#---------- private methods -----------
 
-#' Format a MJP for pretty printing.
+#' Format a PDMP for pretty printing.
 #'
-#' Give important information about a \code{\link{mjpModel}} in one character 
+#' Give important information about a \code{\link{pdmpModel}} in one character 
 #' string. This method is used internally to generate default filenames or plot 
 #' titles.
 #' 
-#' @param x an object of class \code{\link{mjpModel}} or one of its subclasses.
+#' @param x an object of class \code{\link{pdmpModel}} or one of its subclasses.
 #' @param slots a vector specifying the names of all slots that shall be pasted
 #' to the string. ' The default is \code{c("parms", "init", "times")}. 
-#' Supported slots are "descr", "parms", "init",  and "times".
+#' Supported slots are "descr", "parms", "init", "times" and "discStates".
 #' @param begin a character string that is pasted at the beginning.
 #' @param end a character string that is pasted at the end.
 #' @param short logical. If TRUE, a shorter version without space characters
@@ -30,18 +29,18 @@ NULL
 #' if \code{short} is \code{FALSE}.
 #'
 #' @examples
-#' data("KendallBD")
-#' format(KendallBD, begin = "KendallBD__", end = ".rda")
-#' format(KendallBD, begin = paste0(descr(KendallBD), ": "), short=FALSE)
-#' parms(KendallBD) <- list()
-#' cat(format(KendallBD, short = FALSE, collapse = ".\n",
-#'            slots = c("init", "times","parms"),
-#'            begin = "Kendalls birth-death-process:\n"))
-#' @rdname mjp-methods
+#' data("toggleSwitch")
+#' format(toggleSwitch, begin = "ToggleSwitch__", end = ".rda")
+#' format(toggleSwitch, begin = paste0(descr(toggleSwitch), ": "), short=FALSE)
+#' parms(toggleSwitch) <- list()
+#' cat(format(toggleSwitch, short = FALSE, collapse = ".\n",
+#'            slots = c("init", "times", "discStates"),
+#'            begin = "A model without parameters:\n"))
+#' 
+#' @aliases format
 #' @export
-#' @aliases format,mjpModel-method
 setMethod(f = "format", 
-          signature = "mjpModel", 
+          signature = "pdmp_vd_Model", 
           definition = function(x, begin = NULL, end = NULL, short = TRUE, 
                                 slots = c("parms", "init", "times"), 
                                 sep, collapse){
@@ -76,6 +75,21 @@ setMethod(f = "format",
     initVals <- printVect(init(x), sep = sep, collapse = vectCollapse)
     result <- paste0(result, paste0(initName, initVals, collapse))
   }
+  if("discStates" %in% slots){
+   statesName <- ifelse(short, "discStates_", "Discrete States: ")
+   statesVals <- ""
+   for(i in seq_along(discStates(x))){
+     statesVals <- paste0(statesVals, 
+                         names(discStates(x))[i],
+                         ifelse(short, "", " \U220A "),
+                         "{",
+                         paste(discStates(x)[[i]], collapse = ","),
+                         "}")
+     if(i != length(discStates(x)) & !short)
+       statesVals <- paste0(statesVals, ", ")
+   }
+   result <- paste0(result, paste0(statesName, statesVals, collapse))
+  }
   if("times" %in% slots){
     timeName <- ifelse(short, "Times_", "Times: ")
     if(short)
@@ -96,14 +110,14 @@ setMethod(f = "format",
 
 #' Methods for funktion print in package \pkg{pdmpsim}
 #' 
-#' @param all specifies whether all slots are printed. If FALSE (the default),
+#' @param x an object of class \code{pdmp_vd_Model} or one of its subclasses.
+#' @param all speciefies whether all slots are printed. If FALSE (the default),
 #' only the slots that characterize the model will be printed.
 #' @param ... optional parameters passed to print.
 #' @importFrom utils str
 #' @export
-#' @aliases print,mjpModel-method
 setMethod(f = "print",
-          signature = "mjpModel",
+          signature = "pdmp_vd_Model",
           definition = function(x, all = FALSE, ...){
           #  .local <- function (x, all = FALSE, ...)
           #  {
@@ -125,7 +139,7 @@ setMethod(f = "print",
                     cat("\n")
                   }
                 }
-              cat("Hint: use print(x, all=TRUE) to see all mjpModel slots.\n")
+              cat("Hint: use print(x, all=TRUE) to see all pdmp_vd_Model slots.\n")
               }
           #  }
           #  .local(x, ...)
@@ -133,39 +147,47 @@ setMethod(f = "print",
 
 #---------------- plot -----------------
 
-#' Plot a MJP
+#' Plot a PDMP
 #' 
 #' This is method plots single simulations of
-#' markov jump processes defined as
-#' \code{\link{mjpModel}}. There are also other plot
+#' piecewise deterministic markov processes defined as
+#' \code{\link{pdmpModel}}. There are also other plot
 #' methods available that use \pkg{ggplot2}. 
 #'
-#' @param x an object of class mjpModel with a simulation 
+#' @param x an object of class pdmpModel with a simulation 
 #' stored in slot \code{out}
 #' @param y ignored
 #' @param ... optional plotting parameters
 #' @examples 
-#' data("SIRstoch")
-#' sim <- sim(SIRstoch, seed = 1)
+#' data("IASP")
+#' sim <- sim(IASP, seed = 1)
 #' plot(sim, col = "red", lwd = 2)
 #' 
-#' # Alternative: plotSeeds
-#' msim <- multSim(SIRstoch, seeds = 1)
-#' plot <- plotSeeds(msim)
-#' plot + ggplot2::facet_grid(variable ~ seed)
-#' @seealso \code{\link{plotSeeds}} for another plot function
-#' to plot single simulations
+#' @seealso \code{\link{plotSeeds}} for another plot function, 
+#' not yet available for variable dimension
 #' @importFrom graphics title
-#' @rdname mjp-methods
-#' @aliases plot,mjpModel,missing-method
 #' @export
-setMethod("plot", signature(x="mjpModel", y="missing"),
-          function(x, y,...) {
+setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
+          function(x, y, ...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
+            #summarise the output
+            sum_out<-sapply(X=x@out,FUN=function(u)c(time=u$t,x@summaryfunc(u)) )
             par(oma = c(0,0,2,0))
-            do.call("plot", alist(x=x@out, panel=function(...) lines(...,type="S"),...))
-            graphics::title(x@descr, outer = TRUE)
+            do.call("plot", alist(sum_out, ...))
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
+          }
+)
+
+setMethod("matplot", signature(x="pdmp_vd_Model", y="missing"),
+          function(x, y, ...) {
+            if (is.null(x@out))
+              stop("Please simulate the model before plotting", call. = FALSE)
+            #summarise the output
+            sum_out<-sapply(X=x@out,FUN=function(u)c(time=u$t,x@summaryfunc(u)) )
+            par(oma = c(0,0,2,0))
+            do.call("matplot", alist(sum_out, ...))
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
           }
 )
 
