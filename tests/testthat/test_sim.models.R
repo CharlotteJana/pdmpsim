@@ -123,3 +123,4 @@ test_that("variable 'initialize' works as expected", {
   initModel <- sim(initModel, initialize = TRUE)
   expect_equal(out(initModel)[1, 2], 2, check.names = FALSE)
 })
+

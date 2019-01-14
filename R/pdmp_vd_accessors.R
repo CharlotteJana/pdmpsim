@@ -50,47 +50,13 @@ setGeneric("summaryfunc<-", function(obj,value) standardGeneric("summaryfunc<-")
 #======= Getters ==========
 
 #' @rdname pdmp_vd-accessors
-#' @export
-setMethod("dynfunc", "pdmp_vd_Model", function(obj) obj@dynfunc)
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("ratefunc", "pdmp_vd_Model", function(obj) obj@ratefunc)
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("jumpfunc", "pdmp_vd_Model", function(obj) obj@jumpfunc)
-#' @rdname pdmp_vd-accessors
+
 #' @export
 setMethod("summaryfunc", "pdmp_vd_Model", function(obj) obj@summaryfunc)
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("descr", "pdmp_vd_Model", function(obj) obj@descr)
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("discStates", "pdmp_vd_Model", function(obj) obj@discStates)
 
-#======= Setters that set obj@out <- NULL =========
 
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("dynfunc<-", "pdmp_vd_Model", function(obj, value) {
-  obj@dynfunc <- value
-  out(obj) <- NULL
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("ratefunc<-", "pdmp_vd_Model", function(obj, value) {
-  obj@ratefunc <- value
-  out(obj) <- NULL
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("jumpfunc<-", "pdmp_vd_Model", function(obj, value) {
-  obj@jumpfunc <- value
-  out(obj) <- NULL
-  invisible(obj)
-})
+#======= Setters that don't change slot out =======
+
 #' @rdname pdmp_vd-accessors
 #' @export
 setMethod("summaryfunc<-", "pdmp_vd_Model", function(obj, value) {
@@ -98,47 +64,4 @@ setMethod("summaryfunc<-", "pdmp_vd_Model", function(obj, value) {
   out(obj) <- NULL
   invisible(obj)
 })
-#' @importFrom simecol "parms<-"
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("parms<-", "pdmp_vd_Model", function(obj, value) {
-  obj@parms <- value
-  out(obj) <- NULL
-  invisible(obj)
-})
 
-#======= Setters that don't change slot out =======
-
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("discStates<-", "pdmp_vd_Model", function(obj, value) {
-  obj@discStates <- value
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("descr<-", "pdmp_vd_Model", function(obj, value) {
-  obj@descr <- value
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("main<-", "pdmp_vd_Model", function(obj, value) {
-  warning("Slot 'main' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed. Please modify slot 'dynfunc' instead'.")
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("equations<-", "pdmp_vd_Model", function(obj, value) {
-  warning("Slot 'equations' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed.")
-  invisible(obj)
-})
-#' @rdname pdmp_vd-accessors
-#' @export
-setMethod("observer<-", "pdmp_vd_Model", function(obj, value) {
-  warning("Slot 'observer' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed.")
-  invisible(obj)
-})

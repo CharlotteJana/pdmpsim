@@ -5,59 +5,17 @@
 \alias{pdmp_vd-accessors}
 \alias{summaryfunc}
 \alias{summaryfunc<-}
-\alias{dynfunc,pdmp_vd_Model-method}
-\alias{ratefunc,pdmp_vd_Model-method}
-\alias{jumpfunc,pdmp_vd_Model-method}
 \alias{summaryfunc,pdmp_vd_Model-method}
-\alias{descr,pdmp_vd_Model-method}
-\alias{discStates,pdmp_vd_Model-method}
-\alias{dynfunc<-,pdmp_vd_Model-method}
-\alias{ratefunc<-,pdmp_vd_Model-method}
-\alias{jumpfunc<-,pdmp_vd_Model-method}
 \alias{summaryfunc<-,pdmp_vd_Model-method}
-\alias{parms<-,pdmp_vd_Model-method}
-\alias{discStates<-,pdmp_vd_Model-method}
-\alias{descr<-,pdmp_vd_Model-method}
-\alias{main<-,pdmp_vd_Model-method}
-\alias{equations<-,pdmp_vd_Model-method}
-\alias{observer<-,pdmp_vd_Model-method}
 \title{Accessor functions for Class pdmp_vd_Model}
 \usage{
 summaryfunc(obj)
 
 summaryfunc(obj) <- value
 
-\S4method{dynfunc}{pdmp_vd_Model}(obj)
-
-\S4method{ratefunc}{pdmp_vd_Model}(obj)
-
-\S4method{jumpfunc}{pdmp_vd_Model}(obj)
-
 \S4method{summaryfunc}{pdmp_vd_Model}(obj)
 
-\S4method{descr}{pdmp_vd_Model}(obj)
-
-\S4method{discStates}{pdmp_vd_Model}(obj)
-
-\S4method{dynfunc}{pdmp_vd_Model}(obj) <- value
-
-\S4method{ratefunc}{pdmp_vd_Model}(obj) <- value
-
-\S4method{jumpfunc}{pdmp_vd_Model}(obj) <- value
-
 \S4method{summaryfunc}{pdmp_vd_Model}(obj) <- value
-
-\S4method{parms}{pdmp_vd_Model}(obj) <- value
-
-\S4method{discStates}{pdmp_vd_Model}(obj) <- value
-
-\S4method{descr}{pdmp_vd_Model}(obj) <- value
-
-\S4method{main}{pdmp_vd_Model}(obj) <- value
-
-\S4method{equations}{pdmp_vd_Model}(obj) <- value
-
-\S4method{observer}{pdmp_vd_Model}(obj) <- value
 }
 \arguments{
 \item{obj}{an object of class \code{\link{pdmp_vd_Model}}}

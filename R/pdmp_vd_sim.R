@@ -74,49 +74,50 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
   }
   set.seed(seed[2])
   times <- fromtoby(obj@times)
-  parms <- obj@parms
+  oparms <- obj@parms
   m<-length(times)
   simf<-function(t0,t1,x){
     objdim <- length(x)
     #dynamics:vector field 
-    dfunc <- function(t, y, parms) {
+    dfunc <- function(t, y, parms){
       # dξᵢ/dt = dynfunc[i], dθ/dt = dynfunc[n] = 0,
-      list(c(obj@dynfunc(t, x = y[-objdim - 1], parms = parms),
-             # dI/dt = Σᵢ ratefunc[i]
-             #make sure rates are positive
-             sum(pmax(obj@ratefunc(t = t, x = y[-objdim - 1], parms = parms),0))))
+      y0<-y[-objdim - 1]
+      dx<-obj@dynfunc(t = t, x = y0, parms = oparms)
+      w<-obj@ratefunc(t = t, x = y0, parms = oparms)
+      print(c(t,w,y))
+      dI<-sum(pmax(w,0))
+      list(c(dx,dI))
     }
     # rootfunc = I (rootfunc == 0 jumpfunc is executed
-    rootfunc <- function(t, y, parms) y[objdim + 1]
+    rootfunc <- function(t, y, parms,...) y[objdim + 1]
     # inity = initial state for y = (obj@init, I₀) with I₀ ~ -exp
     inity <- c(x, -rexp(n = 1))
-    names(inity) <- c(names(x), "pdmpsim:negcumrate")
-    
+    names(inity)[objdim+1] <- "pdmpsim:negcumrate"
+
     # call of ode-solver (default: lsodar)
     if (outrate) {
       lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
-                                func = dfunc, initpar = parms, 
+                                func = dfunc, initpar = oparms, 
                                 rootfunc = rootfunc,
                                 nroot = 1))
     }
     else {
       lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
-                                      func = dfunc, initpar = parms, 
+                                      func = dfunc, initpar = oparms, 
                                       rootfunc = rootfunc,
                                       nroot = 1))[,-objdim-2]
     }
-    return(list(rf=.hasSlot(lout,iroot) , x=lout[2,-1],t=lout[2,1]))
+    return(list(rf=.hasSlot(lout,"iroot") , x=lout[2,-1], t=lout[2,1]))
   }
-  
-  xi<-init
+  xi<-obj@init
   out<-vector("list",m)
-  out[[1]]<-list(t=times[1],x=init)
+  out[[1]]<-c(time=times[1],xi)
   #loop
   for(i in 1:(m-1))
   {t0<-times[i]
   t1<-times[i+1]
   while (t0<t1) {
-    ow<-simf(t0,t1,xi)
+    ow<-simf(t0=t0,t1=t1,x=xi)
     t0<-ow$t
     if(ow$rf){
       w <- obj@ratefunc(t = t0, x = ow$x, parms = parms)
@@ -131,7 +132,7 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
       xi<-ow$x
       }
   }
-  out[[i+1]]<-list(t=times[i+1],x=xi)
+  out[[i+1]]<-c(time=times[i+1],xi)
   }
   obj@out<-out
   if(outSlot) return(invisible(obj))

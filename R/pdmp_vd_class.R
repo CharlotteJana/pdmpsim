@@ -86,16 +86,8 @@ NULL
 #' @importFrom simecol simObj
 #' @export
 setClass("pdmp_vd_Model",
-         slots = list(descr = "character", 
-                      parms = "numericOrlist", 
-                      init = "numeric", 
-                      discStates = "list",
-                      times = "numeric",
-                      dynfunc = "function", 
-                      jumpfunc = "function", 
-                      ratefunc = "function", 
-                      initfunc = "functionOrNULL"),
-         contains = "simObj")
+         slots = list(summaryfunc = "function"),
+         contains = "pdmpModel")
 
 #' @rdname pdmp_vd_Model-class
 #' @param obj pdmpModel object that is being built. 
@@ -153,7 +145,8 @@ pdmp_vd_Model <- function(obj = NULL,
                       initfunc = NULL) {
   obj <- new("pdmp_vd_Model", dynfunc = dynfunc, jumpfunc = jumpfunc,
              descr = descr, ratefunc = ratefunc, times = times, init = init, 
-             parms = parms, initfunc = initfunc, solver = solver, out = out,
+             parms = parms, initfunc = initfunc, summaryfunc=summaryfunc, 
+             solver = solver, out = out,
              discStates = discStates)
   invisible(obj)
 }
