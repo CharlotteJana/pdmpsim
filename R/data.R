@@ -165,8 +165,7 @@
 #' @slot borroot It has dimension one and replaces the ground (=minimum), where the velocity is changed by \eqn{b*velocity}.
 #' @slot terroot Every value, which forces the process to terminate is stored in the vector terroot.
 #' In this example it has dimension one and is the fixed value of 20 which forces the precess to terminate.
-#' @slot borderfunc The simulations will start at time \code{t = 0} and end at time where the termination terminating value is reached.
-#' 
+#' @slot borderfunc the borderfunc changes the values of the differential equation by reaching the borroot.
 #' @format An object of class \code{\link{pdmpBorder}}.
 #' @seealso \code{\link{OÖK}} for another example of a \code{pdmpBorder}, where stochastic and border jumps appear.
 #' In \code{\link{pdmpBorder}} you can find a formal description of the S4 class.
@@ -207,13 +206,12 @@
 #' and we have the modus change rates, differing in each area on the recent modus, because of different food resources, competitors and hunters 
 #' \eqn{κ112, κ113, κ131, κ132, κ121, κ123, κ212, κ213, κ231, κ232, κ221, κ223, κ312, κ313, κ331, κ332, κ321, κ323}. 
 #' The values of the parameters in this example are artificial and are not based on real data.
-#' @slot times The simulations will start at time \code{t = 0} and end at the terminatin borderjump.
+#' @slot times The simulations will start at time \code{t = 0} and end at the terminating borderjump.
 #' @slot borroot Every value, which forces the process to jump into a fixed state is stored in the vector borroot.
 #' In this example it has dimension one and is the engery maximum of 2.
 #' @slot terroot Every value, which forces the process to terminate is stored in the vector terroot.
 #' In this example it has dimension one and is the energy minimum of 0.
-#' @slot borderfunc The simulations will start at time \code{t = 0} and end at 
-#' \code{t = 10} with step length 0.01.
+#' @slot borderfunc In case the process reaches a borroot (f.e. energy of 9), the borderfunc forces the process to jump into modus seach (=1).
 #' @format An object of class \code{\link{pdmpBorder}}.
 #' @seealso \code{\link{IBBall}} for an easier example of a \code{pdmpBorder}.
 #' @example inst/models/OÖK.R

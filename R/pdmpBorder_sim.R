@@ -113,7 +113,7 @@ setMethod("sim", "pdmpBorder", function(obj, initialize = FALSE,
                # I wird als negative exp-verteilte Zufallszahl gesetzt, wechsel aber hier sicher (mit wkt 1)
                -rexp(n = 1)))
     }
-    # borderfunc gibt sichere wechsel an rändern an mit switch über alle which.roots??
+    # borderfunc gibt sichere wechsel an rändern an mit switch über alle which.roots
     else if(which.root <= rootdim){print(c("terminal",which.root))
       return(y)}
   }

@@ -10,8 +10,10 @@ IBBall
 }
 \description{
 This is a minimal fictitious example, of a PDMP jumping at borders 
-\code{\link{pdmpBorder}}, where no stochastic jumps exist, so that it is easy 
-to see the functionality of borders.
+\code{\link{pdmpBorder}}.
+In difference to the examples simulated by \code{\link{pdmpModel}} the Prosess doesn't make stochastic jumps, what means thet we habe just one 
+state, which changes the dynamic by reaching the border.
+This example makes it easy to see the functionality of borders.
 Here the minimum border 0 ist the ground where the velocity of the ball
 rises and therefore the height of each hop increases up to a second 
 fixed border (20), where the process stops.
@@ -19,29 +21,26 @@ fixed border (20), where the process stops.
 \section{Slots}{
 
 \describe{
-\item{\code{init}}{There ist one continous variable, which describes the velocity of 
-the ball and no discrete variable.}
+\item{\code{init}}{There ist one continous variable, which describes the height of the ball and no discrete variable.}
 
-\item{\code{discStates}}{there are no discstates.}
+\item{\code{discStates}}{there are no discStates.}
 
 \item{\code{dynfunc}}{The dynamic of the continous variable depends on 
-the velocity at the last jump (borderjump or stochastic jump).}
+the velocity at the last jump (borderjump jump).}
 
-\item{\code{jumpfunc}}{}
+\item{\code{ratefunc}}{The ratefunc is 0, because the probability to jump ist 0, because the example models just one discret state.}
 
-\item{\code{ratefunc}}{}
-
-\item{\code{parms}}{There are are a number of parameters that appear in the dynamics 
-and  no change rates of the process.}
+\item{\code{parms}}{There is the parameter b, which is the factor of changing the velocity of our process each time the process hits the border zero and a 
+and there are no change rates of the process.}
 
 \item{\code{times}}{The simulations will start at time \code{t = 0} and end at the time, where the termination terminating value is reached.}
 
-\item{\code{borroot}}{It has dimension one and replaces the ground (=minimum)}
+\item{\code{borroot}}{It has dimension one and replaces the ground (=minimum), where the velocity is changed by \eqn{b*velocity}.}
 
 \item{\code{terroot}}{Every value, which forces the process to terminate is stored in the vector terroot.
-In this example it has dimension one and is the fixes value of 20 which forces the precess to terminate.}
+In this example it has dimension one and is the fixed value of 20 which forces the precess to terminate.}
 
-\item{\code{borderfunc}}{The simulations will start at time \code{t = 0} and end at time where the termination terminating value is reached.}
+\item{\code{borderfunc}}{the borderfunc changes the values of the differential equation by reaching the borroot.}
 }}
 
 \examples{
@@ -70,8 +69,7 @@ data("IBBall")
 plot(sim(IBBall))
 }
 \seealso{
-\code{\link{OÖK}} for an easier example of a \code{pdmpBorder}
-and \code{\link{pdmpBorder}}
-for the formal description of the S4 class.
+\code{\link{OÖK}} for another example of a \code{pdmpBorder}, where stochastic and border jumps appear.
+In \code{\link{pdmpBorder}} you can find a formal description of the S4 class.
 }
 \keyword{datasets}
