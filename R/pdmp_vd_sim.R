@@ -2,7 +2,7 @@
 #t2 more efficient simulation in C 
 #t3 I = survival function?
 
-#' @include pdmp_vd_class.R pdmp_vd_methods.R
+#' @include pdmp_vd_class.R pdmp_methods.R
 NULL
 
 ##### method sim ####

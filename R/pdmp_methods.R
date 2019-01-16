@@ -2,7 +2,7 @@
 #t1 Plot methode wird nicht exportiert. Warum nicht???
 #t2 warum automatisch generic für matplot?
 
-#' @include pdmp_class.R
+#' @include pdmp_class.R pdmp_vd_class.R
 NULL
 
 #---------- private methods -----------
@@ -173,10 +173,10 @@ setMethod(f = "print",
 
 #' Plot a PDMP
 #' 
-#' This is method plots single simulations of
-#' piecewise deterministic markov processes defined as
-#' \code{\link{pdmpModel}}. There are also other plot
-#' methods available that use \pkg{ggplot2}. 
+#' These methods plot single simulations of
+#' piecewise deterministic Markov processes defined as
+#' \code{\link{pdmpModel}} or \code{\link{pdmp_vd_Model}}. Note that there are further plot
+#' methods implemented that use \pkg{ggplot2}. 
 #'
 #' @param x an object of class pdmpModel with a simulation 
 #' stored in slot \code{out}
@@ -197,7 +197,7 @@ setMethod(f = "print",
 #' plot(sim, col = "red", lwd = 2)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
-#' @importFrom graphics title
+#' @importFrom graphics title matplot plot
 #' @export
 setMethod("plot", signature(x="pdmpModel", y="missing"),
           function(x, y, ...) {
@@ -221,14 +221,29 @@ setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
           }
 )
 
+setMethod("matplot", signature(x="pdmpModel", y="missing"),
+          function(x, y, type = "p", lty = 1:5, lwd = 1, lend = par("lend"), 
+                   pch = NULL, col = 1:6, cex = NULL, bg = NA, xlab = NULL, 
+                   ylab = NULL, xlim = NULL, ylim = NULL, log = "", ..., add = FALSE, 
+                   verbose = getOption("verbose")) {
+            if (is.null(x@out))
+              stop("Please simulate the model before plotting", call. = FALSE)
+            par(oma = c(0,0,2,0))
+            do.call("matplot", alist(x=x@out[,1],y=x@out[,-1], ...))
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
+          }
+)
 setMethod("matplot", signature(x="pdmp_vd_Model", y="missing"),
-          function(x, y, ...) {
+          function(x, y, type = "p", lty = 1:5, lwd = 1, lend = par("lend"), 
+                   pch = NULL, col = 1:6, cex = NULL, bg = NA, xlab = NULL, 
+                   ylab = NULL, xlim = NULL, ylim = NULL, log = "", ..., add = FALSE, 
+                   verbose = getOption("verbose")) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
             #summarise the output
             sum_out<-sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])) )
             par(oma = c(0,0,2,0))
-            do.call("matplot", alist(sum_out, ...))
+            do.call("matplot", alist(sum_out[,1],sum_out[,-1], ...))
             graphics::title(x@descr, line = -0.3, outer = TRUE)
           }
 )

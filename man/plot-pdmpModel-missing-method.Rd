@@ -16,10 +16,10 @@ stored in slot \code{out}}
 \item{...}{optional plotting parameters}
 }
 \description{
-This is method plots single simulations of
-piecewise deterministic markov processes defined as
-\code{\link{pdmpModel}}. There are also other plot
-methods available that use \pkg{ggplot2}.
+These methods plot single simulations of
+piecewise deterministic Markov processes defined as
+\code{\link{pdmpModel}} or \code{\link{pdmp_vd_Model}}. Note that there are further plot
+methods implemented that use \pkg{ggplot2}.
 }
 \examples{
 data("toggleSwitch")
