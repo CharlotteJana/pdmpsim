@@ -48,7 +48,7 @@ NULL
 #' @example inst/examples/ex_pdmp_vd_sim.R
 ##' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 ##' for multiple simulations, ... for plot and summary methods of the simulation.
-#' @aliases sim
+#' @aliases sim_vd
 #' @importMethodsFrom simecol sim
 #' @importFrom simecol fromtoby
 #' @importFrom stats rexp

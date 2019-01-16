@@ -3,7 +3,7 @@
 \docType{methods}
 \name{sim,pdmp_vd_Model-method}
 \alias{sim,pdmp_vd_Model-method}
-\alias{sim}
+\alias{sim_vd}
 \title{Simulation of a pdmp_vd_Model object}
 \usage{
 \S4method{sim}{pdmp_vd_Model}(obj, initialize = FALSE, seed = 1,

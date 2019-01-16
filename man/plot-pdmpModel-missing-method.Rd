@@ -30,6 +30,10 @@ plot(sim, col = "red", lwd = 2)
 msim <- multSim(toggleSwitch, seeds = 1)
 plot <- plotSeeds(msim)
 plot + ggplot2::facet_grid(variable ~ seed)
+# variable dimensions: summary functions apply
+data("IASP")
+sim <- sim(IASP, seed = 1)
+plot(sim, col = "red", lwd = 2)
 }
 \seealso{
 \code{\link{plotSeeds}} for another plot function

@@ -1,5 +1,6 @@
 #======== todo =================================================================
 #t1 Plot methode wird nicht exportiert. Warum nicht???
+#t2 warum automatisch generic für matplot?
 
 #' @include pdmp_class.R
 NULL
@@ -190,6 +191,10 @@ setMethod(f = "print",
 #' msim <- multSim(toggleSwitch, seeds = 1)
 #' plot <- plotSeeds(msim)
 #' plot + ggplot2::facet_grid(variable ~ seed)
+#' # variable dimensions: summary functions apply
+#' data("IASP")
+#' sim <- sim(IASP, seed = 1)
+#' plot(sim, col = "red", lwd = 2)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title
@@ -200,6 +205,30 @@ setMethod("plot", signature(x="pdmpModel", y="missing"),
               stop("Please simulate the model before plotting", call. = FALSE)
             par(oma = c(0,0,2,0))
             do.call("plot", alist(x@out, ...))
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
+          }
+)
+
+setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
+          function(x, y, ...) {
+            if (is.null(x@out))
+              stop("Please simulate the model before plotting", call. = FALSE)
+            #summarise the output
+            sum_out<-sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])))
+            par(oma = c(0,0,2,0))
+            do.call("plot", alist(sum_out, ...))
+            graphics::title(x@descr, line = -0.3, outer = TRUE)
+          }
+)
+
+setMethod("matplot", signature(x="pdmp_vd_Model", y="missing"),
+          function(x, y, ...) {
+            if (is.null(x@out))
+              stop("Please simulate the model before plotting", call. = FALSE)
+            #summarise the output
+            sum_out<-sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])) )
+            par(oma = c(0,0,2,0))
+            do.call("matplot", alist(sum_out, ...))
             graphics::title(x@descr, line = -0.3, outer = TRUE)
           }
 )
