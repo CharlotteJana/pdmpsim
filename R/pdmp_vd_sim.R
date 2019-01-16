@@ -84,7 +84,6 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
       y0<-y[-objdim - 1]
       dx<-obj@dynfunc(t = t, x = y0, parms = oparms)
       w<-obj@ratefunc(t = t, x = y0, parms = oparms)
-      print(c(t,w,y))
       dI<-sum(pmax(w,0))
       list(c(dx,dI))
     }
@@ -95,19 +94,12 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
     names(inity)[objdim+1] <- "pdmpsim:negcumrate"
 
     # call of ode-solver (default: lsodar)
-    if (outrate) {
-      lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
+    lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
                                 func = dfunc, initpar = oparms, 
                                 rootfunc = rootfunc,
                                 nroot = 1))
-    }
-    else {
-      lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
-                                      func = dfunc, initpar = oparms, 
-                                      rootfunc = rootfunc,
-                                      nroot = 1))[,-objdim-2]
-    }
-    return(list(rf=.hasSlot(lout,"iroot") , x=lout[2,-1], t=lout[2,1]))
+    if (outrate) { return(list(rf=.hasSlot(lout,"iroot") , x=lout[2,-1], t=lout[2,1]))}
+    else {return(list(rf=.hasSlot(lout,"iroot") , x=lout[2,c(-1,-objdim-2)], t=lout[2,1]))}
   }
   xi<-obj@init
   out<-vector("list",m)

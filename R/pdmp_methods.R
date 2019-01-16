@@ -209,6 +209,7 @@ setMethod("plot", signature(x="pdmpModel", y="missing"),
           }
 )
 
+#' @export
 setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
           function(x, y, ...) {
             if (is.null(x@out))
@@ -220,7 +221,7 @@ setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
             graphics::title(x@descr, line = -0.3, outer = TRUE)
           }
 )
-
+#' @export
 setMethod("matplot", signature(x="pdmpModel", y="missing"),
           function(x, y, type = "p", lty = 1:5, lwd = 1, lend = par("lend"), 
                    pch = NULL, col = 1:6, cex = NULL, bg = NA, xlab = NULL, 
@@ -233,6 +234,7 @@ setMethod("matplot", signature(x="pdmpModel", y="missing"),
             graphics::title(x@descr, line = -0.3, outer = TRUE)
           }
 )
+#' @export
 setMethod("matplot", signature(x="pdmp_vd_Model", y="missing"),
           function(x, y, type = "p", lty = 1:5, lwd = 1, lend = par("lend"), 
                    pch = NULL, col = 1:6, cex = NULL, bg = NA, xlab = NULL, 

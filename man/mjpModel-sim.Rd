@@ -49,7 +49,7 @@ Simulation of a mjpModel object
 \note{
 If the result is stored in slot \code{out}, it can get lost if the 
 value of the other slots is changed via <-. 
-See \code{\link{mjp-accessors}} for further informations.
+See \code{\link{mjpaccessors}} for further informations.
 }
 \examples{
 \dontshow{

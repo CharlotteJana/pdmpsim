@@ -38,7 +38,7 @@ NULL
 #' Otherwise, only the simulation result is returned.
 #' @note If the result is stored in slot \code{out}, it can get lost if the 
 #' value of the other slots is changed via <-. 
-#' See \code{\link{mjp-accessors}} for further informations.
+#' See \code{\link{mjpaccessors}} for further informations.
 #'
 #' @example /inst/examples/ex_mjp_sim.R
 #' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
@@ -72,7 +72,7 @@ setMethod("sim", "mjpModel", function(obj, initialize = FALSE,
                obj@jumpfunc,
                obj@ratefunc,parent.frame(),
                NAOK=TRUE,PACKAGE="pdmpsim");
-    out<-as.data.frame(cbind(times,apply(X=outa[,-1],
+    out<-as.data.frame(cbind(times,apply(X=outa[,-1,drop=FALSE],
                              MARGIN = 2,
                              FUN=function(u) approx(x=outa[,1],y=u,method="const",xout=times,f=0,ties="ordered")$y)))
     colnames(out)<-c("t",names(obj@init))

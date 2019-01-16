@@ -44,7 +44,7 @@ NULL
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
 #'
-# @example /inst/examples/ex_mjp_class.R not yet present - necessary
+#' @example /inst/examples/ex_mjp_class.R 
 #'
 #' @references
 #' \tabular{ll}{
@@ -57,7 +57,7 @@ NULL
 #' See \code{\link{SIRstoch}} and \code{\link{KendallBD}} for two examples
 #' that have a detailed documentation explaining every slot.
 #' Class \code{mjpModel} provides a method \code{\link{sim}} for simulation, 
-#' \code{\link{mjpModel-accessors}{accessor functions}} (with names identical to the 
+#' \code{\link{mjpaccessors}{accessor functions}} (with names identical to the 
 #' slot names) to get or set model parameters, time steps, initial values, the 
 #' vectorfields, the transition rates and the solver.
 #' See \code{\link{multSim}} and \code{\link{multSimCsv}} to perform multiple 
@@ -95,7 +95,7 @@ setClass("mjpModel",
 #' \code{ratefunc}. The value for \code{jtype} will be chosen randomly during
 #' simulation, depending ot the rates given in \code{ratefunc}.
 #' @param solver a function or a character string specifying the numerical 
-#' algorithm used.At the moment it is ignored since only the "direct" algorithm of Gillespie ("Gdirect")  is implemented.  
+#' algorithm used. At the moment it is ignored since only the "direct" algorithm of Gillespie ("Gdirect")  is implemented.  
 #' @param initfunc this parameter can hold an optional function which has a 
 #' pdmpModel as only parameter and returnes a (modified) pdmp. 
 #' This function is called automatically when a new object is created by 

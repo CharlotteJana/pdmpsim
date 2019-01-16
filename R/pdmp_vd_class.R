@@ -90,46 +90,47 @@ setClass("pdmp_vd_Model",
          contains = "pdmpModel")
 
 #' @rdname pdmp_vd_Model-class
-#' @param obj pdmpModel object that is being built. 
-#' @param descr a string containing a short description of the model. 
+#' @slot obj pdmpModel object that is being built. 
+#' @slot descr a string containing a short description of the model. 
 #' This parameter is optional and only used in plot methods.
-#' @param parms a list with constant model parameters.
-#' @param times vector of time steps or vector with three named values 
+#' @slot parms a list with constant model parameters.
+#' @slot times vector of time steps or vector with three named values 
 #' "from", "to", "by" specifying the simulation time steps. The from-to-by can 
 #' be edited with fixParms.
-#' @param init initial state of the simulation. This is a named vector giving
+#' @slot  init initial state of the simulation. This is a named vector giving
 #' the names of all variables and their start value.
-#' @param discStates a list. For every discrete variable, \code{discStates} contains
+#' @slot discStates a list. For every discrete variable, \code{discStates} contains
 #' a vector with all its possible state values. This entry should have the
 #' same name as the discrete variable.
-#' @param dynfunc a \code{function(time, variables, parms)} that returns a 
+#' @slot dynfunc a \code{function(time, variables, parms)} that returns a 
 #' vector with odes for every variable. The order and length of the vector 
 #' should be the same as in slot "init", discrete variables should have 0 
 #' as entry.
-#' @param ratefunc a \code{function(t, x, parms)} that returns a vector with
+#' @slot ratefunc a \code{function(t, x, parms)} that returns a vector with
 #' transition rates from the actual state to another state. Only non zero rates 
 #' are given. The length of the returned vector determines the number of 
 #' different jumptypes.
-#' @param jumpfunc a \code{function(t, x, parms, jtype)} that returns the next 
+#' @slot jumpfunc a \code{function(t, x, parms, jtype)} that returns the next 
 #' discrete state the process will jump to. This state depends on parameter
 #' \code{jtype}. The number of possible \code{jtypes} is determined by function
 #' \code{ratefunc}. The value for \code{jtype} will be chosen randomly during
 #' simulation, depending ot the rates given in \code{ratefunc}.
-#' @param solver a function or a character string specifying the numerical 
+#' @slot solver a function or a character string specifying the numerical 
 #' algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
 #' The default solver is "lsodar".
-#' @param initfunc this parameter can hold an optional function which has a 
+#' @slot initfunc this parameter can hold an optional function which has a 
 #' pdmpModel as only parameter and returnes a (modified) pdmp. 
 #' This function is called automatically when a new object is created by 
 #' \code{new} or when it is reinitialized by \code{initialize(obj)} or before 
 #' starting a simulation with \code{sim(obj, initialize = TRUE)}.
-#' @param summaryfunc is a function which contracts a vector of variable dimension 
+#' @slot summaryfunc is a function which contracts a vector of variable dimension 
 #' to a vector of fixed dimension. This is needed for plotting a (multi-)simulation 
 #' object from this class.   
-#' @param out NULL or an object of class deSolve. If a simulation is done with 
+#' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this parameter.
 #' @importFrom deSolve lsodar
-#' @export
+#' @exportClass pdmp_vd_Model
+#' @export pdmp_vd_Model
 pdmp_vd_Model <- function(obj = NULL, 
                       descr = character(0), 
                       dynfunc = function(t, x, parms) 0 * x, 

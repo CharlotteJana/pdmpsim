@@ -44,7 +44,7 @@ the names of all variables and their start value.}
 method \code{\link{sim}}, the result will be stored in this parameter.}
 
 \item{solver}{a function or a character string specifying the numerical 
-algorithm used.At the moment it is ignored since only the "direct" algorithm of Gillespie ("Gdirect")  is implemented.}
+algorithm used. At the moment it is ignored since only the "direct" algorithm of Gillespie ("Gdirect")  is implemented.}
 
 \item{initfunc}{this parameter can hold an optional function which has a 
 pdmpModel as only parameter and returnes a (modified) pdmp. 
@@ -97,6 +97,30 @@ or before starting a simulation with \code{sim(obj, initialize = TRUE)}.}
 method \code{\link{sim}}, the result will be stored in this slot.}
 }}
 
+\examples{
+\dontshow{
+  require("simecol")
+}
+
+# a mjp with different jumptypes
+simplemjp <- mjpModel(
+  descr = "a MJP with 2 jumptypes",
+  init = c(A = 0, B = 0),
+  ratefunc = function(t, x, parms) parms[1:2],
+  jumpfunc = function(t, x, parms, jtype){
+    x+switch(jtype,c(0,1),c(1,0))
+  },
+  parms=c(a=0,b=0)
+)
+simplemjp <- sim(simplemjp, seed = 10) # simulate
+plot(simplemjp)
+
+print(head(out(simplemjp)))
+
+# see ?simplePdmp for an explanation of this example
+# and ?toggleSwitch for a more sophisticated example
+
+}
 \references{
 \tabular{ll}{
 \eqn{\,}{ }[Gil77] \tab Gillespie, Daniel T. (1977). "Exact Stochastic Simulation of Coupled Chemical Reactions". \cr
@@ -107,7 +131,7 @@ method \code{\link{sim}}, the result will be stored in this slot.}
 See \code{\link{SIRstoch}} and \code{\link{KendallBD}} for two examples
 that have a detailed documentation explaining every slot.
 Class \code{mjpModel} provides a method \code{\link{sim}} for simulation, 
-\code{\link{mjpModel-accessors}{accessor functions}} (with names identical to the 
+\code{\link{mjpaccessors}{accessor functions}} (with names identical to the 
 slot names) to get or set model parameters, time steps, initial values, the 
 vectorfields, the transition rates and the solver.
 See \code{\link{multSim}} and \code{\link{multSimCsv}} to perform multiple 
