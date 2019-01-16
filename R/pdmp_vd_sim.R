@@ -82,8 +82,8 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
     dfunc <- function(t, y, parms){
       # dξᵢ/dt = dynfunc[i], dθ/dt = dynfunc[n] = 0,
       y0<-y[-objdim - 1]
-      dx<-obj@dynfunc(t = t, x = y0, parms = oparms)
-      w<-obj@ratefunc(t = t, x = y0, parms = oparms)
+      dx<-obj@dynfunc(t = t, x = y0, parms = parms)
+      w<-obj@ratefunc(t = t, x = y0, parms = parms)
       dI<-sum(pmax(w,0))
       list(c(dx,dI))
     }
@@ -95,7 +95,7 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
 
     # call of ode-solver (default: lsodar)
     lout <- do.call(obj@solver, list(y = inity, times = c(t0,t1),
-                                func = dfunc, initpar = oparms, 
+                                func = dfunc, parms = oparms, 
                                 rootfunc = rootfunc,
                                 nroot = 1))
     if (outrate) { return(list(rf=.hasSlot(lout,"iroot") , x=lout[2,-1], t=lout[2,1]))}
@@ -112,13 +112,13 @@ setMethod("sim", "pdmp_vd_Model", function(obj, initialize = FALSE,
     ow<-simf(t0=t0,t1=t1,x=xi)
     t0<-ow$t
     if(ow$rf){
-      w <- obj@ratefunc(t = t0, x = ow$x, parms = parms)
+      w <- obj@ratefunc(t = t0, x = ow$x, parms = oparms)
       #sample the jump type
       #make sure pobabilities are positive
       jtype <- sample.int(n = length(w), size = 1, prob = pmax(w,0))
       # jumpfunc(jtype) = next state after the jump
       xi<-obj@jumpfunc(t = t0, x = ow$x, 
-                  parms = parms, jtype = jtype)
+                  parms = oparms, jtype = jtype)
       }
     else {
       xi<-ow$x
