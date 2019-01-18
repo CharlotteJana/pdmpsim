@@ -216,10 +216,9 @@ setMethod("plot", signature(x="pdmp_vd_Model", y="missing"),
               stop("Please simulate the model before plotting", call. = FALSE)
             #summarise the output
             sum_out<-as.data.frame(t(sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])))))
-            View(sum_out)
             par(oma = c(0,0,2,0))
             do.call("plot", alist(sum_out, ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            graphics::title(x@descr, outer = TRUE)
           }
 )
 #' @export
@@ -231,8 +230,8 @@ setMethod("matplot", signature(x="pdmpModel", y="missing"),
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
             par(oma = c(0,0,2,0))
-            do.call("matplot", alist(x=x@out[,1],y=x@out[,-1], ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            do.call("matplot", alist(x=x@out[,1],y=t(x@out[,-1]), ...))
+            graphics::title(x@descr, outer = TRUE)
           }
 )
 #' @export
@@ -244,10 +243,12 @@ setMethod("matplot", signature(x="pdmp_vd_Model", y="missing"),
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
             #summarise the output
-            sum_out<-sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])) )
+            sum_out<-t(sapply(X=x@out,FUN=function(u)c(u[1],x@summaryfunc(u[-1])) ))
             par(oma = c(0,0,2,0))
-            do.call("matplot", alist(sum_out[,1],sum_out[,-1], ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            do.call("matplot", alist(sum_out[,1],sum_out[,-1],type = type, lty = lty, lwd = lwd, lend = lend, 
+                                     pch = pch, col = col, cex = cex, bg = bg, xlab = xlab, 
+                                     ylab = ylab, xlim = xlim, ylim = ylim, log = log,...))
+            graphics::title(x@descr, outer = TRUE)
           }
 )
 
