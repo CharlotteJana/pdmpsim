@@ -2,6 +2,7 @@
 #v2 density: in plotDensity umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
+#t1 plotSeeds - nolo noch mal testen. Problem bei Modellen mit mehreren stet Var?
 
 #' @include multSimData.R
 NULL

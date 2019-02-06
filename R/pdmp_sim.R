@@ -1,5 +1,6 @@
 #======== todo =================================================================
 #t3 I = survival function?
+#t2 eventuell auch dynfunc, ratefunc, etc ohne parms zulassen?
 
 #' @include pdmp_class.R pdmp_methods.R
 NULL

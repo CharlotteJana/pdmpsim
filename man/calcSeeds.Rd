@@ -4,7 +4,7 @@
 \alias{calcSeeds}
 \title{Calculate Seeds}
 \usage{
-calcSeeds(ms, seeds, filename = NULL, allowDeletion = FALSE)
+calcSeeds(ms, seeds, filename = NULL, allowDeletion = FALSE, ...)
 }
 \arguments{
 \item{ms}{object of class \code{multSim} (with existing simulations) that 
@@ -21,6 +21,8 @@ not be saved in a file.}
 \item{allowDeletion}{logical. If true, seeds with existing simulations 
 stored in \code{ms} will be deleted in case they don't appear in 
 the new vector of seeds.}
+
+\item{...}{additional parameters for method \code{\link{sim}}}
 }
 \value{
 object of class "multSim" containing all simulations

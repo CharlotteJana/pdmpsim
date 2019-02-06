@@ -4,7 +4,7 @@
 \alias{expandTimes}
 \title{Expand simulation time}
 \usage{
-expandTimes(ms, to, filename = NULL)
+expandTimes(ms, to, filename = NULL, ...)
 }
 \arguments{
 \item{ms}{object of class "multSim" (with existing simulations) that shall 
@@ -17,6 +17,8 @@ will be skipped and not simulated)}
 i. e. "NameOfFile.rda". In case of a break or an error, already simulated 
 seeds will still be saved there. If \code{filename} = NULL, the result will
 not be saved in a file.}
+
+\item{...}{additional parameters for method \code{\link{sim}}}
 }
 \value{
 object of class "multSim" containing the simulations
