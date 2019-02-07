@@ -20,7 +20,7 @@ NULL
 #' \item \code{variable} for the name of the simulated variable,
 #' \item \code{value} for the simulated value.} 
 #' Methods that use objects of class \code{multSimData} as input are
-#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link[=plot.multSimData]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' 
 #' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}}

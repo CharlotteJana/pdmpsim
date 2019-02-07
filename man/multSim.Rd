@@ -70,6 +70,6 @@ plot(m2$outputList[[15]])
 }
 \seealso{
 There are several plot methods for objects of class \code{multSim}:
-\code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+\code{\link[=plot.multSim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 }

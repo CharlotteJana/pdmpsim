@@ -36,7 +36,7 @@ A plot method for simulations of a piecewise deterministic markov process
 and all discrete variables in a stacked barplot.
 }
 \note{
-Package \code{\pkg{gridExtra}} is needed for this method. If you don't 
+Package \pkg{gridExtra} is needed for this method. If you don't 
 have installed it, an alternative plot will be returned.
 }
 \examples{

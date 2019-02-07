@@ -22,7 +22,7 @@ NULL
 #' the new vector of seeds.
 #' @param ... additional parameters for method \code{\link{sim}}
 #' @seealso There are several plot methods for objects of class \code{multSim}:
-#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link[=plot.multSim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' @return object of class \code{multSim} containing simulations for all 
 #' given seeds

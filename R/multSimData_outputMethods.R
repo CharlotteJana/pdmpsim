@@ -491,7 +491,7 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
 #' ms <- multSim(simplePdmp, seeds = 1:10)
 #' hist(ms, t = 10)
 #' hist(getMultSimData(ms), t = 10, density = 10)
-#' @note Package \code{\pkg{gridExtra}} is needed for this method. If you don't 
+#' @note Package \pkg{gridExtra} is needed for this method. If you don't 
 #' have installed it, an alternative plot will be returned.
 #' @importFrom graphics hist par plot.new layout barplot text mtext
 #' @importFrom grDevices dev.list dev.off gray.colors
