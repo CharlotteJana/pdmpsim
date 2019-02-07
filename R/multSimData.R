@@ -23,8 +23,8 @@ NULL
 #' \code{\link[=plot.multSimData]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' 
-#' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}}
-#' or \code{multSimData}
+#' @param x an object of class \code{\link{multSim}}, \code{\link{multSimCsv}},
+#' \code{multSimData} or \code{\link{pdmpModel}}
 #' @param seeds vector with specific seeds for which the simulation
 #' results (for all times) shall appear in the data.frame
 #' @param times vector with specific time values for which the simulation
@@ -200,6 +200,66 @@ getMultSimData.multSimData <- function(x, times, seeds){
   x <- subset(x, time %in% times & seed %in% seeds)
   return(x)
 }
+
+#' @rdname multSimData
+#' @export
+setMethod("getMultSimData", signature(x="pdmpModel"),
+          function(x, times, seeds) {
+
+            if(missing(seeds) || is.null(seeds)) 
+              seeds <- NA
+            if(length(seeds) != 1)
+              stop("Error in getMultSimData: parameter seeds should contain maximal one
+                   number, because pdmpModel@out contains maximal one simulation.")
+            
+            if(is.null(out(x)))
+              stop("Please simulate the model before applying 'getMultSimData'.")
+            
+            timeIndex <- NULL
+            all.times <- fromtoby(x@times)
+            discVarNames <- names(discStates(x))
+            
+            if(missing(times) || is.null(times)){
+              times <- all.times
+              timeIndex <- seq_along(all.times)
+            }
+            
+            # to avoid the R CMD Check NOTE 'no visible binding for global variable ...'
+            time <- seed <- type <- variable <- value <- NULL
+            
+            
+            
+            # select times
+            if(!identical(times, all.times)){
+              for(i in times){
+                a <- which(all.times == i)
+                if(length(a) == 0){
+                  warning("There are no simulations for time ", i)
+                }
+                else 
+                  timeIndex <- c(timeIndex, a)
+              }
+            }
+            
+            data <- x@out[timeIndex, , drop = FALSE]
+            data <- cbind(seed = rep(seeds), data)
+            
+            # every value gets its own row
+            data <- as.data.frame(data)
+            data <- reshape2::melt(data, id = c("time", "seed"))
+            
+            # column "type" = continous / discrete
+            data$type <- as.factor(
+              vapply(data$variable, 
+                     function(v) ifelse(v %in% discVarNames, "disc", "cont"),
+                     character(1)))
+            
+            # column order = time, seed, type, variable, value
+            data <- select(as.data.frame(data), 
+                           time, seed, type, variable, value)
+            attr(data, "class") <- c("multSimData", class(data))
+            return(data)
+})
 
 is.multSimData <- function(x){
   b1 <- identical(colnames(x), c("time", "seed", "type", "variable", "value"))

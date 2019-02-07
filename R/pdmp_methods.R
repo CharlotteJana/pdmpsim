@@ -170,6 +170,8 @@ setMethod(f = "print",
 
 #---------------- plot -----------------
 
+setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
+
 #' Plot a PDMP
 #' 
 #' This is method plots single simulations of
@@ -180,27 +182,33 @@ setMethod(f = "print",
 #' @param x an object of class pdmpModel with a simulation 
 #' stored in slot \code{out}
 #' @param y ignored
-#' @param ... optional plotting parameters
+#' @param ggplot boolean variable. If TRUE, a different plot 
+#' will be created that uses package \pkg{ggplot2}.
+#' @param ... optional parameters to plot (if ggplot = FALSE)
+#' or getMultSimData (if ggplot = TRUE)
 #' @examples 
 #' data("toggleSwitch")
 #' sim <- sim(toggleSwitch, seed = 1)
 #' plot(sim, col = "red", lwd = 2)
-#' 
-#' # Alternative: plotSeeds
-#' msim <- multSim(toggleSwitch, seeds = 1)
-#' plot <- plotSeeds(msim)
-#' plot + ggplot2::facet_grid(variable ~ seed)
+#' plot(sim, ggplot = TRUE)
+#' plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title
 #' @export
 setMethod("plot", signature(x="pdmpModel", y="missing"),
-          function(x, y, ...) {
+          function(x, y, ggplot = FALSE, ...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
-            par(oma = c(0,0,2,0))
-            do.call("plot", alist(x@out, ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            if(!ggplot){
+              par(oma = c(0,0,2,0))
+              do.call("plot", alist(x@out, ...))
+              graphics::title(x@descr, line = -0.3, outer = TRUE)
+            }
+            else{
+              d <- getMultSimData(x, ...)
+              plotSeeds(d)
+            }
           }
 )
 

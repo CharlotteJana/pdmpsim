@@ -1,5 +1,5 @@
 #======== todo =================================================================
-#t2 multSim besser testen
+#t2 multSim besser testen (auch mit ..., z.B. outrate = T setzen)
 
 #' @include pdmp_class.R pdmp_sim.R
 NULL

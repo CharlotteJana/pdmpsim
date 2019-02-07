@@ -3,6 +3,7 @@
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
 #t1 plotSeeds - nolo noch mal testen. Problem bei Modellen mit mehreren stet Var?
+#t1 documentation für plot-Methode
 
 #' @include multSimData.R
 NULL
@@ -218,9 +219,10 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
       values = cols[seq_along(levels(contData$variable))])
   
   # facet_wrap
-  plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
-  #plot <- plot + facet_grid(variable ~ seed)
-  
+  if(length(seeds) > 1){
+    plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
+    #plot <- plot + facet_grid(variable ~ seed)
+  }
   return(plot)
 }
 

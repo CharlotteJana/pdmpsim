@@ -5,7 +5,7 @@
 \alias{plot,pdmpModel,missing-method}
 \title{Plot a PDMP}
 \usage{
-\S4method{plot}{pdmpModel,missing}(x, y, ...)
+\S4method{plot}{pdmpModel,missing}(x, y, ggplot = FALSE, ...)
 }
 \arguments{
 \item{x}{an object of class pdmpModel with a simulation 
@@ -13,7 +13,11 @@ stored in slot \code{out}}
 
 \item{y}{ignored}
 
-\item{...}{optional plotting parameters}
+\item{ggplot}{boolean variable. If TRUE, a different plot 
+will be created that uses package \pkg{ggplot2}.}
+
+\item{...}{optional parameters to plot (if ggplot = FALSE)
+or getMultSimData (if ggplot = TRUE)}
 }
 \description{
 This is method plots single simulations of
@@ -25,11 +29,8 @@ methods available that use \pkg{ggplot2}.
 data("toggleSwitch")
 sim <- sim(toggleSwitch, seed = 1)
 plot(sim, col = "red", lwd = 2)
-
-# Alternative: plotSeeds
-msim <- multSim(toggleSwitch, seeds = 1)
-plot <- plotSeeds(msim)
-plot + ggplot2::facet_grid(variable ~ seed)
+plot(sim, ggplot = TRUE)
+plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 }
 \seealso{
 \code{\link{plotSeeds}} for another plot function
