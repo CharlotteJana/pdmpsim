@@ -1,6 +1,6 @@
 #======== todo =================================================================
 #t3 I = survival function?
-#t2 eventuell auch dynfunc, ratefunc, etc ohne parms zulassen?
+#t3 eventuell auch dynfunc, ratefunc, etc ohne parms zulassen?
 
 #' @include pdmp_class.R pdmp_methods.R
 NULL
@@ -106,7 +106,7 @@ setMethod("sim", "pdmpModel", function(obj, initialize = FALSE,
   }
 
   # events: this is needed for solver lsodar
-  events <- list(func = eventfunc, root = TRUE, rootfunc = rootfunc)
+  events <- list(func = eventfunc, root = TRUE)
 
   # inity = initial state for y = (obj@init, I₀) with I₀ ~ -exp
   inity <- c(obj@init, -rexp(n = 1))
