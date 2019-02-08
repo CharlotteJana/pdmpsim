@@ -94,7 +94,7 @@ density.multSim <- function(x, t, main, ...){
 plotSeeds.multSim <- function(x, seeds, ...){
   if(missing(seeds)) seeds <- x$seeds
   data <- getMultSimData(x, seeds = seeds)
-  plot <- plotSeeds(data, ...) + 
+  plot <- plotSeeds(data, seeds, ...) + 
     ggplot2::labs(title = x$model@descr,
                   subtitle = format(x$model, short = FALSE, collapse = "\n",
                                     slots = c("init", "parms")))

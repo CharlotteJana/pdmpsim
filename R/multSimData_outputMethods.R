@@ -105,6 +105,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
 #' @param seeds vector with seed numbers to plot. This is optional if \code{x}
 #' is a \code{\link{multSimData}} object.
+#' @param ylim a length-2 numeric defining the scale of the y-axis.
 #' @param ... additional arguments, currently not used.
 #' @note A maximal number of 4 seeds can be plotted. 
 #' The method requires the package \pkg{tidyr}.
@@ -124,7 +125,7 @@ plotSeeds <- function(x, seeds, ...){
 
 #' @rdname plotSeeds
 #' @export
-plotSeeds.multSimData <- function(x, seeds = NULL, ...){
+plotSeeds.multSimData <- function(x, seeds = NULL, ylim, ...){
   
   if(!requireNamespace("tidyr", quietly = TRUE)) {
     stop("Pkg 'tidyr' needed for this function to work. 
@@ -133,10 +134,14 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   if(!is.multSimData(x)){
     stop("Parameter x has to be of type 'multSimData'.")
   }
+  
   if(!is.null(seeds)){
     x <- subset(x, seed %in% seeds)
   }
-  if(length(unique(x$seed)) > 4){
+  else{
+    seeds <- unique(x$seed)
+  }
+  if(length(seeds) > 4){
     stop("To many seeds to plot. A maximum of 4 seeds can be plotted.")
   }
   
@@ -158,6 +163,13 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   contData$variable <- factor(contData$variable)
   discVarNames <- sort(levels(discData$variable))
   discData <- tidyr::spread(discData, variable, value)
+  
+  # define scale of y-axis
+  if(missing(ylim))
+    ylim <- c(min(contData$value), max(contData$value))
+  height <- abs(ylim[2] - ylim[1])/20
+  min <- ylim[1]-(length(discVarNames)+0.5)*height
+  max <- ylim[2]
   
   # define colors for discrete variables
   color_mapping <- function(index, value, states){
@@ -183,7 +195,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
-    ggplot2::coord_cartesian(xlim = c(0, tail(x$time, 1))) +   # zoom in
+    ggplot2::coord_cartesian(xlim = c(0, tail(x$time, 1)), ylim = c(min,max)) +   # zoom in
     ggplot2::labs(y = "", x = "time")  
   
   #** Plot discrete variables
@@ -203,8 +215,6 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   # }
   
   #** Plot discrete variables
-  min <- min(contData$value)
-  height <- abs(max(contData$value) - min)/20
   discValues <- NULL
   discCols <- NULL
   for(i in seq_along(discVarNames)){
@@ -219,7 +229,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
                                        ggplot2::aes_string(
          fill = paste0("col_", discVarNames[i]), 
          xmin = "time", xmax = "time+1", 
-         ymin = min - i*height, ymax = min - (i - 1)*height))
+         ymin = ylim[1] - (i+0.5)*height, ymax = ylim[1] - (i - 0.5)*height))
   }
   
   #t2: ifelse fehlerhaft

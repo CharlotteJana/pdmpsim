@@ -181,8 +181,7 @@ setMethod(f = "print",
 #' @param y ignored
 #' @param ggplot boolean variable. If TRUE, a different plot 
 #' will be created that uses package \pkg{ggplot2}.
-#' @param ... optional parameters to plot (if ggplot = FALSE)
-#' or getMultSimData (if ggplot = TRUE)
+#' @param ... optional parameters to plot method
 #' @examples 
 #' data("toggleSwitch")
 #' sim <- sim(toggleSwitch, seed = 1)
@@ -204,8 +203,8 @@ plot.pdmpModel <- function(x, y , ggplot = FALSE, ...) {
               graphics::title(x@descr, line = -0.3, outer = TRUE)
             }
             else{
-              d <- getMultSimData(x, ...)
-              plotSeeds(d)
+              d <- getMultSimData(x)
+              plotSeeds(d, ...)
             }
           }
 
