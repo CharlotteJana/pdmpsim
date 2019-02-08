@@ -141,6 +141,7 @@ plotStats.multSim <- function(x, vars, funs, ...){
 }
 
 #' @rdname plot
+#' @method plot multSim
 #' @export
 plot.multSim <- function(x, title, subtitle, ...){
   # x <- removeSeeds(x)

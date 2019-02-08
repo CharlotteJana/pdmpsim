@@ -20,8 +20,7 @@ stored in slot \code{out}}
 \item{ggplot}{boolean variable. If TRUE, a different plot 
 will be created that uses package \pkg{ggplot2}.}
 
-\item{...}{optional parameters to plot (if ggplot = FALSE)
-or getMultSimData (if ggplot = TRUE)}
+\item{...}{optional parameters to plot method}
 }
 \description{
 This method plots single simulations of
@@ -34,7 +33,6 @@ data("toggleSwitch")
 sim <- sim(toggleSwitch, seed = 1)
 plot(sim, col = "red", lwd = 2)
 plot(sim, ggplot = TRUE)
-plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 }
 \seealso{
 \code{\link{plotSeeds}} for another plot function

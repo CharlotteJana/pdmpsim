@@ -38,6 +38,7 @@ NULL
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot aes geom_bin2d stat_density_2d geom_line
 #' @importFrom ggplot2 geom_smooth scale_color_discrete labs facet_wrap
+#' @method plot multSimData
 #' @export
 plot.multSimData <- function(x, title = NULL, subtitle = NULL, 
                              discPlot = "smooth", contPlot = "bin2d", ...){
@@ -277,7 +278,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ylim, ...){
 #' @return a \code{tbl} with the applied function values
 #' @examples 
 #' data("simplePdmp")
-#' md <- getMultSimData(multSim(simplePdmp, 1:20))
+#' md <- getMultSimData(multSim(simplePdmp, 1:10))
 #' summarise_at(md, .vars = c("f", "d"), .funs = c("min", "max"))
 #' summarise_at(md, .vars = "f", .funs = dplyr::funs(10 * quantile(., 0.75)))
 #' @seealso \link[dplyr]{summarise_at} for the original method, 
