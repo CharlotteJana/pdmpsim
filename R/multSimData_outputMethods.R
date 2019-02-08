@@ -10,6 +10,32 @@ NULL
 
 #========== plot ===============
 
+#' Plot a 2d heatmap for multiple simulations of PDMPs
+#' 
+#' This method plots multiple simulations of PDMPs.
+#' Values of the continous variables are plotted in a 2d heatmap
+#' whereas values of discrete variables are plotted as functions.
+#' 
+#' @param x an object of class \code{\link{multSim}} or
+#' \code{\link{multSimData}}
+#' @param title title of the plot
+#' @param subtitle subtitle of the plot
+#' @param contPlot character vector determining the type of the plot
+#' for the continous variables. Possible values are 'bin2d' standing for 
+#' geom_bin2d and 'density_2d' standing for geom_density_2d.
+#' Defaults to 'bin2d'.
+#' @param discPlot character vector determining the type of the plot
+#' for the discrete variables. Possible values are 'line' standing for 
+#' geom_line and 'smooth' standing for geom_smooth. Defaults to 'smooth'.
+#' @param ... optional parameters to geom_bin2d resp. geom_density_2d 
+#' and geom_line resp. geom_smooth
+#' @seealso \code{\link{plotSeeds}}, \code{\link{plotTimes}}, 
+#' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}} 
+#' for other plot functions
+#' @examples
+#' data("simplePdmp")
+#' ms <- multSim(simplePdmp, 1:20)
+#' @name plot
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot aes geom_bin2d stat_density_2d geom_line
 #' @importFrom ggplot2 geom_smooth scale_color_discrete labs facet_wrap

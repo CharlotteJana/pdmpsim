@@ -140,10 +140,9 @@ plotStats.multSim <- function(x, vars, funs, ...){
  return(plot)
 }
 
-#' @importFrom dplyr summarise
+#' @rdname plot
 #' @export
 plot.multSim <- function(x, title, subtitle, ...){
-  
   # x <- removeSeeds(x)
   data <- getMultSimData(x)
   

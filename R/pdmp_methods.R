@@ -1,5 +1,4 @@
 #======== todo =================================================================
-#t1 Plot methode wird nicht exportiert. Warum nicht???
 
 #' @include pdmp_class.R
 NULL
@@ -170,11 +169,9 @@ setMethod(f = "print",
 
 #---------------- plot -----------------
 
-setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
-
 #' Plot a PDMP
 #' 
-#' This is method plots single simulations of
+#' This method plots single simulations of
 #' piecewise deterministic markov processes defined as
 #' \code{\link{pdmpModel}}. There are also other plot
 #' methods available that use \pkg{ggplot2}. 
@@ -195,9 +192,10 @@ setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title
+#' @name plot-pdmpModel
+#' @method plot pdmpModel
 #' @export
-setMethod("plot", signature(x="pdmpModel", y="missing"),
-          function(x, y, ggplot = FALSE, ...) {
+plot.pdmpModel <- function(x, y , ggplot = FALSE, ...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
             if(!ggplot){
@@ -210,5 +208,9 @@ setMethod("plot", signature(x="pdmpModel", y="missing"),
               plotSeeds(d)
             }
           }
-)
 
+#' @rdname plot-pdmpModel
+#' @export
+setMethod("plot", signature(x = "pdmpModel", y = "missing"), plot.pdmpModel)
+
+# setMethod("plot", signature(x="pdmpModel", y="missing"),
