@@ -3,6 +3,8 @@
 \docType{methods}
 \name{pdmp-accessors}
 \alias{pdmp-accessors}
+\alias{out}
+\alias{out<-}
 \alias{dynfunc}
 \alias{dynfunc<-}
 \alias{ratefunc}
@@ -13,23 +15,41 @@
 \alias{descr<-}
 \alias{discStates}
 \alias{discStates<-}
+\alias{parms}
 \alias{parms<-}
+\alias{init}
+\alias{init<-}
+\alias{solver}
+\alias{solver<-}
+\alias{times}
+\alias{times<-}
+\alias{initfunc}
+\alias{out,pdmpModel-method}
 \alias{dynfunc,pdmpModel-method}
 \alias{ratefunc,pdmpModel-method}
 \alias{jumpfunc,pdmpModel-method}
 \alias{descr,pdmpModel-method}
 \alias{discStates,pdmpModel-method}
+\alias{parms,pdmpModel-method}
+\alias{init,pdmpModel-method}
+\alias{solver,pdmpModel-method}
+\alias{times,pdmpModel-method}
+\alias{out<-,pdmpModel-method}
 \alias{dynfunc<-,pdmpModel-method}
 \alias{ratefunc<-,pdmpModel-method}
 \alias{jumpfunc<-,pdmpModel-method}
-\alias{parms<-,pdmpModel-method}
 \alias{discStates<-,pdmpModel-method}
+\alias{parms<-,pdmpModel-method}
+\alias{init<-,pdmpModel-method}
+\alias{solver<-,pdmpModel-method}
+\alias{times<-,pdmpModel-method}
 \alias{descr<-,pdmpModel-method}
-\alias{main<-,pdmpModel-method}
-\alias{equations<-,pdmpModel-method}
-\alias{observer<-,pdmpModel-method}
 \title{Accessor functions for Class pdmpModel}
 \usage{
+out(obj, value)
+
+out(obj) <- value
+
 dynfunc(obj)
 
 dynfunc(obj) <- value
@@ -50,7 +70,25 @@ discStates(obj)
 
 discStates(obj) <- value
 
+parms(obj, value)
+
 parms(obj) <- value
+
+init(obj, value)
+
+init(obj) <- value
+
+solver(obj, value)
+
+solver(obj) <- value
+
+times(obj, value)
+
+times(obj) <- value
+
+initfunc(obj, value)
+
+\S4method{out}{pdmpModel}(obj)
 
 \S4method{dynfunc}{pdmpModel}(obj)
 
@@ -62,23 +100,33 @@ parms(obj) <- value
 
 \S4method{discStates}{pdmpModel}(obj)
 
+\S4method{parms}{pdmpModel}(obj)
+
+\S4method{init}{pdmpModel}(obj)
+
+\S4method{solver}{pdmpModel}(obj)
+
+\S4method{times}{pdmpModel}(obj)
+
+\S4method{out}{pdmpModel}(obj) <- value
+
 \S4method{dynfunc}{pdmpModel}(obj) <- value
 
 \S4method{ratefunc}{pdmpModel}(obj) <- value
 
 \S4method{jumpfunc}{pdmpModel}(obj) <- value
 
-\S4method{parms}{pdmpModel}(obj) <- value
-
 \S4method{discStates}{pdmpModel}(obj) <- value
 
+\S4method{parms}{pdmpModel}(obj) <- value
+
+\S4method{init}{pdmpModel}(obj) <- value
+
+\S4method{solver}{pdmpModel}(obj) <- value
+
+\S4method{times}{pdmpModel}(obj) <- value
+
 \S4method{descr}{pdmpModel}(obj) <- value
-
-\S4method{main}{pdmpModel}(obj) <- value
-
-\S4method{equations}{pdmpModel}(obj) <- value
-
-\S4method{observer}{pdmpModel}(obj) <- value
 }
 \arguments{
 \item{obj}{an object of class \code{\link{pdmpModel}}}

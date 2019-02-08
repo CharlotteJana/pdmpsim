@@ -1,6 +1,3 @@
-\dontshow{
-  require("simecol")
-}
 data("simplePdmp") # load object of class pdmpModel
 
 #### simulations
@@ -27,8 +24,9 @@ head(out(simplePdmp)) # NULL, because slot init has changed
 simplePdmp <- sim(simplePdmp, outSlot = FALSE)
 str(simplePdmp) # only the simulation result, the pdmpModel object is lost
 
-### an example with initialize = TRUE
+### an example with initialize = TRUE, doesn't work at the moment
 
+\dontrun{
 initModel <- pdmpModel(
   descr = "a model with random initial values",
   init = c(f = 0, d = 1),
@@ -45,4 +43,5 @@ initModel <- pdmpModel(
 print(init(initModel))
 print(head(out(sim(initModel, seed = 2, initialize = TRUE))))
 print(head(out(sim(initModel, seed = 5, initialize = TRUE))))
+}
 

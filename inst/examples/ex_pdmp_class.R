@@ -1,6 +1,3 @@
-\dontshow{
-  require("simecol")
-}
 
 # a pdmp with different jumptypes
 simplePdmp <- pdmpModel(

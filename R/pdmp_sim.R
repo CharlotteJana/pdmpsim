@@ -1,8 +1,9 @@
 #======== todo =================================================================
+#t2 In Bspdatei ist ein Bsp mit Slot initfunc, das nicht funktioniert
 #t3 I = survival function?
 #t3 eventuell auch dynfunc, ratefunc, etc ohne parms zulassen?
 
-#' @include pdmp_class.R pdmp_methods.R
+#' @include pdmp_class.R pdmp_methods.R simecol_functions.R
 NULL
 
 ##### method sim ####
@@ -49,8 +50,7 @@ NULL
 #' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 #' for multiple simulations, ... for plot and summary methods of the simulation.
 #' @aliases sim
-#' @importMethodsFrom simecol sim
-#' @importFrom simecol fromtoby
+# #' @importFrom simecol fromtoby
 #' @importFrom stats rexp
 #' @export
 setMethod("sim", "pdmpModel", function(obj, initialize = FALSE, 

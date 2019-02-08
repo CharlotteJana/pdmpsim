@@ -4,9 +4,16 @@
 #t3 initialize method schreiben wie in polyPdmpKlasse
 #t2 achtung: zur zeit MUSS solver = "lsodar" mitübergeben werden. warum?
 #t3 validity method schreiben wie in polyPdmpKlasse (aber mit Inhalt!)
+#t2 initialisierung testen
+#t2 initfunc einführen
 
 #' @import methods
 NULL
+
+## helper classes
+setClassUnion("functionOrNULL", c("NULL", "function"))
+setClassUnion("functionOrcharacter", c("character", "function"))
+setClassUnion("numericOrlist", c("numeric", "list"))
 
 #=========== pdmpModel ===============
 
@@ -14,12 +21,11 @@ NULL
 #'
 #' @description An S4 class to represent a piecewise deterministic markov 
 #' process (PDMP).\cr
-#' This class is based on the \pkg{simecol} Package and provides a possibility 
-#' to simulate piecewise deterministic markov processes. These processes
-#' are described in [Zei09] and [Ben+15]. There are some restrictions compared 
-#' to the original definition given in [Dav84]: In our case there are no borders 
-#' allowed and the number of continous variables should be independent of the 
-#' state (of the discrete variable) of the process.
+#' This class provides a possibility to simulate piecewise deterministic markov
+#' processes. These processes are described in [Zei09] and [Ben+15]. There are
+#' some restrictions compared to the original definition given in [Dav84]: In
+#' our case there are no borders allowed and the number of continous variables
+#' should be independent of the state (of the discrete variable) of the process.
 #'
 #' @slot descr a string containing a short description of the model. 
 #' This slot is optional and only used in plot methods.
@@ -47,11 +53,11 @@ NULL
 #' @slot solver a function or a character string specifying the numerical 
 #' algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
 #' The default solver is "lsodar".
-#' @slot initfunc this slot can hold an optional function which has a pdmpModel
-#' as only parameter and returnes an object of class \code{pdmpModel}. 
-#' This function is called automatically when a new object is created by 
-#' \code{new} or when it is reinitialized by \code{initialize(obj)} 
-#' or before starting a simulation with \code{sim(obj, initialize = TRUE)}.
+# #' @slot initfunc this slot can hold an optional function which has a pdmpModel
+# #' as only parameter and returnes an object of class \code{pdmpModel}. 
+# #' This function is called automatically when a new object is created by 
+# #' \code{new} or when it is reinitialized by \code{initialize(obj)} 
+# #' or before starting a simulation with \code{sim(obj, initialize = TRUE)}.
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
 #'
@@ -85,19 +91,21 @@ NULL
 #' vectorfields, the transition rates and the solver.
 #' See \code{\link{multSim}} and \code{\link{multSimCsv}} to perform multiple 
 #' simulations for a \code{pdmpModel}.
-#' @importFrom simecol simObj
 #' @export
 setClass("pdmpModel",
          slots = list(descr = "character", 
                       parms = "numericOrlist", 
-                      init = "numeric", 
+                      init  = "numeric", 
                       discStates = "list",
-                      times = "numeric",
-                      dynfunc = "function", 
+                      times    = "numeric",
+                      dynfunc  = "function", 
                       jumpfunc = "function", 
-                      ratefunc = "function", 
-                      initfunc = "functionOrNULL"),
-         contains = "simObj")
+                      ratefunc = "function",
+                      solver   = "functionOrcharacter",
+                      out      = "ANY"
+                      )
+         )
+
 
 #' @rdname pdmpModel-class
 #' @param obj pdmpModel object that is being built. 
@@ -128,11 +136,11 @@ setClass("pdmpModel",
 #' @param solver a function or a character string specifying the numerical 
 #' algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
 #' The default solver is "lsodar".
-#' @param initfunc this parameter can hold an optional function which has a 
-#' pdmpModel as only parameter and returnes a (modified) pdmp. 
-#' This function is called automatically when a new object is created by 
-#' \code{new} or when it is reinitialized by \code{initialize(obj)} or before 
-#' starting a simulation with \code{sim(obj, initialize = TRUE)}.
+# #' @param initfunc this parameter can hold an optional function which has a 
+# #' pdmpModel as only parameter and returnes a (modified) pdmp. 
+# #' This function is called automatically when a new object is created by 
+# #' \code{new} or when it is reinitialized by \code{initialize(obj)} or before 
+# #' starting a simulation with \code{sim(obj, initialize = TRUE)}.
 #' @param out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this parameter.
 #' @importFrom deSolve lsodar
@@ -147,11 +155,13 @@ pdmpModel <- function(obj = NULL,
                       parms = list(), 
                       discStates = list(0),
                       out = NULL, 
-                      solver = "lsodar", 
-                      initfunc = NULL) {
-  obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc,
-             descr = descr, ratefunc = ratefunc, times = times, init = init, 
-             parms = parms, initfunc = initfunc, solver = solver, out = out,
-             discStates = discStates)
+                      solver = "lsodar") {
+  if (is(obj, "pdmpModel")) {
+    obj <- initialize(obj)
+  } else {
+    obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc,
+               descr = descr, ratefunc = ratefunc, times = times, init = init, 
+               parms = parms, solver = solver, out = out, discStates = discStates)
+  }
   invisible(obj)
 }

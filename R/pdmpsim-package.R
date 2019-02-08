@@ -40,8 +40,6 @@
 #' @section Imported Packages:
 #' The following packages are needed for package \pkg{pdmpsim} to work: \cr
 #' For solving the ODEs during the simulation, package \pkg{deSolve} is required. 
-#' Class \code{\link{pdmpModel}} is an inherited class of 
-#' \code{\link[simecol]{simObj}} which is defined in package \pkg{simecol}. 
 #' To store multiple simulations as \code{csv} files and work with them without 
 #' loading them into the working memory, package \pkg{LaF} is needed. 
 #' Package \pkg{Deriv} is only used in function \code{\link{generator}}. 

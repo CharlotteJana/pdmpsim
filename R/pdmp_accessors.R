@@ -25,10 +25,6 @@
 #' @param obj an object of class \code{\link{pdmpModel}}
 #' @param value the value that shall be set
 #'
-#' @importMethodsFrom simecol "times" "times<-" "solver" "solver<-"
-#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms"
-#' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
-#' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
 #' @include pdmp_class.R
 #' @name pdmp-accessors
 #' @seealso Class definition \code{\link{pdmpModel}}
@@ -36,6 +32,12 @@ NULL
 
 #========= setGenerics ===========
 
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("out", function(obj, value) standardGeneric("out"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("out<-", function(obj, value) standardGeneric("out<-"))
 #' @rdname pdmp-accessors
 #' @export
 setGeneric("dynfunc", function(obj) standardGeneric("dynfunc"))
@@ -68,10 +70,40 @@ setGeneric("discStates", function(obj) standardGeneric("discStates"))
 setGeneric("discStates<-", function(obj, value) standardGeneric("discStates<-"))
 #' @rdname pdmp-accessors
 #' @export
+setGeneric("parms", function(obj, value) standardGeneric("parms")) 
+#' @rdname pdmp-accessors
+#' @export
 setGeneric("parms<-", function(obj, value) standardGeneric("parms<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("init", function(obj, value) standardGeneric("init"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("init<-", function(obj, value) standardGeneric("init<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("solver", function(obj, value) standardGeneric("solver"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("solver<-", function(obj, value) standardGeneric("solver<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("times", function(obj, value) standardGeneric("times"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("times<-", function(obj, value) standardGeneric("times<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("initfunc", function(obj, value) standardGeneric("initfunc"))
+# #' @rdname pdmp-accessors
+# #' @export
+# setGeneric("initfunc<-", function(obj, value) standardGeneric("initfunc<-"))
 
 #======= Getters ==========
 
+#' @rdname pdmp-accessors
+#' @export
+setMethod("out", "pdmpModel", function(obj) obj@out)
 #' @rdname pdmp-accessors
 #' @export
 setMethod("dynfunc", "pdmpModel", function(obj) obj@dynfunc)
@@ -87,9 +119,30 @@ setMethod("descr", "pdmpModel", function(obj) obj@descr)
 #' @rdname pdmp-accessors
 #' @export
 setMethod("discStates", "pdmpModel", function(obj) obj@discStates)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("parms", "pdmpModel", function(obj) obj@parms)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("init", "pdmpModel", function(obj) obj@init)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("solver", "pdmpModel", function(obj) obj@solver)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("times", "pdmpModel", function(obj) obj@times)
+# #' @rdname pdmp-accessors
+# #' @export
+# setMethod("initfunc", "pdmpModel", function(obj) obj@initfunc)
 
 #======= Setters that set obj@out <- NULL =========
 
+#' @rdname pdmp-accessors
+#' @export
+setMethod("out<-", "pdmpModel", function(obj, value) {
+  obj@out <- value
+  invisible(obj)
+})
 #' @rdname pdmp-accessors
 #' @export
 setMethod("dynfunc<-", "pdmpModel", function(obj, value) {
@@ -113,6 +166,13 @@ setMethod("jumpfunc<-", "pdmpModel", function(obj, value) {
 })
 #' @rdname pdmp-accessors
 #' @export
+setMethod("discStates<-", "pdmpModel", function(obj, value) {
+  obj@discStates <- value
+  out(obj) <- NULL
+  invisible(obj)
+})
+#' @rdname pdmp-accessors
+#' @export
 setMethod("parms<-", "pdmpModel", function(obj, value) {
   obj@parms <- value
   out(obj) <- NULL
@@ -120,11 +180,32 @@ setMethod("parms<-", "pdmpModel", function(obj, value) {
 })
 #' @rdname pdmp-accessors
 #' @export
-setMethod("discStates<-", "pdmpModel", function(obj, value) {
-  obj@discStates <- value
+setMethod("init<-", "pdmpModel", function(obj, value) {
+  obj@init <- value
   out(obj) <- NULL
   invisible(obj)
 })
+#' @rdname pdmp-accessors
+#' @export
+setMethod("solver<-", "pdmpModel", function(obj, value) {
+  obj@solver <- value
+  out(obj) <- NULL
+  invisible(obj)
+})
+#' @rdname pdmp-accessors
+#' @export
+setMethod("times<-", "pdmpModel", function(obj, value) {
+  obj@times <- value
+  out(obj) <- NULL
+  invisible(obj)
+})
+# #' @rdname pdmp-accessors
+# #' @export
+# setMethod("initfunc<-", "pdmpModel", function(obj, value) {
+#   obj@initfunc <- value
+#   out(obj) <- NULL
+#   invisible(obj)
+# })
 
 #======= Setters that don't change slot out =======
 
@@ -132,26 +213,5 @@ setMethod("discStates<-", "pdmpModel", function(obj, value) {
 #' @export
 setMethod("descr<-", "pdmpModel", function(obj, value) {
   obj@descr <- value
-  invisible(obj)
-})
-#' @rdname pdmp-accessors
-#' @export
-setMethod("main<-", "pdmpModel", function(obj, value) {
-  warning("Slot 'main' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed. Please modify slot 'dynfunc' instead'.")
-  invisible(obj)
-})
-#' @rdname pdmp-accessors
-#' @export
-setMethod("equations<-", "pdmpModel", function(obj, value) {
-  warning("Slot 'equations' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed.")
-  invisible(obj)
-})
-#' @rdname pdmp-accessors
-#' @export
-setMethod("observer<-", "pdmpModel", function(obj, value) {
-  warning("Slot 'observer' is a slot inherited by 'simObj' of class 'simecol' 
-  and cannot be changed.")
   invisible(obj)
 })

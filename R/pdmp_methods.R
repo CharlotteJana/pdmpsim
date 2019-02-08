@@ -1,4 +1,5 @@
 #======== todo =================================================================
+#t2 das Bsp für plot sollte laufen: plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 
 #' @include pdmp_class.R
 NULL
@@ -187,7 +188,6 @@ setMethod(f = "print",
 #' sim <- sim(toggleSwitch, seed = 1)
 #' plot(sim, col = "red", lwd = 2)
 #' plot(sim, ggplot = TRUE)
-#' plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title

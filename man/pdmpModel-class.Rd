@@ -13,7 +13,7 @@ pdmpModel(obj = NULL, descr = character(0), dynfunc = function(t, x,
   parms) 0 * x, jumpfunc = function(t, x, parms, jtype) x,
   ratefunc = function(t, x, parms) c(0), times = c(from = 0, to = 10,
   by = 1), init = c(0, 0), parms = list(), discStates = list(0),
-  out = NULL, solver = "lsodar", initfunc = NULL)
+  out = NULL, solver = "lsodar")
 }
 \arguments{
 \item{obj}{pdmpModel object that is being built.}
@@ -56,22 +56,15 @@ method \code{\link{sim}}, the result will be stored in this parameter.}
 \item{solver}{a function or a character string specifying the numerical 
 algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
 The default solver is "lsodar".}
-
-\item{initfunc}{this parameter can hold an optional function which has a 
-pdmpModel as only parameter and returnes a (modified) pdmp. 
-This function is called automatically when a new object is created by 
-\code{new} or when it is reinitialized by \code{initialize(obj)} or before 
-starting a simulation with \code{sim(obj, initialize = TRUE)}.}
 }
 \description{
 An S4 class to represent a piecewise deterministic markov 
 process (PDMP).\cr
-This class is based on the \pkg{simecol} Package and provides a possibility 
-to simulate piecewise deterministic markov processes. These processes
-are described in [Zei09] and [Ben+15]. There are some restrictions compared 
-to the original definition given in [Dav84]: In our case there are no borders 
-allowed and the number of continous variables should be independent of the 
-state (of the discrete variable) of the process.
+This class provides a possibility to simulate piecewise deterministic markov
+processes. These processes are described in [Zei09] and [Ben+15]. There are
+some restrictions compared to the original definition given in [Dav84]: In
+our case there are no borders allowed and the number of continous variables
+should be independent of the state (of the discrete variable) of the process.
 }
 \section{Slots}{
 
@@ -111,20 +104,11 @@ simulation, depending ot the rates given in \code{ratefunc}.}
 algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
 The default solver is "lsodar".}
 
-\item{\code{initfunc}}{this slot can hold an optional function which has a pdmpModel
-as only parameter and returnes an object of class \code{pdmpModel}. 
-This function is called automatically when a new object is created by 
-\code{new} or when it is reinitialized by \code{initialize(obj)} 
-or before starting a simulation with \code{sim(obj, initialize = TRUE)}.}
-
 \item{\code{out}}{NULL or an object of class deSolve. If a simulation is done with 
 method \code{\link{sim}}, the result will be stored in this slot.}
 }}
 
 \examples{
-\dontshow{
-  require("simecol")
-}
 
 # a pdmp with different jumptypes
 simplePdmp <- pdmpModel(

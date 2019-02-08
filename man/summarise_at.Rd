@@ -35,7 +35,7 @@ separately.
 }
 \examples{
 data("simplePdmp")
-md <- getMultSimData(multSim(simplePdmp, 1:20))
+md <- getMultSimData(multSim(simplePdmp, 1:10))
 summarise_at(md, .vars = c("f", "d"), .funs = c("min", "max"))
 summarise_at(md, .vars = "f", .funs = dplyr::funs(10 * quantile(., 0.75)))
 }
