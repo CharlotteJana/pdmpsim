@@ -8,7 +8,7 @@
 #t3 loadMultSimCsv: wie verlinke ich das LaF-Manual?
 #t3 Wäre der parameter uniqueSeeds auch bei anderen methoden sinnvoll?
 #t3 uniqueSeeds getestet?
-#t3 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
+#t2 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
 #t2 absolute paths in msCsv$csvlist?
 
 #------------------- multSimCsv --------------------------
@@ -115,7 +115,7 @@
 #' \code{\link{summarize_at}}, \code{\link{hist}}, \code{\link{density}} 
 #' and \code{\link{plotSeeds}} on the data.frame created with 
 #' \code{getMultSimData}. You can also use \code{\link{plotTimes}} to find 
-#' the seed numbers of interesting outliers by setting an appropriate threshold.
+#' the seed numbers of interesting outliers by setting parameter nolo suitably.
 #' 
 #' \code{}
 #' @aliases multsimcsv

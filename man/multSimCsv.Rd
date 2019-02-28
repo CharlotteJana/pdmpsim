@@ -114,7 +114,7 @@ fit into the working memory. Afterwards, you can apply methods
 \code{\link{summarize_at}}, \code{\link{hist}}, \code{\link{density}} 
 and \code{\link{plotSeeds}} on the data.frame created with 
 \code{getMultSimData}. You can also use \code{\link{plotTimes}} to find 
-the seed numbers of interesting outliers by setting an appropriate threshold.
+the seed numbers of interesting outliers by setting parameter nolo suitably.
 
 \code{}
 }
