@@ -28,7 +28,6 @@ test_that("parameter outSlot behaves correctly", {
 })
 
 test_that("if initialize = TRUE, slot 'initfunc' is called before sim", {
-  skip("Slot 'initfunc' is not included yet.")
 
   model1 <- sim(obj, seed = 1)
   obj@initfunc <- function(obj){

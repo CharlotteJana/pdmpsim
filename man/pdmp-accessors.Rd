@@ -24,6 +24,7 @@
 \alias{times}
 \alias{times<-}
 \alias{initfunc}
+\alias{initfunc<-}
 \alias{out,pdmpModel-method}
 \alias{dynfunc,pdmpModel-method}
 \alias{ratefunc,pdmpModel-method}
@@ -34,6 +35,7 @@
 \alias{init,pdmpModel-method}
 \alias{solver,pdmpModel-method}
 \alias{times,pdmpModel-method}
+\alias{initfunc,pdmpModel-method}
 \alias{out<-,pdmpModel-method}
 \alias{dynfunc<-,pdmpModel-method}
 \alias{ratefunc<-,pdmpModel-method}
@@ -43,6 +45,7 @@
 \alias{init<-,pdmpModel-method}
 \alias{solver<-,pdmpModel-method}
 \alias{times<-,pdmpModel-method}
+\alias{initfunc<-,pdmpModel-method}
 \alias{descr<-,pdmpModel-method}
 \title{Accessor functions for Class pdmpModel}
 \usage{
@@ -88,6 +91,8 @@ times(obj) <- value
 
 initfunc(obj, value)
 
+initfunc(obj) <- value
+
 \S4method{out}{pdmpModel}(obj)
 
 \S4method{dynfunc}{pdmpModel}(obj)
@@ -108,6 +113,8 @@ initfunc(obj, value)
 
 \S4method{times}{pdmpModel}(obj)
 
+\S4method{initfunc}{pdmpModel}(obj)
+
 \S4method{out}{pdmpModel}(obj) <- value
 
 \S4method{dynfunc}{pdmpModel}(obj) <- value
@@ -125,6 +132,8 @@ initfunc(obj, value)
 \S4method{solver}{pdmpModel}(obj) <- value
 
 \S4method{times}{pdmpModel}(obj) <- value
+
+\S4method{initfunc}{pdmpModel}(obj) <- value
 
 \S4method{descr}{pdmpModel}(obj) <- value
 }

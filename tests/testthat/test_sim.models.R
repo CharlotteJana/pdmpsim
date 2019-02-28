@@ -108,7 +108,6 @@ test_that("sim is correct for a pdmp with 2 discrete variables", {
 })
 
 test_that("variable 'initialize' works as expected", {
-  skip("Slot 'initfunc' is not included yet.")
   initModel <- pdmpModel(
     init = c(f = 0, d = 1),
     initfunc = function(pdmp){

@@ -95,9 +95,9 @@ setGeneric("times<-", function(obj, value) standardGeneric("times<-"))
 #' @rdname pdmp-accessors
 #' @export
 setGeneric("initfunc", function(obj, value) standardGeneric("initfunc"))
-# #' @rdname pdmp-accessors
-# #' @export
-# setGeneric("initfunc<-", function(obj, value) standardGeneric("initfunc<-"))
+#' @rdname pdmp-accessors
+#' @export
+setGeneric("initfunc<-", function(obj, value) standardGeneric("initfunc<-"))
 
 #======= Getters ==========
 
@@ -131,9 +131,9 @@ setMethod("solver", "pdmpModel", function(obj) obj@solver)
 #' @rdname pdmp-accessors
 #' @export
 setMethod("times", "pdmpModel", function(obj) obj@times)
-# #' @rdname pdmp-accessors
-# #' @export
-# setMethod("initfunc", "pdmpModel", function(obj) obj@initfunc)
+#' @rdname pdmp-accessors
+#' @export
+setMethod("initfunc", "pdmpModel", function(obj) obj@initfunc)
 
 #======= Setters that set obj@out <- NULL =========
 
@@ -199,13 +199,13 @@ setMethod("times<-", "pdmpModel", function(obj, value) {
   out(obj) <- NULL
   invisible(obj)
 })
-# #' @rdname pdmp-accessors
-# #' @export
-# setMethod("initfunc<-", "pdmpModel", function(obj, value) {
-#   obj@initfunc <- value
-#   out(obj) <- NULL
-#   invisible(obj)
-# })
+#' @rdname pdmp-accessors
+#' @export
+setMethod("initfunc<-", "pdmpModel", function(obj, value) {
+   obj@initfunc <- value
+   out(obj) <- NULL
+   invisible(obj)
+})
 
 #======= Setters that don't change slot out =======
 

@@ -1,11 +1,11 @@
 #======== todo =================================================================
 #t1 Beispiele verändern (simplePdmp?, mit Initfunc?)
 #t2 Warum muss die Dokumentation doppelt sein? Konstruktor anders definieren?
-#t3 initialize method schreiben wie in polyPdmpKlasse
 #t2 achtung: zur zeit MUSS solver = "lsodar" mitübergeben werden. warum?
 #t3 validity method schreiben wie in polyPdmpKlasse (aber mit Inhalt!)
 #t2 initialisierung testen
-#t2 initfunc einführen
+#t2 andere solver testen
+#t1 initialize exportieren?
 
 #' @import methods
 NULL
@@ -51,13 +51,13 @@ setClassUnion("numericOrlist", c("numeric", "list"))
 #' \code{ratefunc}. The value for \code{jtype} will be chosen randomly during
 #' simulation, depending ot the rates given in \code{ratefunc}.
 #' @slot solver a function or a character string specifying the numerical 
-#' algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
-#' The default solver is "lsodar".
-# #' @slot initfunc this slot can hold an optional function which has a pdmpModel
-# #' as only parameter and returnes an object of class \code{pdmpModel}. 
-# #' This function is called automatically when a new object is created by 
-# #' \code{new} or when it is reinitialized by \code{initialize(obj)} 
-# #' or before starting a simulation with \code{sim(obj, initialize = TRUE)}.
+#' algorithm used, e.g. "lsodar" from package \pkg{deSolve}. The solver should 
+#' include root-finding.
+#' @slot initfunc this slot can hold an optional function which has a pdmpModel
+#' as only parameter and returnes an object of class \code{pdmpModel}.
+#' This function is called automatically when a new object is created by
+#' \code{new} or when it is reinitialized by \code{initialize(obj)}
+#' or before starting a simulation with \code{sim(obj, initialize = TRUE)}.
 #' @slot out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this slot.
 #'
@@ -101,11 +101,24 @@ setClass("pdmpModel",
                       dynfunc  = "function", 
                       jumpfunc = "function", 
                       ratefunc = "function",
+                      initfunc = "functionOrNULL",
                       solver   = "functionOrcharacter",
                       out      = "ANY"
                       )
          )
 
+
+setMethod("initialize", signature(.Object="pdmpModel"),
+          function(.Object, ...) {
+            .Object <- callNextMethod()
+            .Object@out <- NULL
+            if (is.function(.Object@initfunc)) {
+              initfunc                <- .Object@initfunc
+              .Object                 <- initfunc(.Object)
+            }
+            invisible(.Object)
+          }
+)
 
 #' @rdname pdmpModel-class
 #' @param obj pdmpModel object that is being built. 
@@ -134,13 +147,13 @@ setClass("pdmpModel",
 #' \code{ratefunc}. The value for \code{jtype} will be chosen randomly during
 #' simulation, depending ot the rates given in \code{ratefunc}.
 #' @param solver a function or a character string specifying the numerical 
-#' algorithm used, e.g. "lsoda", "rk4" or "euler" from package deSolve. 
-#' The default solver is "lsodar".
-# #' @param initfunc this parameter can hold an optional function which has a 
-# #' pdmpModel as only parameter and returnes a (modified) pdmp. 
-# #' This function is called automatically when a new object is created by 
-# #' \code{new} or when it is reinitialized by \code{initialize(obj)} or before 
-# #' starting a simulation with \code{sim(obj, initialize = TRUE)}.
+#' algorithm used, e.g. "lsodar" from package \pkg{deSolve}. The solver should
+#' include root-finding.
+#' @param initfunc this parameter can hold an optional function which has a
+#' pdmpModel as only parameter and returnes a (modified) pdmp.
+#' This function is called automatically when a new object is created by
+#' \code{new} or when it is reinitialized by \code{initialize(obj)} or before
+#' starting a simulation with \code{sim(obj, initialize = TRUE)}.
 #' @param out NULL or an object of class deSolve. If a simulation is done with 
 #' method \code{\link{sim}}, the result will be stored in this parameter.
 #' @importFrom deSolve lsodar
@@ -154,12 +167,13 @@ pdmpModel <- function(obj = NULL,
                       init = c(0, 0), 
                       parms = list(), 
                       discStates = list(0),
+                      initfunc = NULL,
                       out = NULL, 
                       solver = "lsodar") {
   if (is(obj, "pdmpModel")) {
     obj <- initialize(obj)
   } else {
-    obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc,
+    obj <- new("pdmpModel", dynfunc = dynfunc, jumpfunc = jumpfunc, initfunc = initfunc,
                descr = descr, ratefunc = ratefunc, times = times, init = init, 
                parms = parms, solver = solver, out = out, discStates = discStates)
   }
