@@ -1,9 +1,7 @@
 #======== todo =================================================================
 #t2 simecol slot "inputs" importieren?
 #t2 auch ... einfügen wie in simecol accessors (siehe ?parms)
-#t3 Die Hilfe ist sehr lang, aber wenn ich weniger dokumentiere, kommen Fehler
 #t3 wenn discStates geändert, verify aufrufen
-#t3 warum muss ich eine generic für parms<- schreiben?
 
 #======== Description ===========
 
@@ -33,70 +31,48 @@ NULL
 #========= setGenerics ===========
 
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("out", function(obj, value) standardGeneric("out"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("out<-", function(obj, value) standardGeneric("out<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("dynfunc", function(obj) standardGeneric("dynfunc"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("dynfunc<-", function(obj, value) standardGeneric("dynfunc<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("ratefunc", function(obj) standardGeneric("ratefunc"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("ratefunc<-", function(obj, value) standardGeneric("ratefunc<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("jumpfunc", function(obj) standardGeneric("jumpfunc"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("jumpfunc<-", function(obj, value) standardGeneric("jumpfunc<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("descr", function(obj) standardGeneric("descr"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("descr<-", function(obj, value) standardGeneric("descr<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("discStates", function(obj) standardGeneric("discStates"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("discStates<-", function(obj, value) standardGeneric("discStates<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("parms", function(obj, value) standardGeneric("parms")) 
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("parms<-", function(obj, value) standardGeneric("parms<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("init", function(obj, value) standardGeneric("init"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("init<-", function(obj, value) standardGeneric("init<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("solver", function(obj, value) standardGeneric("solver"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("solver<-", function(obj, value) standardGeneric("solver<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("times", function(obj, value) standardGeneric("times"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("times<-", function(obj, value) standardGeneric("times<-"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("initfunc", function(obj, value) standardGeneric("initfunc"))
 #' @rdname pdmp-accessors
-#' @export
 setGeneric("initfunc<-", function(obj, value) standardGeneric("initfunc<-"))
 
 #======= Getters ==========
