@@ -3,6 +3,7 @@
 #v2 plotTimes: parameter nolo (= number of labelled outliers) umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
+#t1 Hilfe für plot.multSimData wird nicht angezeigt
 
 #' @include multSimData.R
 NULL
@@ -520,22 +521,27 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
 #' default value for a \code{multSim} object \code{x} gives informations about 
 #' parameters and the initial values.
 #' @param bins integer. Number of bins for the histogram of the continous variables.
+#' @param ggplot boolean value. If \code{ggplot = TRUE}, the plot is generated
+#'   with methods from package \pkg{ggplot2}. Note that in this case, package
+#'   \pkg{gridExtra} has to be installed. If \code{ggplot = FALSE}, base methods
+#'   are used to generate the plot.
 #' @param ... additional parameters passed to the default method of 
-#' \code{\link[ggplot2]{geom_histogram}}
+#' \code{\link[ggplot2]{geom_histogram}} (if \code{ggplot = TRUE}) or 
+#' \code{\link[graphics]{hist}} (if \code{ggplot = FALSE}).
 #' @name hist
 #' @examples 
 #' data("simplePdmp")
 #' ms <- multSim(simplePdmp, seeds = 1:10)
 #' hist(ms, t = 10)
 #' hist(getMultSimData(ms), t = 10, density = 10)
-#' @note Package \pkg{gridExtra} is needed for this method. If you don't 
-#' have installed it, an alternative plot will be returned.
+# @note Package \pkg{gridExtra} is needed for this method. If you don't 
+# have installed it, an alternative plot will be returned.
 #' @importFrom graphics hist par plot.new layout barplot text mtext
 #' @importFrom grDevices dev.list dev.off gray.colors
 #' @importFrom ggplot2 position_stack geom_histogram geom_bar theme
 #' @importFrom ggplot2 ggplot element_blank facet_wrap aes element_line
 #' @export
-hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
+hist.multSimData <- function(x, t, bins = 15, main, sub, ggplot = FALSE, ...){
   
   if(missing(t)) t <- unique(x$time)
   if(length(t) > 1) 
@@ -558,7 +564,7 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
   discData$value <- factor(discData$value)
   discData$type <- ""
 
-  if(requireNamespace("gridExtra", quietly = TRUE)){
+  if(ggplot & requireNamespace("gridExtra", quietly = TRUE)){
     plot <- ggplot2::ggplot(data = NULL) + 
       ggplot2::theme_bw() +
       ggplot2::theme(axis.title = ggplot2::element_blank())
@@ -596,8 +602,8 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     
     grid::grid.newpage()
     grid::grid.draw(p)
-    #return(invisible(p))
-    return(p)
+    return(invisible(p))
+    #return(p)
   } 
   else{
     n <- unique(contData$variable)
@@ -606,8 +612,6 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     discData <- dplyr::summarise(discData, count = n())
     discData$value <- as.ordered(discData$value)
     
-    if(!is.null(grDevices::dev.list())) grDevices::dev.off()
-    graphics::plot.new()
     opar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(opar))
     graphics::par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
@@ -698,8 +702,6 @@ density.multSimData <- function(x, t, main, sub, ...){
   d <- unique(discData$variable)
   simnr <- length(unique(x$seed))
   
-  if(!is.null(grDevices::dev.list())) grDevices::dev.off()
-  plot.new()
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(oma = c(0,1,4,0))
