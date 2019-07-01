@@ -325,10 +325,12 @@ summarise_at.multSimData <- function(.tbl, .vars, .funs, ...){
 #' \code{\link[ggplot2]{geom_smooth}} are possible. Other values are ignored.
 #' @param ... Additional arguments for the function calls in funs.
 #' @examples 
+#' \dontrun{
 #' data("toggleSwitch")
-#' ms <- multSim(toggleSwitch, seeds = 1:10)
+#' ms <- multSim(toggleSwitch, seeds = 1:20)
 #' plotStats(ms, vars = c("fA", "fB"), funs = "mean")
 #' plotStats(ms, vars = "fB", funs = c("min", "max", "mean"))
+#' }
 #' @seealso \link{summarise_at} to get the calculated values of the statistics
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot aes geom_line geom_smooth theme

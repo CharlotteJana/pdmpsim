@@ -1,11 +1,10 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.0-6
-Date: 2018-11-21
-Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
-Author: Volkmar Liebscher [aut, cre], 
-  Charlotte Jana[aut]
+Version: 1.0-7
+Date: 2019-06-28
+Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  
+             person("Charlotte", "Jana", role = "aut"))
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic 
     markov processes (PDMPs). The package contains methods to simulate, store multiple 

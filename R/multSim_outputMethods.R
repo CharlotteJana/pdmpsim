@@ -7,7 +7,7 @@ NULL
 
 #' @importFrom utils str
 #' @importFrom stats median
-#' @export
+#' @rawNamespace S3method(print, multSim)
 print.multSim <- function(x, ...){
   cat("An S3-object of class", class(x)[1], "with elements \n\n")
   names <- names(x)
