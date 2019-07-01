@@ -9,7 +9,7 @@
 \usage{
 plotSeeds(x, seeds, ...)
 
-\method{plotSeeds}{multSimData}(x, seeds = NULL, ...)
+\method{plotSeeds}{multSimData}(x, seeds = NULL, ylim, ...)
 
 \method{plotSeeds}{multSim}(x, seeds, ...)
 }
@@ -20,6 +20,8 @@ plotSeeds(x, seeds, ...)
 is a \code{\link{multSimData}} object.}
 
 \item{...}{additional arguments, currently not used.}
+
+\item{ylim}{a length-2 numeric defining the scale of the y-axis.}
 }
 \description{
 This method plots the simulation for every seed in the input. 

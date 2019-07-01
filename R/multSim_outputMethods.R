@@ -7,7 +7,7 @@ NULL
 
 #' @importFrom utils str
 #' @importFrom stats median
-#' @export
+#' @rawNamespace S3method(print, multSim)
 print.multSim <- function(x, ...){
   cat("An S3-object of class", class(x)[1], "with elements \n\n")
   names <- names(x)
@@ -97,7 +97,7 @@ density.multSim <- function(x, t, main, ...){
 plotSeeds.multSim <- function(x, seeds, ...){
   if(missing(seeds)) seeds <- x$seeds
   data <- getMultSimData(x, seeds = seeds)
-  plot <- plotSeeds(data, ...) + 
+  plot <- plotSeeds(data, seeds, ...) + 
     ggplot2::labs(title = x$model@descr,
                   subtitle = format(x$model, short = FALSE, collapse = "\n",
                                     slots = c("init", "parms")))
@@ -143,10 +143,10 @@ plotStats.multSim <- function(x, vars, funs, ...){
  return(plot)
 }
 
-#' @importFrom dplyr summarise
+#' @rdname plot
+#' @method plot multSim
 #' @export
 plot.multSim <- function(x, title, subtitle, ...){
-  
   # x <- removeSeeds(x)
   data <- getMultSimData(x)
   

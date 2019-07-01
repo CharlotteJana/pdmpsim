@@ -1,17 +1,46 @@
 #======== todo =================================================================
 #v2 density: in plotDensity umbenennen?
+#v2 plotTimes: parameter nolo (= number of labelled outliers) umbenennen?
 #t3 density: warum muss stats in imports und darf nicht zu suggest?
 #t3 hist und density für multSimCsv
-#t1 Dokmentation anpassen, so dass sie auch auf mjpModel-plots passt
+#t1 Dokumentation anpassen, so dass sie auch auf mjpModel-plots passt
+#t1 Hilfe für plot.multSimData wird nicht angezeigt
 
 #' @include multSimData.R
 NULL
 
 #========== plot ===============
 
+#' Plot a 2d heatmap for multiple simulations of PDMPs
+#' 
+#' This method plots multiple simulations of PDMPs.
+#' Values of the continous variables are plotted in a 2d heatmap
+#' whereas values of discrete variables are plotted as functions.
+#' 
+#' @param x an object of class \code{\link{multSim}} or
+#' \code{\link{multSimData}}
+#' @param title title of the plot
+#' @param subtitle subtitle of the plot
+#' @param contPlot character vector determining the type of the plot
+#' for the continous variables. Possible values are 'bin2d' standing for 
+#' geom_bin2d and 'density_2d' standing for geom_density_2d.
+#' Defaults to 'bin2d'.
+#' @param discPlot character vector determining the type of the plot
+#' for the discrete variables. Possible values are 'line' standing for 
+#' geom_line and 'smooth' standing for geom_smooth. Defaults to 'smooth'.
+#' @param ... optional parameters to geom_bin2d resp. geom_density_2d 
+#' and geom_line resp. geom_smooth
+#' @seealso \code{\link{plotSeeds}}, \code{\link{plotTimes}}, 
+#' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}} 
+#' for other plot functions
+#' @examples
+#' data("simplePdmp")
+#' ms <- multSim(simplePdmp, 1:20)
+#' @name plot
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot aes geom_bin2d stat_density_2d geom_line
 #' @importFrom ggplot2 geom_smooth scale_color_discrete labs facet_wrap
+#' @method plot multSimData
 #' @export
 plot.multSimData <- function(x, title = NULL, subtitle = NULL, 
                              discPlot = "smooth", contPlot = "bin2d", ...){
@@ -78,6 +107,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
 #' @param x object of class \code{\link{multSim}} or \code{\link{multSimData}}.
 #' @param seeds vector with seed numbers to plot. This is optional if \code{x}
 #' is a \code{\link{multSimData}} object.
+#' @param ylim a length-2 numeric defining the scale of the y-axis.
 #' @param ... additional arguments, currently not used.
 #' @note A maximal number of 4 seeds can be plotted. 
 #' The method requires the package \pkg{tidyr}.
@@ -97,7 +127,7 @@ plotSeeds <- function(x, seeds, ...){
 
 #' @rdname plotSeeds
 #' @export
-plotSeeds.multSimData <- function(x, seeds = NULL, ...){
+plotSeeds.multSimData <- function(x, seeds = NULL, ylim, ...){
   
   if(!requireNamespace("tidyr", quietly = TRUE)) {
     stop("Pkg 'tidyr' needed for this function to work. 
@@ -106,10 +136,14 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   if(!is.multSimData(x)){
     stop("Parameter x has to be of type 'multSimData'.")
   }
+  
   if(!is.null(seeds)){
     x <- subset(x, seed %in% seeds)
   }
-  if(length(unique(x$seed)) > 4){
+  else{
+    seeds <- unique(x$seed)
+  }
+  if(length(seeds) > 4){
     stop("To many seeds to plot. A maximum of 4 seeds can be plotted.")
   }
   
@@ -132,6 +166,13 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   discVarNames <- sort(levels(discData$variable))
   discData <- tidyr::spread(discData, variable, value)
 
+  # define scale of y-axis
+  if(missing(ylim))
+    ylim <- c(min(contData$value), max(contData$value))
+  height <- abs(ylim[2] - ylim[1])/20
+  min <- ylim[1]-(length(discVarNames)+0.5)*height
+  max <- ylim[2]
+  
   # define colors for discrete variables
   color_mapping <- function(index, value, states){
     discVar <- discVarNames[index]
@@ -156,7 +197,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   #---------- Create Plot ---------------------
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time)) + 
-    ggplot2::coord_cartesian(xlim = c(0, max(x$time, 1))) +   # zoom in
+    ggplot2::coord_cartesian(xlim = c(0, tail(x$time, 1)), ylim = c(min,max)) +   # zoom in
     ggplot2::labs(y = "", x = "time")  
   
   #** Plot discrete variables
@@ -176,9 +217,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
   # }
   
   #** Plot discrete variables
-  min <- ifelse(nrow(contData) == 0, 0, min(contData$value))
-  max <- ifelse(nrow(contData) == 0, 1, max(contData$value))
-  height <- abs(max - min)/20
+  
   discValues <- NULL
   discCols <- NULL
   for(i in seq_along(discVarNames)){
@@ -193,10 +232,9 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
                                        ggplot2::aes_string(
          fill = paste0("col_", discVarNames[i]), 
          xmin = "time", xmax = "time+1", 
-         ymin = min - i*height, ymax = min - (i - 1)*height))
+         ymin = ylim[1] - (i+0.5)*height, ymax = ylim[1] - (i - 0.5)*height))
   }
   
-  #t2: ifelse fehlerhaft
   plot <- plot + ggplot2::scale_fill_identity(
      "discrete\nstates", guide = "legend", breaks = discCols,
     labels = printVect(discValues,collapse = NULL)
@@ -216,9 +254,10 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
       values = cols[seq_along(levels(contData$variable))])
   
   # facet_wrap
-  plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
-  #plot <- plot + facet_grid(variable ~ seed)
-  
+  if(length(seeds) > 1){
+    plot <- plot + ggplot2::facet_wrap( ~ seed, ncol = 2)
+    #plot <- plot + facet_grid(variable ~ seed)
+  }
   return(plot)
 }
 
@@ -239,7 +278,7 @@ plotSeeds.multSimData <- function(x, seeds = NULL, ...){
 #' @return a \code{tbl} with the applied function values
 #' @examples 
 #' data("simplePdmp")
-#' md <- getMultSimData(multSim(simplePdmp, 1:20))
+#' md <- getMultSimData(multSim(simplePdmp, 1:10))
 #' summarise_at(md, .vars = c("f", "d"), .funs = c("min", "max"))
 #' summarise_at(md, .vars = "f", .funs = dplyr::funs(10 * quantile(., 0.75)))
 #' @seealso \link[dplyr]{summarise_at} for the original method, 
@@ -285,10 +324,12 @@ summarise_at.multSimData <- function(.tbl, .vars, .funs, ...){
 #' \code{\link[ggplot2]{geom_smooth}} are possible. Other values are ignored.
 #' @param ... Additional arguments for the function calls in funs.
 #' @examples 
+#' \dontrun{
 #' data("toggleSwitch")
-#' ms <- multSim(toggleSwitch, seeds = 1:10)
+#' ms <- multSim(toggleSwitch, seeds = 1:20)
 #' plotStats(ms, vars = c("fA", "fB"), funs = "mean")
 #' plotStats(ms, vars = "fB", funs = c("min", "max", "mean"))
+#' }
 #' @seealso \link{summarise_at} to get the calculated values of the statistics
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot aes geom_line geom_smooth theme
@@ -481,22 +522,27 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
 #' default value for a \code{multSim} object \code{x} gives informations about 
 #' parameters and the initial values.
 #' @param bins integer. Number of bins for the histogram of the continous variables.
+#' @param ggplot boolean value. If \code{ggplot = TRUE}, the plot is generated
+#'   with methods from package \pkg{ggplot2}. Note that in this case, package
+#'   \pkg{gridExtra} has to be installed. If \code{ggplot = FALSE}, base methods
+#'   are used to generate the plot.
 #' @param ... additional parameters passed to the default method of 
-#' \code{\link[ggplot2]{geom_histogram}}
+#' \code{\link[ggplot2]{geom_histogram}} (if \code{ggplot = TRUE}) or 
+#' \code{\link[graphics]{hist}} (if \code{ggplot = FALSE}).
 #' @name hist
 #' @examples 
 #' data("simplePdmp")
 #' ms <- multSim(simplePdmp, seeds = 1:10)
 #' hist(ms, t = 10)
 #' hist(getMultSimData(ms), t = 10, density = 10)
-#' @note Package \code{\pkg{gridExtra}} is needed for this method. If you don't 
-#' have installed it, an alternative plot will be returned.
+# @note Package \pkg{gridExtra} is needed for this method. If you don't 
+# have installed it, an alternative plot will be returned.
 #' @importFrom graphics hist par plot.new layout barplot text mtext
 #' @importFrom grDevices dev.list dev.off gray.colors
 #' @importFrom ggplot2 position_stack geom_histogram geom_bar theme
 #' @importFrom ggplot2 ggplot element_blank facet_wrap aes element_line
 #' @export
-hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
+hist.multSimData <- function(x, t, bins = 15, main, sub, ggplot = FALSE, ...){
   
   if(missing(t)) t <- unique(x$time)
   if(length(t) > 1) 
@@ -520,7 +566,7 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
   if(nrow(discData) > 0)
     discData$type <- ""
 
-  if(requireNamespace("gridExtra", quietly = TRUE)){
+  if(ggplot & requireNamespace("gridExtra", quietly = TRUE)){
     plot <- ggplot2::ggplot(data = NULL) + 
       ggplot2::theme_bw() +
       ggplot2::theme(axis.title = ggplot2::element_blank())
@@ -558,8 +604,8 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     
     grid::grid.newpage()
     grid::grid.draw(p)
-    #return(invisible(p))
-    return(p)
+    return(invisible(p))
+    #return(p)
   } 
   else{
     n <- unique(contData$variable)
@@ -568,8 +614,6 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ...){
     discData <- dplyr::summarise(discData, count = n())
     discData$value <- as.ordered(discData$value)
     
-    if(!is.null(grDevices::dev.list())) grDevices::dev.off()
-    graphics::plot.new()
     opar <- graphics::par(no.readonly = TRUE)
     on.exit(graphics::par(opar))
     graphics::par(oma = c(0,1,4,0)) #mfrow = c(1,n+1))
@@ -661,8 +705,6 @@ density.multSimData <- function(x, t, main, sub, ...){
   d <- unique(discData$variable)
   simnr <- length(unique(x$seed))
   
-  if(!is.null(grDevices::dev.list())) grDevices::dev.off()
-  plot.new()
   opar <- par(no.readonly = TRUE)
   on.exit(par(opar))
   par(oma = c(0,1,4,0))

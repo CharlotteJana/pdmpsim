@@ -107,10 +107,6 @@ value of the other slots is changed via <-.
 See \code{\link{pdmpBorder-accessors}} for further informations.
 }
 \examples{
-\dontshow{
-  require("simecol")
-}
-
 data("simplePdmp") # load object of class pdmpModel
 
 #### simulations
@@ -142,6 +138,7 @@ str(simplePdmp) # only the simulation result, the pdmpModel object is lost
 initModel <- pdmpModel(
   descr = "a model with random initial values",
   init = c(f = 0, d = 1),
+  discStates = list(d = c(-1, 1)),
   initfunc = function(pdmp){
     set.seed(NULL) # necessary to be not affected by parameter 'seed'
     init(pdmp) <- c("f" = runif(1, min = 1, max = 100), "d" = 1) 
@@ -155,7 +152,6 @@ initModel <- pdmpModel(
 print(init(initModel))
 print(head(out(sim(initModel, seed = 2, initialize = TRUE))))
 print(head(out(sim(initModel, seed = 5, initialize = TRUE))))
-
 }
 \seealso{
 function \code{\link{multSim}} or \code{\link{multSimCsv}} 

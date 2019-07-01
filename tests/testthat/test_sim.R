@@ -27,33 +27,6 @@ test_that("parameter outSlot behaves correctly", {
   expect_s3_class(out, "deSolve")
 })
 
-test_that("slot 'main' has no impact on the simulation", {
-
-  out1 <- sim(obj, outSlot = FALSE, seed = 1)
-  obj@main <- function(time, init, parms) list(c(0, 0))
-  out2 <- sim(obj, outSlot = FALSE, seed = 1)
-  expect_identical(out1, out2)
-})
-
-test_that("slot 'equations' has no impact on the simulation", {
-
-  out1 <- sim(obj, outSlot = FALSE, seed = 1)
-  obj@equations <- list(function(time, init) time*init[1])
-  out2 <- sim(obj, outSlot = FALSE, seed = 1)
-  expect_identical(out1, out2)
-})
-
-test_that("slot 'observer' has no impact on the simulation", {
-
-  out1 <- sim(obj, outSlot = FALSE, seed = 1)
-  obj@observer <- function(state){
-    print(state)
-    return(-state)
-  }
-  out2 <- sim(obj, outSlot = FALSE, seed = 1)
-  expect_identical(out1, out2)
-})
-
 test_that("if initialize = TRUE, slot 'initfunc' is called before sim", {
 
   model1 <- sim(obj, seed = 1)

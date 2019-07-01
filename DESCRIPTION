@@ -1,11 +1,11 @@
 Package: pdmpsim
 Type: Package
 Title: Simulate Piecewise Deterministic Markov Processes
-Version: 1.1-28
-Date: 2018-11-21
-Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  person("Charlotte", "Jana", role = "aut"))
-Author: Volkmar Liebscher [aut, cre], 
-  Charlotte Jana[aut]
+Version: 1.1-29
+Date: 2019-07-01
+Authors@R: c(person("Volkmar", "Liebscher", role = c("aut", "cre"), email = "volkmar.liebscher@uni-greifswald.de"),  
+             person("Charlotte", "Jana", role = "aut"),
+             person("Katrin", "Wagels", role = "aut"))
 Maintainer: Volkmar Liebscher <volkmar.liebscher@uni-greifswald.de>
 Description: Simulate certain stochastic processes  known as piecewise deterministic Markov processes (PDMPs) and Markov jump processes (MJPs). The package contains methods to simulate, store multiple simulations, calculate some statistics on them, plot methods and a function to calculate the generator of a PDMP. The PDMPs can have multiple discrete and continous variables, but are not allowed to have borders or a varying number of continous variables (the number should be independent of the state of the discrete variable).
 License: GPL(>= 2)
@@ -14,13 +14,14 @@ URL: https://github.com/CharlotteJana/pdmpsim
 BugReports: https://github.com/CharlotteJana/pdmpsim/issues
 LazyData: true
 NeedsCompilation: true
-Depends: simecol, 
-    methods
+Depends: R (>= 2.10), methods
 Imports: deSolve,
     dplyr,
     ggplot2,
     LaF,
-    reshape2
+    reshape2,
+    simecol,
+    stats
 Suggests: Deriv,
     ggrepel,
     gridExtra,

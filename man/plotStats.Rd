@@ -35,10 +35,12 @@ can be specified individually with the parameter \code{funs}. The plot is
 created with \pkg{ggplot2} and can be modified afterwards.
 }
 \examples{
+\dontrun{
 data("toggleSwitch")
-ms <- multSim(toggleSwitch, seeds = 1:10)
+ms <- multSim(toggleSwitch, seeds = 1:20)
 plotStats(ms, vars = c("fA", "fB"), funs = "mean")
 plotStats(ms, vars = "fB", funs = c("min", "max", "mean"))
+}
 }
 \seealso{
 \link{summarise_at} to get the calculated values of the statistics

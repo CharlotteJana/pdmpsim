@@ -1,6 +1,7 @@
 #======== todo =================================================================
 #s1 toggleSwitch: references
 #t2: SIRstoch: implement
+#tv2 toggleSwitch: k01 und k10 zusammenfassen?
 
 #######################################################################
 

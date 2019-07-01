@@ -1,5 +1,6 @@
 #======== todo =================================================================
 #t1 document generics
+#t1 is it necessary to importMethodsFrom simecol?
 #' @name mjp-accessors
 NULL
 
@@ -23,10 +24,10 @@ NULL
 #' @param obj an object of class \code{\link{mjpModel}}
 #' @param value the value that shall be set
 #'
-#' @importMethodsFrom simecol "times" "times<-" "solver" "solver<-"
-#' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms" "parms<-"
+# #' @importMethodsFrom simecol "times" "times<-" "solver" "solver<-" initfunc" "initfunc<-"
+# #' @importMethodsFrom simecol "init" "init<-" "out" "out<-" "parms" "parms<-"
 #' @importMethodsFrom simecol "main" "main<-"  "equations" "equations<-" 
-#' @importMethodsFrom simecol "observer" "observer<-" "initfunc" "initfunc<-"
+#' @importMethodsFrom simecol "observer" "observer<-"
 #' @include pdmp_class.R pdmp_accessors.R mjp_class.R
 #' @name mjp-accessors
 #' @seealso Class definition \code{\link{mjpModel}}

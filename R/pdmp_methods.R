@@ -1,5 +1,5 @@
 #======== todo =================================================================
-#t1 Plot methode wird nicht exportiert. Warum nicht???
+#t2 das Bsp für plot sollte laufen: plot(sim, ggplot = TRUE, seed = 1) + ggplot2::facet_grid(variable ~ seed)
 
 #' @include pdmp_class.R
 NULL
@@ -172,7 +172,7 @@ setMethod(f = "print",
 
 #' Plot a PDMP
 #' 
-#' This is method plots single simulations of
+#' This method plots single simulations of
 #' piecewise deterministic markov processes defined as
 #' \code{\link{pdmpModel}}. There are also other plot
 #' methods available that use \pkg{ggplot2}. 
@@ -180,27 +180,36 @@ setMethod(f = "print",
 #' @param x an object of class pdmpModel with a simulation 
 #' stored in slot \code{out}
 #' @param y ignored
-#' @param ... optional plotting parameters
+#' @param ggplot boolean variable. If TRUE, a different plot 
+#' will be created that uses package \pkg{ggplot2}.
+#' @param ... optional parameters to plot method
 #' @examples 
 #' data("toggleSwitch")
 #' sim <- sim(toggleSwitch, seed = 1)
 #' plot(sim, col = "red", lwd = 2)
-#' 
-#' # Alternative: plotSeeds
-#' msim <- multSim(toggleSwitch, seeds = 1)
-#' plot <- plotSeeds(msim)
-#' plot + ggplot2::facet_grid(variable ~ seed)
+#' plot(sim, ggplot = TRUE)
 #' @seealso \code{\link{plotSeeds}} for another plot function
 #' to plot single simulations
 #' @importFrom graphics title
+#' @name plot-pdmpModel
+#' @method plot pdmpModel
 #' @export
-setMethod("plot", signature(x="pdmpModel", y="missing"),
-          function(x, y, ...) {
+plot.pdmpModel <- function(x, y , ggplot = FALSE, ...) {
             if (is.null(x@out))
               stop("Please simulate the model before plotting", call. = FALSE)
-            par(oma = c(0,0,2,0))
-            do.call("plot", alist(x@out, ...))
-            graphics::title(x@descr, line = -0.3, outer = TRUE)
+            if(!ggplot){
+              par(oma = c(0,0,2,0))
+              do.call("plot", alist(x@out, ...))
+              graphics::title(x@descr, line = -0.3, outer = TRUE)
+            }
+            else{
+              d <- getMultSimData(x)
+              plotSeeds(d, ...)
+            }
           }
-)
 
+#' @rdname plot-pdmpModel
+#' @export
+setMethod("plot", signature(x = "pdmpModel", y = "missing"), plot.pdmpModel)
+
+# setMethod("plot", signature(x="pdmpModel", y="missing"),

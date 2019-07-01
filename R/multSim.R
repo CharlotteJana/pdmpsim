@@ -1,5 +1,5 @@
 #======== todo =================================================================
-#t2 multSim besser testen
+#t2 multSim besser testen (auch mit ..., z.B. outrate = T setzen)
 
 #' @include pdmp_class.R pdmp_sim.R
 NULL
@@ -20,8 +20,9 @@ NULL
 #' @param allowDeletion logical. If true, seeds with existing simulations 
 #' stored in \code{ms} will be deleted in case they don't appear in 
 #' the new vector of seeds.
+#' @param ... additional parameters for method \code{\link{sim}}
 #' @seealso There are several plot methods for objects of class \code{multSim}:
-#' \code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+#' \code{\link[=plot.multSim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 #' \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 #' @return object of class \code{multSim} containing simulations for all 
 #' given seeds
@@ -58,7 +59,7 @@ NULL
 #' plot(m2$outputList[[15]])
 #' @export
 multSim <- function(obj, seeds, filename = NULL, 
-                    ms = NULL, allowDeletion = FALSE){
+                    ms = NULL, allowDeletion = FALSE, ...){
 
   # check if filename ends with ".rda"
   if(!is.null(filename) && 
@@ -104,7 +105,7 @@ multSim <- function(obj, seeds, filename = NULL,
   # compare seeds and simulate
   if(!identical(seeds, ms$seeds))
     message("Parameter \'ms$seeds\' has changed.")
-  ms <- calcSeeds(ms, seeds, filename, allowDeletion) #simulation
+  ms <- calcSeeds(ms, seeds, filename, allowDeletion, ...) #simulation
 
 
   # return
@@ -119,7 +120,7 @@ multSim <- function(obj, seeds, filename = NULL,
 #'
 #' @keywords internal
 #' @seealso multSim
-calcSeeds <- function(ms, seeds, filename = NULL, allowDeletion = FALSE){
+calcSeeds <- function(ms, seeds, filename = NULL, allowDeletion = FALSE, ...){
 
   if(!is.null(filename) && 
      substr(filename, nchar(filename) - 3, nchar(filename)) != ".rda"){
@@ -187,7 +188,7 @@ calcSeeds <- function(ms, seeds, filename = NULL, allowDeletion = FALSE){
 
         # simulation
         ms$timeList[[i]] <- system.time( # stores time needed for simulation
-          ms$outputList[[i]] <- sim(ms$model, seed = seeds[i], outSlot = FALSE)
+          ms$outputList[[i]] <- sim(ms$model, seed = seeds[i], outSlot = FALSE, ...)
         )
       }
       if(i == length(seeds)) message("")
@@ -214,7 +215,7 @@ calcSeeds <- function(ms, seeds, filename = NULL, allowDeletion = FALSE){
 #'
 #' @keywords internal
 #' @seealso multSim
-expandTimes <- function(ms, to, filename = NULL){
+expandTimes <- function(ms, to, filename = NULL, ...){
   if(to <= ms$model@times["to"]) 
     stop("Value \"to\" has to be larger than ", ms$model@times["to"],".")
 
@@ -252,7 +253,7 @@ expandTimes <- function(ms, to, filename = NULL){
         newMS$timeList[[i]] <- system.time( # stores time needed for simulation
           newMS$outputList[[i]] <- sim(newMS$model, 
                                        seed = newMS$seeds[i], 
-                                       outSlot = FALSE)
+                                       outSlot = FALSE, ...)
         )
       }
       if(i == length(newMS$seeds)) message("")

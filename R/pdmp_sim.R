@@ -1,8 +1,12 @@
 #======== todo =================================================================
+#t2 In Bspdatei ist ein Bsp mit Slot initfunc, das nicht funktioniert
 #t3 I = survival function?
+#t3 eventuell auch dynfunc, ratefunc, etc ohne parms zulassen?
 
 #' @include pdmp_class.R pdmp_methods.R
 NULL
+
+setGeneric("sim", function(obj, initialize = TRUE, ...) standardGeneric("sim"))
 
 ##### method sim ####
 
@@ -48,7 +52,6 @@ NULL
 #' @seealso function \code{\link{multSim}} or \code{\link{multSimCsv}} 
 #' for multiple simulations, ... for plot and summary methods of the simulation.
 #' @aliases sim
-#' @importMethodsFrom simecol sim
 #' @importFrom simecol fromtoby
 #' @importFrom stats rexp
 #' @export
@@ -105,7 +108,7 @@ setMethod("sim", "pdmpModel", function(obj, initialize = FALSE,
   }
 
   # events: this is needed for solver lsodar
-  events <- list(func = eventfunc, root = TRUE, rootfunc = rootfunc)
+  events <- list(func = eventfunc, root = TRUE)
 
   # inity = initial state for y = (obj@init, I₀) with I₀ ~ -exp
   inity <- c(obj@init, -rexp(n = 1))

@@ -8,7 +8,6 @@
 #' @param value the value that shall be set
 #' @include pdmpBorder_class.R pdmpBorder_methods.R
 #' @name pdmpBorder-accessors
-#' @importFrom simecol "out<-"
 NULL
 
 #========= setGenerics ===========

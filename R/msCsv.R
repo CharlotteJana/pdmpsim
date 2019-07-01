@@ -8,8 +8,7 @@
 #t3 loadMultSimCsv: wie verlinke ich das LaF-Manual?
 #t3 Wäre der parameter uniqueSeeds auch bei anderen methoden sinnvoll?
 #t3 uniqueSeeds getestet?
-#t3 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
-#t2 absolute paths in msCsv$csvlist?
+#t2 examples für multSimCsv, loadMultSimCsv, multSim2multSimCsv
 
 #------------------- multSimCsv --------------------------
 
@@ -115,9 +114,7 @@
 #' \code{\link{summarize_at}}, \code{\link{hist}}, \code{\link{density}} 
 #' and \code{\link{plotSeeds}} on the data.frame created with 
 #' \code{getMultSimData}. You can also use \code{\link{plotTimes}} to find 
-#' the seed numbers of interesting outliers by setting an appropriate threshold.
-#' 
-#' \code{}
+#' the seed numbers of interesting outliers by setting parameter nolo suitably.
 #' @aliases multsimcsv
 #' @importFrom utils write.table
 #' @export
@@ -249,8 +246,6 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
 #' @param x either an object  of class \code{\link{multSimCsv}} or a character 
 #' string indicating the filename of a stored multSimCsv object, e. g. 
 #' "exampleModel_MultSimCsv.rda"
-#' @param dir directory where the csv files are stored. 
-#' Defaults to the working directory.
 #' @return object of class \code{\link{multSimCsv}}
 #' @note Opening the saved rda file directly with \code{\link{readRDS}} will 
 #' lead to a \code{multSimCsv} object with \code{lafList} set to NULL.
@@ -261,27 +256,27 @@ multSimCsv <- function(obj, seeds, prefix = format(obj, end = "__"),
 #' @aliases loadmultsimcsv
 #' @importFrom LaF laf_open
 #' @export
-loadMultSimCsv <- function(x, dir){
+loadMultSimCsv <- function(x){
   UseMethod("loadMultSimCsv", x)
 }
 
 #' @describeIn loadMultSimCsv create laf-links for multSimCsv objects
-loadMultSimCsv.multSimCsv <- function(x, dir = "."){
+loadMultSimCsv.multSimCsv <- function(x){
   x$lafList <- list(0)
   for(i in seq_along(x$csvList)){
     x$lafList[[i]] <- laf_open(x$datamodel, 
-      file = normalizePath(file.path(dir, x$csvList[[i]])))
+      file = x$csvList[[i]])
   }
   return(x)
 }
 
 #' @describeIn loadMultSimCsv load multSimCsv from rda file and create LaF links
-loadMultSimCsv.character <- function(x, dir = "."){
-  msCsv <- readRDS(file = normalizePath(file.path(dir, x)))
+loadMultSimCsv.character <- function(x){
+  msCsv <- readRDS(file = x)
   msCsv$lafList <- list(0)
   for(i in seq_along(msCsv$csvList)){
     msCsv$lafList[[i]] <- laf_open(msCsv$datamodel, 
-      file = normalizePath(file.path(dir, msCsv$csvList[[i]])))
+      file = msCsv$csvList[[i]])
   }
   return(msCsv)
 }

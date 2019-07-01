@@ -1,10 +1,8 @@
-#======== todo =================================================================
-#t1 tests ohne setwd und ohne dass der ordner testdata existieren muss
-
 #-------- simulate pdmps and save the results for testing -----------
 
-setwd(system.file("testdata", package = "pdmpsim", mustWork = TRUE))
-unlink('test*') # removes all files from working directory
+if(!dir.exists(paste0(tempdir(), "/pdmpsimtest")))
+  dir.create(paste0(tempdir(), "/pdmpsimtest"))
+unlink(paste0(tempdir(), "/pdmpsimtest/*"))
 
 simplePdmp <- pdmpModel(
   descr = "a simple pdmp",
@@ -19,6 +17,8 @@ simplePdmp <- pdmpModel(
 )
 
 suppressMessages(try({
-  multSimCsv(simplePdmp, seeds = 1:5, prefix = "test")
-  saveRDS(multSim(simplePdmp, seeds = 1:5), file = "test_MultSim.rda")
+  multSimCsv(simplePdmp, seeds = 1:5, 
+             prefix = paste0(tempdir(), "/pdmpsimtest/","test"))
+  saveRDS(multSim(simplePdmp, seeds = 1:5), 
+          file = paste0(tempdir(), "/pdmpsimtest/", "test_MultSim.rda"))
 }, silent = TRUE))

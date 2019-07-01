@@ -1,10 +1,10 @@
 #### todo
-# testen mit NAs in den Simulationen
+#t3 test with NAs in simulations
 
 context("calculations")
-setwd(system.file("testdata", package = "pdmpsim", mustWork = TRUE))
-ms <- readRDS("test_MultSim.rda")
-msCsv <- loadMultSimCsv("test_MultSimCsv.rda")
+
+ms <- readRDS(paste0(tempdir(), "/pdmpsimtest/test_MultSim.rda"))
+msCsv <- loadMultSimCsv(paste0(tempdir(), "/pdmpsimtest/test_MultSimCsv.rda"))
 
 #-------------- tests ----------------
 

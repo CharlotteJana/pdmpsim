@@ -5,7 +5,7 @@
 \title{Multiple simulations of a pdmp model}
 \usage{
 multSim(obj, seeds, filename = NULL, ms = NULL,
-  allowDeletion = FALSE)
+  allowDeletion = FALSE, ...)
 }
 \arguments{
 \item{obj}{object of class \code{\link{pdmpModel}} or one of its subclasses}
@@ -24,6 +24,8 @@ shall be expanded}
 \item{allowDeletion}{logical. If true, seeds with existing simulations 
 stored in \code{ms} will be deleted in case they don't appear in 
 the new vector of seeds.}
+
+\item{...}{additional parameters for method \code{\link{sim}}}
 }
 \value{
 object of class \code{multSim} containing simulations for all 
@@ -68,6 +70,6 @@ plot(m2$outputList[[15]])
 }
 \seealso{
 There are several plot methods for objects of class \code{multSim}:
-\code{\link[pdmpsim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
+\code{\link[=plot.multSim]{plot}}, \code{\link{plotSeeds}}, \code{\link{plotTimes}},
 \code{\link{plotStats}}, \code{\link{hist}} and \code{\link{density}}.
 }
