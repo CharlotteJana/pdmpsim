@@ -4,7 +4,7 @@
                                 κ112 = 5, κ113 = 3, κ131 = 3, κ132 = 0, κ121 = 0, κ123 = 1, κ212 = 5, κ213 = 3, κ231 = 3, κ232 = 0, κ221 = 0, 
                                 κ223 = 1 , κ312 = 4.5, κ313 = 3, κ331 = 3, κ332 = 0, κ321 = 0, κ323 = 1),
                   init = c(energy = 6, area = 1, modi = 2),
-                  borroot = function(t, x, parms){return(c(x[1]-2))}, 
+                  borroot = function(t, x, parms){return(c(x[1]-9))}, 
                   terroot = function(t, x, parms){return(c(x[1]))},
                   discStates = list(area = (c(1, 2, 3)), modi = c(1, 2, 3)),
                   dynfunc = function(t, x, parms) {

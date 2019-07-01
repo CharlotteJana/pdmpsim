@@ -49,7 +49,7 @@ and we have the modus change rates, differing in each area on the recent modus, 
 \eqn{κ112, κ113, κ131, κ132, κ121, κ123, κ212, κ213, κ231, κ232, κ221, κ223, κ312, κ313, κ331, κ332, κ321, κ323}. 
 The values of the parameters in this example are artificial and are not based on real data.}
 
-\item{\code{times}}{The simulations will start at time \code{t = 0} and end at the terminatin borderjump.}
+\item{\code{times}}{The simulations will start at time \code{t = 0} and end at the terminating borderjump.}
 
 \item{\code{borroot}}{Every value, which forces the process to jump into a fixed state is stored in the vector borroot.
 In this example it has dimension one and is the engery maximum of 2.}
@@ -57,8 +57,7 @@ In this example it has dimension one and is the engery maximum of 2.}
 \item{\code{terroot}}{Every value, which forces the process to terminate is stored in the vector terroot.
 In this example it has dimension one and is the energy minimum of 0.}
 
-\item{\code{borderfunc}}{The simulations will start at time \code{t = 0} and end at 
-\code{t = 10} with step length 0.01.}
+\item{\code{borderfunc}}{In case the process reaches a borroot (f.e. energy of 9), the borderfunc forces the process to jump into modus seach (=1).}
 }}
 
 \examples{
@@ -68,7 +67,7 @@ In this example it has dimension one and is the energy minimum of 0.}
                                 κ112 = 5, κ113 = 3, κ131 = 3, κ132 = 0, κ121 = 0, κ123 = 1, κ212 = 5, κ213 = 3, κ231 = 3, κ232 = 0, κ221 = 0, 
                                 κ223 = 1 , κ312 = 4.5, κ313 = 3, κ331 = 3, κ332 = 0, κ321 = 0, κ323 = 1),
                   init = c(energy = 6, area = 1, modi = 2),
-                  borroot = function(t, x, parms){return(c(x[1]-2))}, 
+                  borroot = function(t, x, parms){return(c(x[1]-9))}, 
                   terroot = function(t, x, parms){return(c(x[1]))},
                   discStates = list(area = (c(1, 2, 3)), modi = c(1, 2, 3)),
                   dynfunc = function(t, x, parms) {
