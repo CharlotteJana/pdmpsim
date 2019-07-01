@@ -115,8 +115,6 @@ fit into the working memory. Afterwards, you can apply methods
 and \code{\link{plotSeeds}} on the data.frame created with 
 \code{getMultSimData}. You can also use \code{\link{plotTimes}} to find 
 the seed numbers of interesting outliers by setting parameter nolo suitably.
-
-\code{}
 }
 
 \seealso{

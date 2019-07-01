@@ -1,8 +1,7 @@
 context("multSimData")
 
-setwd(system.file("testdata", package = "pdmpsim", mustWork = TRUE))
-ms <- readRDS("test_MultSim.rda")
-msCsv <- loadMultSimCsv("test_MultSimCsv.rda")
+ms <- readRDS(paste0(tempdir(), "/pdmpsimtest/test_MultSim.rda"))
+msCsv <- loadMultSimCsv(paste0(tempdir(), "/pdmpsimtest/test_MultSimCsv.rda"))
 sim <- getMultSimData(ms, seeds = c(1, 3))
 simCsv <- getMultSimData(msCsv, seeds = c(1, 3))
 slice <- getMultSimData(ms, times = c(1, 10))

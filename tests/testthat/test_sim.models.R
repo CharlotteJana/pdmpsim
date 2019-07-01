@@ -1,7 +1,3 @@
-### todo
-# toggleSwitch: beide Varianten vergleichen
-# insgesamt: den Code der wichtigen Modelle in einer Datei speichern
-
 context("sim method simulates correctly")
 
 test_that("sim is correct for a simple model", {
@@ -66,8 +62,6 @@ test_that("sim is correct for a pdmp with 2 jumptypes", {
     begin <- end + 1
   }
   expect_equal(data[,"f"], data[,"ftest"], tolerance = 1e-02)
-  #par(mfrow = c(1,2))
-  #matplot(data[,"times"], data[,c("f", "ftest")], type = "l")
 })
 
 test_that("sim is correct for a pdmp with 2 discrete variables", {
@@ -104,7 +98,6 @@ test_that("sim is correct for a pdmp with 2 discrete variables", {
     begin <- end + 1
   }
   expect_equal(data[,"f"], data[,"ftest"], tolerance = 1e-02)
-  #matplot(data[,"times"], data[,c("f", "ftest")], type = "l")
 })
 
 test_that("variable 'initialize' works as expected", {

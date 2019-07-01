@@ -41,7 +41,7 @@ test_that("multSim expands times", {
 })
 
 test_that("multSim handles wrong input arguments", {
-  expect_error(multSim(model, seeds = 1, filename = "testfile"))
+  expect_error(multSim(model, seeds = 1, filename = paste0(tmp, "/testfile")))
   
   ms <- multSim(model, seeds = NULL)
   expect_equal(0, length(ms$outputList))

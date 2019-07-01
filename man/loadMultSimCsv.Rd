@@ -7,19 +7,16 @@
 \alias{loadMultSimCsv.character}
 \title{load csv files with simulation results}
 \usage{
-loadMultSimCsv(x, dir)
+loadMultSimCsv(x)
 
-\method{loadMultSimCsv}{multSimCsv}(x, dir = ".")
+\method{loadMultSimCsv}{multSimCsv}(x)
 
-\method{loadMultSimCsv}{character}(x, dir = ".")
+\method{loadMultSimCsv}{character}(x)
 }
 \arguments{
 \item{x}{either an object  of class \code{\link{multSimCsv}} or a character 
 string indicating the filename of a stored multSimCsv object, e. g. 
 "exampleModel_MultSimCsv.rda"}
-
-\item{dir}{directory where the csv files are stored. 
-Defaults to the working directory.}
 }
 \value{
 object of class \code{\link{multSimCsv}}

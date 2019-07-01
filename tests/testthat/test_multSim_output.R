@@ -1,9 +1,6 @@
 context("multSim - output methods")
 
-data("simplePdmp")
-suppressMessages(
-  ms <- multSim(simplePdmp, seeds = 1:10)
-)
+ms <- readRDS(paste0(tempdir(), "/pdmpsimtest/test_MultSim.rda"))
 
 #-------------- tests ----------------
 
