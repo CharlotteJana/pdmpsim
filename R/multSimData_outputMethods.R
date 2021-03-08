@@ -483,7 +483,7 @@ plotTimes.multSimData <- function(x, vars, times, nolo = 0,
          'violin' or 'dotplot'.")
   
   # print red point for mean
-  plot <- plot + ggplot2::stat_summary(fun.y = mean, geom = "point", 
+  plot <- plot + ggplot2::stat_summary(fun = mean, geom = "point", 
                                        shape = 23, size = 3, fill = "red")
   # print seed numbers for outliers > threshold
   plot <- plot + ggrepel::geom_text_repel(ggplot2::aes(label = print.outlier), 
