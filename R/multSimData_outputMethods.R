@@ -54,7 +54,7 @@ plot.multSimData <- function(x, title = NULL, subtitle = NULL,
   discData <- subset(x, type == "disc")
   discData$variable <- factor(discData$variable)
   discData <- group_by(discData, variable, time, value)
-  discData <- dplyr::summarise(discData, count = n())
+  discData <- dplyr::summarise(discData, count = dplyr::n())
   discData$value <- as.ordered(discData$value)
   
   plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = time))
@@ -611,7 +611,7 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ggplot = FALSE, ...){
     n <- unique(contData$variable)
     d <- unique(discData$variable)
     discData <- group_by(discData, variable, time, value)
-    discData <- dplyr::summarise(discData, count = n())
+    discData <- dplyr::summarise(discData, count = dplyr::n())
     discData$value <- as.ordered(discData$value)
     
     opar <- graphics::par(no.readonly = TRUE)
@@ -627,10 +627,8 @@ hist.multSimData <- function(x, t, bins = 15, main, sub, ggplot = FALSE, ...){
     dVal <- NULL
     dRange <- unique(discData$value)
     for(name in d){
-      dVal <- cbind(dVal, as.matrix(table(
-        c(subset(discData, variable==name)$value, dRange) - 1
-      )))
-    }
+        dVal <- cbind(dVal, subset(discData, variable==name)$count)
+     }
     if(!is.null(dVal)){
       colnames(dVal) <- d
       # warum funktioniert names.arg = as.character(d) nicht????
