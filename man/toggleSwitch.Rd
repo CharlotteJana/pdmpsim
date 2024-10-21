@@ -4,7 +4,9 @@
 \name{toggleSwitch}
 \alias{toggleSwitch}
 \title{The toggle switch model}
-\format{An object of class \code{\link{pdmpModel}}.}
+\format{
+An object of class \code{\link{pdmpModel}}.
+}
 \usage{
 toggleSwitch
 }

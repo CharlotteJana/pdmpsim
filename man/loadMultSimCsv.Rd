@@ -30,11 +30,11 @@ to data stored in csv files). The method returnes an object of class
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{multSimCsv}: create laf-links for multSimCsv objects
+\item \code{loadMultSimCsv(multSimCsv)}: create laf-links for multSimCsv objects
 
-\item \code{character}: load multSimCsv from rda file and create LaF links
+\item \code{loadMultSimCsv(character)}: load multSimCsv from rda file and create LaF links
+
 }}
-
 \note{
 Opening the saved rda file directly with \code{\link{readRDS}} will 
 lead to a \code{multSimCsv} object with \code{lafList} set to NULL.

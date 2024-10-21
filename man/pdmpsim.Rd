@@ -2,8 +2,8 @@
 % Please edit documentation in R/pdmpsim-package.R
 \docType{package}
 \name{pdmpsim}
-\alias{pdmpsim}
 \alias{pdmpsim-package}
+\alias{pdmpsim}
 \title{pdmpsim: simulate PDMPs}
 \description{
 The core of this package is the S4 class \code{\link{pdmpModel}} that has the 
@@ -72,4 +72,22 @@ In \emph{Annales de l'Institut Henri} \cr
 pp. 1040-1075). Institut \cr
 \tab Henri Poincaré. \cr
  }
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/CharlotteJana/pdmpsim}
+  \item Report bugs at \url{https://github.com/CharlotteJana/pdmpsim/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Volkmar Liebscher \email{volkmar.liebscher@uni-greifswald.de}
+
+Authors:
+\itemize{
+  \item Charlotte Jana
+  \item Katrin Wagels
+}
+
 }

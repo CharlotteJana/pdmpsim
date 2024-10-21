@@ -7,8 +7,14 @@
 \alias{plot.multSim}
 \title{Plot a 2d heatmap for multiple simulations of PDMPs}
 \usage{
-\method{plot}{multSimData}(x, title = NULL, subtitle = NULL,
-  discPlot = "smooth", contPlot = "bin2d", ...)
+\method{plot}{multSimData}(
+  x,
+  title = NULL,
+  subtitle = NULL,
+  discPlot = "smooth",
+  contPlot = "bin2d",
+  ...
+)
 
 \method{plot}{multSim}(x, title, subtitle, ...)
 }

@@ -4,7 +4,9 @@
 \name{SIRstoch}
 \alias{SIRstoch}
 \title{Stochastic SIR dynamics}
-\format{An object of class \code{\link{mjpModel}}.}
+\format{
+An object of class \code{\link{mjpModel}}.
+}
 \usage{
 SIRstoch
 }

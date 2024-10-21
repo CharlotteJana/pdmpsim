@@ -4,7 +4,9 @@
 \name{OÖK}
 \alias{OÖK}
 \title{Autecological PDMP}
-\format{An object of class \code{\link{pdmpBorder}}.}
+\format{
+An object of class \code{\link{pdmpBorder}}.
+}
 \usage{
 OÖK
 }
