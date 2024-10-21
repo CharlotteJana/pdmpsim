@@ -109,10 +109,11 @@ getMultSimData.multSim <- function(x, times, seeds){
       seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))
   }
-  
+
   # every value gets its own row
   data <- as.data.frame(data)
   data <- reshape2::melt(data, id = c("time", "seed"))
+  data$variable <- factor(data$variable, levels = sort(levels(data$variable)))
   
   # column "type" = continous / discrete
   data$type <- as.factor(
@@ -133,8 +134,8 @@ getMultSimData.multSim <- function(x, times, seeds){
 getMultSimData.multSimCsv <- function(x, times, seeds){
   data <- data.frame(time = numeric(),
                      seed = numeric(),
-                     type = character(),
-                     variable = character(),
+                     type = factor(),
+                     variable = factor(),
                      value = numeric(),
                      stringsAsFactors = FALSE)
   timeIndex <- NULL
@@ -193,6 +194,8 @@ getMultSimData.multSimCsv <- function(x, times, seeds){
       }
     }
   }
+  data$type <- factor(data$type)
+  data$variable <- factor(data$variable)
   attr(data, "class") <- c("multSimData", class(data))
 
   return(data)
