@@ -37,6 +37,9 @@ NULL
 #' print(d)
 #' @name multSimData
 #' @aliases getmultsimdata multSimData multsimdata
+NULL
+
+#' @rdname multSimData
 #' @export
 getMultSimData <- function (x, times, seeds)  {
   UseMethod("getMultSimData", x)
@@ -44,6 +47,7 @@ getMultSimData <- function (x, times, seeds)  {
 
 #' @rdname multSimData
 #' @importFrom dplyr select everything
+#' @method getMultSimData multSim
 #' @export
 getMultSimData.multSim <- function(x, times, seeds){
   x <- removeSeeds(x)
@@ -101,7 +105,7 @@ getMultSimData.multSim <- function(x, times, seeds){
   for(j in seq_along(seedIndex)){
     lastTime <- nrow(x$outputList[[seedIndex[j]]])
     seedData <- x$outputList[[seedIndex[j]]][timeIndex[timeIndex %in% 1:lastTime], ]
-    if(class(seedData) == "numeric")
+    if(identical(class(seedData),"numeric"))
       seedData <- t(seedData)
     data <- rbind(data, cbind(seed = rep(x$seeds[seedIndex[j]]), seedData))
   }
@@ -124,6 +128,7 @@ getMultSimData.multSim <- function(x, times, seeds){
 }
 
 #' @rdname multSimData
+#' @method getMultSimData multSimCsv
 #' @export
 getMultSimData.multSimCsv <- function(x, times, seeds){
   data <- data.frame(time = numeric(),
@@ -194,6 +199,7 @@ getMultSimData.multSimCsv <- function(x, times, seeds){
 }
 
 #' @rdname multSimData
+#' @method getMultSimData multSimData
 #' @export
 getMultSimData.multSimData <- function(x, times, seeds){
   
