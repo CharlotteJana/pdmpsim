@@ -261,6 +261,7 @@ loadMultSimCsv <- function(x){
 }
 
 #' @describeIn loadMultSimCsv create laf-links for multSimCsv objects
+#' @export
 loadMultSimCsv.multSimCsv <- function(x){
   x$lafList <- list(0)
   for(i in seq_along(x$csvList)){
@@ -271,6 +272,7 @@ loadMultSimCsv.multSimCsv <- function(x){
 }
 
 #' @describeIn loadMultSimCsv load multSimCsv from rda file and create LaF links
+#' @export
 loadMultSimCsv.character <- function(x){
   msCsv <- readRDS(file = x)
   msCsv$lafList <- list(0)

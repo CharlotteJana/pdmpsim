@@ -4,7 +4,9 @@
 \name{KendallBD}
 \alias{KendallBD}
 \title{Kendalls birth-and-death process}
-\format{An object of class \code{\link{mjpModel}}.}
+\format{
+An object of class \code{\link{mjpModel}}.
+}
 \usage{
 KendallBD
 }

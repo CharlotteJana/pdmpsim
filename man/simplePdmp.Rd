@@ -4,7 +4,9 @@
 \name{simplePdmp}
 \alias{simplePdmp}
 \title{A simple PDMP}
-\format{An object of class \code{\link{pdmpModel}}.}
+\format{
+An object of class \code{\link{pdmpModel}}.
+}
 \usage{
 simplePdmp
 }

@@ -7,8 +7,7 @@
 \alias{hist.multSim}
 \title{Histogram over all simulations}
 \usage{
-\method{hist}{multSimData}(x, t, bins = 15, main, sub, ggplot = FALSE,
-  ...)
+\method{hist}{multSimData}(x, t, bins = 15, main, sub, ggplot = FALSE, ...)
 
 \method{hist}{multSim}(x, t, main, sub, ...)
 }

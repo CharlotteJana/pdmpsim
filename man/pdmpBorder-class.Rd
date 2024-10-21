@@ -9,12 +9,23 @@
 \alias{pdmpBorder}
 \title{Class pdmpBorder}
 \usage{
-pdmpBorder(obj = NULL, descr = character(0), dynfunc, jumpfunc,
-  ratefunc, borderfunc = function(t, z, parms) z, borroot = function(t,
-  z, parms) NULL, terroot = function(t, z, parms) NULL, times = c(from
-  = 0, to = 10, by = 1), init = c(0, 0), parms = c(0),
-  discStates = list(0), out = NULL, solver = "lsodar",
-  initfunc = NULL)
+pdmpBorder(
+  obj = NULL,
+  descr = character(0),
+  dynfunc,
+  jumpfunc,
+  ratefunc,
+  borderfunc = function(t, z, parms) z,
+  borroot = function(t, z, parms) NULL,
+  terroot = function(t, z, parms) NULL,
+  times = c(from = 0, to = 10, by = 1),
+  init = c(0, 0),
+  parms = c(0),
+  discStates = list(0),
+  out = NULL,
+  solver = "lsodar",
+  initfunc = NULL
+)
 }
 \arguments{
 \item{borderfunc}{a \code{function(t, x, parms)} that returns the new state after reaching a borroot.}

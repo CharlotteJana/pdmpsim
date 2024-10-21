@@ -4,7 +4,9 @@
 \name{IBBall}
 \alias{IBBall}
 \title{Increased bouncing ball}
-\format{An object of class \code{\link{pdmpBorder}}.}
+\format{
+An object of class \code{\link{pdmpBorder}}.
+}
 \usage{
 IBBall
 }

@@ -29,7 +29,7 @@ Suggests: Deriv,
     RColorBrewer,
     testthat,
     tidyr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.2
 Collate: 
     'data.R'
     'mjp_class.R'

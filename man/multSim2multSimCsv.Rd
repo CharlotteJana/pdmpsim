@@ -5,8 +5,12 @@
 \alias{multsim2multsimcsv}
 \title{Convert 'multSim' to 'multSimCsv'}
 \usage{
-multSim2multSimCsv(ms, prefix = format(ms$model), append = FALSE,
-  digits = NULL)
+multSim2multSimCsv(
+  ms,
+  prefix = format(ms$model),
+  append = FALSE,
+  digits = NULL
+)
 }
 \arguments{
 \item{ms}{object of class \code{\link{multSim}}}
